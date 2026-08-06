@@ -1,0 +1,27 @@
+[project]
+name = "deepagents-harness"
+version = "0.1.0"
+requires-python = ">=3.12"
+dependencies = [
+    "copilotkit>=0.1.94",
+    "deepagents>=0.7.4",
+    "langchain-openai>=1.4.1",
+]
+
+# The LangGraph dev server. `langgraph.json` describes the graphs; this is what
+# serves them. Not a runtime dependency of the agents themselves, so it sits in
+# a group rather than in `dependencies`.
+[dependency-groups]
+dev = [
+    "langgraph-cli[inmem]>=0.4.7",
+]
+
+# `langgraph.json` declares `"dependencies": ["."]`, which makes this project
+# installable into the server's environment. `main.py` holds the Quickstart
+# agent; every other graph lives under `src/`.
+[build-system]
+requires = ["hatchling"]
+build-backend = "hatchling.build"
+
+[tool.hatch.build.targets.wheel]
+packages = ["src"]

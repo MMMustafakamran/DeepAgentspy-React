@@ -1,0 +1,79 @@
+/*
+ * A2UI surface theme.
+ * https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/styling
+ *
+ * The page's "Full example" block, plus the two blocks it lists separately
+ * (`.a2ui-card` min-width and the dark-mode overrides). Everything here is
+ * scoped to `.a2ui-surface`, so importing it at the app root — which is what
+ * the page says to do — leaves the rest of the harness untouched.
+ *
+ * The page's dark-mode block is written as
+ *
+ *     .dark .a2ui-surface,
+ *     @media (prefers-color-scheme: dark) { … }
+ *
+ * which is not valid CSS: an at-rule cannot appear in a selector list, so the
+ * whole rule is dropped by the parser. It is split into the two separate rules
+ * below, which is what it was evidently meant to be. See the Styling route.
+ */
+
+@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+
+.a2ui-surface {
+  /* Colors */
+  --primary: #111111;
+  --primary-foreground: #ffffff;
+  --card: #ffffff;
+  --border: #e0e0e0;
+  --radius: 12px;
+  --foreground: #111111;
+  --input: #d4d4d4;
+  --background: #fafafa;
+
+  /* Typography */
+  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif !important;
+  letter-spacing: -0.01em;
+}
+
+/* Image constraints */
+.a2ui-surface img {
+  max-width: 28px;
+  max-height: 28px;
+  border-radius: 4px;
+}
+
+/* Smaller status indicator icons */
+.a2ui-surface img[alt="On Time"],
+.a2ui-surface img[alt="Delayed"] {
+  max-width: 10px;
+  max-height: 10px;
+  border-radius: 50%;
+}
+
+/* Streaming card width */
+.a2ui-surface .a2ui-card {
+  min-width: 280px;
+}
+
+/* Dark mode */
+.dark .a2ui-surface {
+  --primary: #e5e5e5;
+  --primary-foreground: #111111;
+  --card: #1a1a1a;
+  --border: #333333;
+  --foreground: #e5e5e5;
+  --input: #444444;
+  --background: #111111;
+}
+
+@media (prefers-color-scheme: dark) {
+  .a2ui-surface {
+    --primary: #e5e5e5;
+    --primary-foreground: #111111;
+    --card: #1a1a1a;
+    --border: #333333;
+    --foreground: #e5e5e5;
+    --input: #444444;
+    --background: #111111;
+  }
+}

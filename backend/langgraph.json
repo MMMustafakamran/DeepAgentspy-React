@@ -1,0 +1,20 @@
+{
+    "python_version": "3.12",
+    "dockerfile_lines": [],
+    "dependencies": ["."],
+    "package_manager": "uv",
+    "graphs": {
+        "sample_agent": "./main.py:agent",
+        "tool_rendering_agent": "./src/tool_rendering.py:agent",
+        "state_rendering_agent": "./src/state_rendering.py:agent",
+        "interrupt_agent": "./src/interrupt_based.py:agent",
+        "interrupt_multi_agent": "./src/interrupt_based.py:multi_agent",
+        "frontend_tools_agent": "./src/frontend_tools.py:agent",
+        "a2ui_fixed_agent": "./src/a2ui_fixed.py:agent",
+        "a2ui_dynamic_agent": "./src/a2ui_dynamic.py:graph",
+        "shared_state_agent": "./src/shared_state.py:agent",
+        "predictive_state_agent": "./src/predictive_state.py:agent",
+        "state_io_graph": "./src/state_inputs_outputs.py:graph"
+    },
+    "env": ".env"
+}
