@@ -20,6 +20,11 @@ export const GRAPH_IDS = [
   "a2ui_dynamic_agent",
   "shared_state_agent",
   "predictive_state_agent",
+  // The two custom-graph variants of Predictive State Updates. Neither is a
+  // Deep Agent: the page's Python tab gives their node bodies and its
+  // TypeScript tab gives the graph wiring around them.
+  "predictive_manual_graph",
+  "predictive_tool_graph",
   "state_io_graph",
 ] as const;
 

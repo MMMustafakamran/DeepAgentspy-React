@@ -1,24 +1,45 @@
 "use client";
 
 import { CopilotChat, useAgent } from "@copilotkit/react-core/v2";
+import { useState } from "react";
 
 import { DemoFrame } from "@/components/demo-frame";
 
-const AGENT_ID = "predictive_state_agent";
+const VARIANTS = [
+  {
+    id: "prebuilt",
+    agentId: "predictive_state_agent",
+    label: "Prebuilt agent",
+    blurb: "StateStreamingMiddleware + StateItem on create_deep_agent.",
+  },
+  {
+    id: "manual",
+    agentId: "predictive_manual_graph",
+    label: "Custom graph · manual",
+    blurb: "A StateGraph node calling copilotkit_emit_state in a loop.",
+  },
+  {
+    id: "tool",
+    agentId: "predictive_tool_graph",
+    label: "Custom graph · tool",
+    blurb: "copilotkit_customize_config(emit_intermediate_state=[...]) on the config.",
+  },
+] as const;
+
+type VariantId = (typeof VARIANTS)[number]["id"];
 
 //#region observe-predictions
 /**
  * The page's `YourMainContent`, unchanged apart from styling.
  *
- * The rows fill in while the model is still writing the `step_progress_tool`
- * call. `StateStreamingMiddleware` parses the partial tool arguments as they
- * stream and writes each complete element of `steps` into `observed_steps`, so
- * this list grows one entry at a time before the tool has even been invoked.
+ * The same component reads all three variants — the whole point of the page is
+ * that they are three routes to the same `observed_steps` key. On the prebuilt
+ * and tool variants the rows fill in while the model is still writing the
+ * `step_progress_tool` call; on the manual variant they arrive one per second
+ * from the node's own emit loop.
  */
-function YourMainContent() {
-  const { agent } = useAgent({
-    agentId: AGENT_ID,
-  });
+function YourMainContent({ agentId }: { agentId: string }) {
+  const { agent } = useAgent({ agentId });
 
   const observedSteps = (agent.state.observed_steps as string[]) ?? [];
 
@@ -59,15 +80,42 @@ function YourMainContent() {
 //#endregion
 
 export default function Page() {
+  const [variantId, setVariantId] = useState<VariantId>("prebuilt");
+  const variant = VARIANTS.find((v) => v.id === variantId)!;
+
   return (
     <DemoFrame
       parentPath="/shared-state/predictive-state-updates"
-      subtitle={`prebuilt variant · graph: ${AGENT_ID}`}
+      subtitle={`graph: ${variant.agentId}`}
     >
-      <div className="grid h-full grid-cols-1 md:grid-cols-2">
-        <YourMainContent />
-        <div className="min-h-0 border-t border-slate-200 md:border-l md:border-t-0 dark:border-slate-800">
-          <CopilotChat agentId={AGENT_ID} className="h-full" />
+      <div className="flex h-full flex-col">
+        <div className="shrink-0 border-b border-slate-200 px-4 py-2 dark:border-slate-800">
+          <div className="flex flex-wrap gap-2">
+            {VARIANTS.map((v) => (
+              <button
+                key={v.id}
+                type="button"
+                onClick={() => setVariantId(v.id)}
+                className={`rounded-md px-3 py-1 text-xs font-medium ${
+                  variantId === v.id
+                    ? "bg-[var(--accent)] text-white"
+                    : "border border-slate-300 text-slate-600 dark:border-slate-700 dark:text-slate-300"
+                }`}
+              >
+                {v.label}
+              </button>
+            ))}
+          </div>
+          <p className="mt-1.5 text-xs text-slate-500">{variant.blurb}</p>
+        </div>
+
+        {/* Keyed on the variant so switching drops the previous agent's
+            subscription rather than leaving two live at once. */}
+        <div key={variant.id} className="grid min-h-0 flex-1 grid-cols-1 md:grid-cols-2">
+          <YourMainContent agentId={variant.agentId} />
+          <div className="min-h-0 border-t border-slate-200 md:border-l md:border-t-0 dark:border-slate-800">
+            <CopilotChat agentId={variant.agentId} className="h-full" />
+          </div>
         </div>
       </div>
     </DemoFrame>

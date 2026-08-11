@@ -125,67 +125,129 @@ export default function Page() {
 
       <Panel
         title="Variant 2 — Custom graph, manual emission"
-        description="?agent-type=custom-graph&state-emission=manual-emission · reference only"
+        description="?agent-type=custom-graph&state-emission=manual-emission · a StateGraph you write"
       >
         <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
           Full control: you call <code>copilotkit_emit_state</code> yourself
-          wherever you want a checkpoint. This is the page&apos;s Python,
-          unedited:
+          wherever you want a checkpoint. Four fixed steps, one second apart, so
+          the pacing is visible. No Deep Agent involved — one node, two edges,
+          compiled with a <code>MemorySaver</code>.
+        </p>
+        <div className="mt-4">
+          <TryIt
+            prompts={["Summarise the last quarter"]}
+            expect={
+              <>
+                Exactly four rows — &ldquo;Analyzing input data...&rdquo; through
+                &ldquo;Formatting final output...&rdquo; — appearing one per
+                second before any reply text, then an ordinary answer. The rows
+                persist, because the node returns <code>observed_steps</code> as
+                well as emitting it.
+              </>
+            }
+            fail="Rows that appear and then vanish mean the node emitted without returning."
+          />
+        </div>
+        <div className="mt-4">
+          <SourceCodeGroup
+            files={[
+              { file: "backend/src/predictive_state_manual.py", region: "agent-state" },
+              { file: "backend/src/predictive_state_manual.py", region: "chat-node" },
+              { file: "backend/src/predictive_state_manual.py", region: "graph" },
+            ]}
+          />
+        </div>
+        <p className="mt-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+          This is the page&apos;s Python as printed — the half it gives:
         </p>
         <div className="mt-3">
           <CodeBlock code={DOC_MANUAL} language="python" filename="the doc page" />
         </div>
         <p className="mt-3 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
-          Not implemented here because it cannot be run as printed. It is a node
-          in a graph the page never builds: no <code>StateGraph</code>, no
-          <code> add_node</code>, no <code>compile</code>. The return type
-          promises a jump to <code>cpk_action_node</code>, which is named nowhere
-          on the page. <code>asyncio</code>, <code>Command</code>,{" "}
-          <code>Literal</code> and <code>RunnableConfig</code> are all used and
-          none are imported. Standing it up would mean writing more code than the
-          page shows.
+          A node with no graph around it: no <code>StateGraph</code>, no{" "}
+          <code>add_node</code>, no <code>compile</code>, no model call, and no
+          imports for <code>asyncio</code>, <code>Command</code>,{" "}
+          <code>Literal</code> or <code>RunnableConfig</code>. Its return type
+          also promises a jump to <code>cpk_action_node</code>, named nowhere on
+          the page.
         </p>
         <p className="mt-3 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
-          The pattern itself is live on the{" "}
-          <a
-            href="/generative-ui/state-rendering"
-            className="text-[var(--accent)] underline underline-offset-4"
-          >
-            State Rendering
-          </a>{" "}
-          route, which uses the same <code>copilotkit_emit_state</code> call from
-          a place a Deep Agent can actually reach.
+          The missing half is on the <strong>same page&apos;s TypeScript
+          tab</strong>, which prints the annotation, the model call, the wiring
+          and the <code>compile</code> in full. So the node body above is the
+          Python tab&apos;s and the scaffolding is the TypeScript tab&apos;s,
+          translated — no third source. The unreachable{" "}
+          <code>cpk_action_node</code> is dropped from the signature, since this
+          graph goes straight to <code>END</code> exactly as the TypeScript
+          tab&apos;s does.
         </p>
       </Panel>
 
       <Panel
         title="Variant 3 — Custom graph, tool emission"
-        description="?agent-type=custom-graph&state-emission=tool-emission · reference only"
+        description="?agent-type=custom-graph&state-emission=tool-emission · the same mapping, on the config"
       >
         <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
           The same tool-argument-to-state-key mapping as Variant 1, but declared
-          on the <code>RunnableConfig</code> instead of as middleware:
+          on the <code>RunnableConfig</code> with{" "}
+          <code>copilotkit_customize_config</code> instead of as middleware.{" "}
+          <code>StateStreamingMiddleware</code> is the packaged version of
+          exactly this.
+        </p>
+        <div className="mt-4">
+          <TryIt
+            prompts={["Migrate a database to a new schema"]}
+            expect={
+              <>
+                Steps stream into the panel as the model writes the{" "}
+                <code>step_progress_tool</code> call, then the node returns a{" "}
+                <code>Command</code> that copies the same argument into{" "}
+                <code>observed_steps</code> so it persists.
+              </>
+            }
+            fail="Steps that only appear after the reply mean emit_intermediate_state was not applied to the config the model was invoked with."
+          />
+        </div>
+        <div className="mt-4">
+          <SourceCodeGroup
+            files={[
+              { file: "backend/src/predictive_state_tool.py", region: "agent-state" },
+              { file: "backend/src/predictive_state_tool.py", region: "frontend-actions-node" },
+              { file: "backend/src/predictive_state_tool.py", region: "graph" },
+            ]}
+          />
+        </div>
+        <p className="mt-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+          The most complete of the page&apos;s Python snippets — it carries its
+          own import block, the tool, the mapping, the model call and both{" "}
+          <code>Command</code> returns. <code>frontend_actions_node</code> above
+          is it unedited:
         </p>
         <div className="mt-3">
           <CodeBlock code={DOC_TOOL} language="python" filename="the doc page" />
         </div>
         <p className="mt-3 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
-          Also a bare node with no graph around it. Beyond that,{" "}
-          <code>state[&quot;copilotkit&quot;][&quot;actions&quot;]</code> is
-          bound straight into <code>bind_tools</code> as though those entries
-          were LangChain tools; on the equivalent TypeScript tab the page wraps
-          them in <code>convertActionsToDynamicStructuredTools</code> first, and
-          nothing in the Python <code>copilotkit</code> package does that
-          conversion for you. It also pins <code>gpt-4</code>, which no other
-          page in this doc set uses.
-        </p>
-        <p className="mt-3 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
-          <code>copilotkit_customize_config</code> and{" "}
-          <code>emit_intermediate_state</code> are real —{" "}
-          <code>StateStreamingMiddleware</code> in Variant 1 is the packaged
-          version of exactly this mapping.
+          Only the state class and the graph builder are missing, and both come
+          from the same page. No <code>ToolNode</code> here, unlike the
+          TypeScript tab: this node routes to <code>END</code> on both paths, so
+          the tool is never executed — the model&apos;s <em>argument</em> is the
+          payload, which is why the tool body is empty.
         </p>
       </Panel>
+
+      <Callout tone="warn" title="state['copilotkit']['actions'] goes in unconverted">
+        <p>
+          Variant 3 binds{" "}
+          <code>state[&quot;copilotkit&quot;][&quot;actions&quot;]</code>{" "}
+          straight into <code>bind_tools</code> as though those entries were
+          LangChain tools. The equivalent TypeScript tab wraps them in{" "}
+          <code>convertActionsToDynamicStructuredTools</code> first, and nothing
+          in the Python <code>copilotkit</code> package does that conversion for
+          you. It is harmless on this route because no frontend tools are
+          registered against this graph, so the list is empty — but register one
+          and the bind would be handed raw dicts.
+        </p>
+      </Callout>
 
       {/* <Callout tone="warn" title="Predictions need <CopilotKit>, not <CopilotKitProvider>">
         <p>

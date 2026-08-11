@@ -20,7 +20,7 @@ A navigable, working test harness for the CopilotKit ↔ Deep Agents (Python) in
 
 Deep Agents is LangChain's framework for long-horizon agents — `create_deep_agent` returns a compiled LangGraph graph with planning and virtual-filesystem tools already installed. CopilotKit connects one of those graphs to a React app over the AG-UI protocol, so the agent can render components, call browser-side tools, suspend for human input, and share state with your UI.
 
-This repo implements every Deep Agents doc page in that list as a live route. It is a QA tool, not a tutorial: each route shows what the page teaches actually running, alongside the repo's own source read off disk at render time, plus a plain statement of anywhere the page and the shipped packages disagree. Fifteen doc pages, thirteen routes (three doc URLs are query-string variants of one page), eleven graphs — ten Deep Agents plus one hand-built `StateGraph`, because [Input/Output Schemas](https://docs.copilotkit.ai/deepagents/shared-state/state-inputs-outputs) is about a LangGraph feature `create_deep_agent` does not expose.
+This repo implements every Deep Agents doc page in that list as a live route. It is a QA tool, not a tutorial: each route shows what the page teaches actually running, alongside the repo's own source read off disk at render time, plus a plain statement of anywhere the page and the shipped packages disagree. Fifteen doc pages, thirteen routes (three doc URLs are query-string variants of one page), thirteen graphs — ten Deep Agents plus three hand-built `StateGraph`s, for the pages that are about LangGraph features `create_deep_agent` does not expose.
 
 Everything traces to a doc page. Nothing was invented to fill a gap — where a page omits something needed to run, the gap is named on the route and in [§9](#9-known-issues--docvsimplementation-discrepancies).
 
@@ -40,7 +40,8 @@ browser
             ▼
        LangGraph dev server  :8123                    backend/langgraph.json
        ├─ 10 compiled graphs from create_deep_agent   backend/main.py, backend/src/*.py
-       └─  1 hand-built StateGraph                    backend/src/state_inputs_outputs.py
+       └─  3 hand-built StateGraphs                   predictive_state_manual / predictive_state_tool
+            │                                         / state_inputs_outputs
             │
             ▼
        OpenAI
@@ -50,7 +51,7 @@ browser
 
 Two runtime endpoints, not one:
 
-- `/api/copilotkit` — all ten graphs. Sets `a2ui: { injectA2UITool: false, agents: ["a2ui_fixed_agent"] }`, because the fixed-schema agent returns its own A2UI operations and must not also be handed a `generate_a2ui` tool.
+- `/api/copilotkit` — all thirteen graphs. Sets `a2ui: { injectA2UITool: false, agents: ["a2ui_fixed_agent"] }`, because the fixed-schema agent returns its own A2UI operations and must not also be handed a `generate_a2ui` tool.
 - `/api/copilotkit-a2ui-dynamic` — the dynamic-schema agent only, with no `a2ui` block, so injection stays on. The setting is per-runtime, which is why it needs its own endpoint.
 
 ---
@@ -112,7 +113,7 @@ Two terminals — the CLI does not start both.
 cd backend && uv run langgraph dev --port 8123 --no-browser
 ```
 
-Success looks like this, with all ten graphs importing:
+Success looks like this, with all thirteen graphs importing:
 
 ```
 Welcome to
@@ -224,11 +225,11 @@ Reading agent state as ordinary reactive React state.
 *Pass:* first answer in English, second in Spanish. **Toggle + runAgent()** produces a fresh reply with no typing.
 *Fail:* the label flips but answers stay English — the write landed but the model never saw it; check `expose_state`.
 
-**`/shared-state/predictive-state-updates`** → `predictive_state_agent`
-`StateStreamingMiddleware` streaming a tool argument into a state key as the model writes it. The two custom-graph variants are reference-only on the same route.
-*Try:* `Plan and execute a website redesign`
-*Pass:* step rows appear on the left one at a time, noticeably *before* the chat message completes, and persist after.
-*Fail:* all rows at once after the reply — the streaming middleware did not intercept. Nothing at all — the provider is `<CopilotKitProvider>` rather than `<CopilotKit>`; see [§9](#9-known-issues--docvsimplementation-discrepancies).
+**`/shared-state/predictive-state-updates`** → `predictive_state_agent`, `predictive_manual_graph`, `predictive_tool_graph`
+**All three of the page's variants are live**, behind a toggle at the top of the demo. Variants 2 and 3 are not Deep Agents — they are hand-built `StateGraph`s, which is what those tabs are for.
+*Try:* `Plan and execute a website redesign` on each tab.
+*Pass:* **Prebuilt** — step rows appear one at a time, noticeably *before* the chat message completes. **Custom · manual** — exactly four fixed rows, one per second, then an ordinary answer (verified: four distinct state updates in order). **Custom · tool** — steps stream as the model writes the tool call, then the node's `Command` copies the same argument into `observed_steps` so it persists.
+*Fail:* all rows at once after the reply — the streaming did not intercept. Nothing at all — the provider is `<CopilotKitProvider>` rather than `<CopilotKit>`; see [§9](#9-known-issues--docvsimplementation-discrepancies).
 
 **`/shared-state/state-inputs-outputs`** → `state_io_graph` — *the one route that is not a Deep Agent*
 A hand-built `StateGraph` with `input_schema` / `output_schema`, because the page's own callout says `create_deep_agent` does not expose them. Three fields, three fates: `question` goes in and never comes back, `answer` comes back, `resources` never crosses the wire at all.
@@ -258,12 +259,12 @@ Verified 2026-08-06 by driving every graph through the real `CopilotRuntime` rou
 | [shared-state/in-app-agent-read](https://docs.copilotkit.ai/deepagents/shared-state/in-app-agent-read) | `/shared-state/in-app-agent-read` | `shared_state_agent` | ✅ Working | `Literal[...] = "english"` is not a runtime default |
 | [shared-state/in-app-agent-write](https://docs.copilotkit.ai/deepagents/shared-state/in-app-agent-write) | `/shared-state/in-app-agent-write` | `shared_state_agent` | ✅ Working | Needs `expose_state`, which neither page mentions |
 | [.../predictive-state-updates?agent-type=prebuilt](https://docs.copilotkit.ai/deepagents/shared-state/predictive-state-updates?agent-type=prebuilt) | `/shared-state/predictive-state-updates` | `predictive_state_agent` | ✅ Working | Requires `<CopilotKit>`, not `<CopilotKitProvider>` |
-| [...&state-emission=manual-emission](https://docs.copilotkit.ai/deepagents/shared-state/predictive-state-updates?agent-type=custom-graph&state-emission=manual-emission) | same route, §Variant 2 | — | 📄 Reference | Bare node, no graph, undefined `cpk_action_node`, no imports |
-| [...&state-emission=tool-emission](https://docs.copilotkit.ai/deepagents/shared-state/predictive-state-updates?agent-type=custom-graph&state-emission=tool-emission) | same route, §Variant 3 | — | 📄 Reference | Same, plus unconverted `copilotkit.actions` in `bind_tools` |
+| [...&state-emission=manual-emission](https://docs.copilotkit.ai/deepagents/shared-state/predictive-state-updates?agent-type=custom-graph&state-emission=manual-emission) | same route, tab 2 | `predictive_manual_graph` | ✅ Working | Node body from the Python tab; graph wiring from the same page's TS tab |
+| [...&state-emission=tool-emission](https://docs.copilotkit.ai/deepagents/shared-state/predictive-state-updates?agent-type=custom-graph&state-emission=tool-emission) | same route, tab 3 | `predictive_tool_graph` | ✅ Working | Python snippet is near-complete; only the state class and graph were missing |
 | [shared-state/state-inputs-outputs](https://docs.copilotkit.ai/deepagents/shared-state/state-inputs-outputs) | `/shared-state/state-inputs-outputs` | `state_io_graph` | ✅ Working | Custom `StateGraph`, not a Deep Agent — the page calls for exactly that |
 | [shared-state/workflow-execution](https://docs.copilotkit.ai/deepagents/shared-state/workflow-execution) | `/shared-state/workflow-execution` | — | ❌ Broken | Upstream duplicate of the page above |
 
-**Totals:** 11 ✅ Working · 2 ⚠️ Partial · 2 📄 Reference · 1 ❌ Broken.
+**Totals:** 13 ✅ Working · 2 ⚠️ Partial · 0 📄 Reference · 1 ❌ Broken.
 
 The same table is rendered in-app at `/status`, generated from `frontend/src/lib/nav-config.ts` — that file is the single source of truth for routes, statuses and doc links, so this table and the app cannot drift apart.
 
@@ -322,30 +323,37 @@ Both shared-state pages say the agent "reads `state["language"]` … as it runs"
 **12. The A2UI schemas and catalog are never shown.**
 [fixed-schema](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/fixed-schema) says to design `flight_schema.json` in the A2UI Composer and never prints one; [dynamic-schema](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/dynamic-schema) writes `a2ui={{ catalog: myCatalog }}` and links to a "Bring Your Own Catalog" page that resolves outside the Deep Agents tree. Both were supplied for this repo, as were the shadcn-style primitives the [advanced](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/advanced) renderers import — that file is marked `⚠ SELF-DEFINED` at the top.
 
-**13. Neither custom-graph variant of predictive-state-updates can be run.**
-Both show a bare node with no `StateGraph`, no `add_node`, no `compile`. The manual-emission one returns `Command[Literal["cpk_action_node", …]]` naming a node that appears nowhere on the page, and uses `asyncio`, `Command`, `Literal` and `RunnableConfig` without importing any of them. The tool-emission one additionally binds `state["copilotkit"]["actions"]` straight into `bind_tools` as though those were LangChain tools — its own TypeScript tab wraps them in `convertActionsToDynamicStructuredTools` first, and nothing in the Python package does that conversion. Reproduced verbatim as reference.
+**13. Neither custom-graph variant of predictive-state-updates is complete in Python.**
+Both show a bare node with no `StateGraph`, no `add_node`, no `compile`. The manual-emission one also omits the model call and the return, returns `Command[Literal["cpk_action_node", …]]` naming a node that appears nowhere on the page, and uses `asyncio`, `Command`, `Literal` and `RunnableConfig` without importing any of them.
+
+**Both are live here anyway**, because the missing half is on the *same page's TypeScript tab*, which prints the annotation, wiring and `compile` in full. So each graph is the Python tab's node body inside the TypeScript tab's scaffolding — two tabs of one page, no third source. The unreachable `cpk_action_node` is dropped from the signature, since the graph goes straight to `END` exactly as the TypeScript one does.
+
+Two further notes. The tool-emission variant binds `state["copilotkit"]["actions"]` straight into `bind_tools` as though those were LangChain tools; its TypeScript tab wraps them in `convertActionsToDynamicStructuredTools` first, and nothing in the Python package does that conversion — harmless here only because no frontend tools are registered against that graph. And it needs no `ToolNode`: the node routes to `END` on both paths, so the tool is never executed and the model's *argument* is the payload.
+
+**14. The Python LangGraph API rejects a checkpointer; the JS one does not.**
+The TypeScript tab compiles both custom graphs with a `MemorySaver`. Do the same in Python and the dev server refuses to start: *"Your graph 'graph' … includes a custom checkpointer … With LangGraph API, persistence is handled automatically by the platform … please remove the custom checkpointer."* It is a hard `ValueError` at graph-load time, not a warning. Both graphs here therefore call `workflow.compile()` bare and let the server provide persistence. The JS dev server accepts the same `MemorySaver` without complaint.
 
 ### Upstream page bugs
 
-**14. `workflow-execution` serves the wrong page.**
+**15. `workflow-execution` serves the wrong page.**
 `/deepagents/shared-state/workflow-execution` returns [state-inputs-outputs](https://docs.copilotkit.ai/deepagents/shared-state/state-inputs-outputs) byte for byte — same subtitle, prose, code and closing snippet. Only the `h1` differs, and even the subtitle describes the *other* page's topic. Both fetched as raw markdown and compared. Marked ❌ Broken rather than guessed at.
 
-**15. `state-inputs-outputs` uses the deprecated LangGraph spelling.**
+**16. `state-inputs-outputs` uses the deprecated LangGraph spelling.**
 `StateGraph(OverallState, input=…, output=…)`. Still accepted in LangGraph 1.2.10, but it warns: *"`input` is deprecated and will be removed. Please use `input_schema` instead."* The implementation here uses `input_schema=` / `output_schema=`. The snippet also imports nothing it uses, switches from `list[str]` to `List[str]` midway, and never fills in `resources` — the field the whole page is about — leaving `# ...add the rest of the agent implementation` where it would be written. An absent key proves nothing if the node never sets it, so `answer_node` records what it actually sent to the model.
 
-**16. `useRenderToolCall` is not the hook the prose means.**
+**17. `useRenderToolCall` is not the hook the prose means.**
 [tool-rendering](https://docs.copilotkit.ai/deepagents/generative-ui/tool-rendering) names it three times as the counterpart to `useDefaultRenderTool`. It is a real export, but a different hook — no arguments, returns a function that renders a given tool call from renderers already registered. The one meant is `useRenderTool`, which the page's own snippets use.
 
-**17. `frontend-tools` repeats itself and links elsewhere.**
+**18. `frontend-tools` repeats itself and links elsewhere.**
 Its Step 1 links to `/langgraph/quickstart` rather than the Deep Agents one, and Steps 4–5 repeat "What is this?", "When should I use this?" and the whole `useFrontendTool` snippet verbatim.
 
-**18. Broken anchors on `advanced`.**
+**19. Broken anchors on `advanced`.**
 Links to `./fixed-schema#adding-interactivity-action-handlers` (no such anchor — the section is "Action handler details") and `./fixed-schema-streaming#…` (page does not exist).
 
-**19. Model ids vary across pages.**
+**20. Model ids vary across pages.**
 `openai:gpt-4o` on Quickstart and Tool Rendering, `gpt-5.4` on Dynamic Schema A2UI and Predictive State Updates, `gpt-4` inside the tool-emission snippet. Every agent here reads `OPENAI_MODEL` instead, defaulting to `gpt-4o`.
 
-**20. The Quickstart installs a package it never uses.**
+**21. The Quickstart installs a package it never uses.**
 Its install line is `npm install @copilotkit/react-ui @copilotkit/react-core @copilotkit/runtime`, but every import it then writes is from `@copilotkit/react-core/v2`. `@copilotkit/react-ui` is the v1 UI package; nothing here imports it and it is not installed.
 
 ---
@@ -391,7 +399,9 @@ deepagents/
 │       ├── interrupt_based.py        interrupt_agent + interrupt_multi_agent
 │       ├── frontend_tools.py         frontend_tools_agent
 │       ├── shared_state.py           shared_state_agent (read + write routes)
-│       ├── predictive_state.py       predictive_state_agent
+│       ├── predictive_state.py       predictive_state_agent      (prebuilt)
+│       ├── predictive_state_manual.py predictive_manual_graph    ← StateGraph
+│       ├── predictive_state_tool.py   predictive_tool_graph      ← StateGraph
 │       ├── a2ui_fixed.py             a2ui_fixed_agent
 │       ├── a2ui_dynamic.py           a2ui_dynamic_agent
 │       ├── state_inputs_outputs.py   state_io_graph — a StateGraph, not a Deep Agent

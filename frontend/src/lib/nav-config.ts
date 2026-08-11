@@ -25,6 +25,8 @@ export interface RouteMeta {
   offNav?: boolean;
   /** Owns a live surface at `<path>/demo-chat`. */
   hasDemo?: boolean;
+  /** Extra graph ids the route's demo can switch between. */
+  extraAgentIds?: string[];
   /** Graph id in backend/langgraph.json, when the route drives one. */
   agentId?: string;
 }
@@ -187,13 +189,14 @@ export const NAV: NavGroup[] = [
         path: "/shared-state/predictive-state-updates",
         hasDemo: true,
         agentId: "predictive_state_agent",
+        extraAgentIds: ["predictive_manual_graph", "predictive_tool_graph"],
         title: "Predictive State Updates",
         docPath: "/deepagents/shared-state/predictive-state-updates?agent-type=prebuilt",
         summary:
-          "StateStreamingMiddleware streaming a tool argument into state as the model writes it, plus the two custom-graph variants.",
-        status: "partial",
+          "All three of the page's variants running side by side: the prebuilt middleware, and both custom graphs.",
+        status: "working",
         statusNote:
-          "The prebuilt variant is live. Both custom-graph variants are reference-only — the page only sketches the graph.",
+          "All three are live. The Python tabs give the node bodies; the graph wiring comes from the same page's TypeScript tabs.",
       },
       {
         path: "/shared-state/state-inputs-outputs",

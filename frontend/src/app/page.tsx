@@ -70,7 +70,7 @@ export default function Page() {
                     </Link>
                   </td>
                   <td className="py-2.5 pr-4 font-mono text-xs text-slate-600 dark:text-slate-400">
-                    {route.agentId}
+                    {[route.agentId, ...(route.extraAgentIds ?? [])].join(", ")}
                   </td>
                   <td className="py-2.5">
                     <StatusBadge status={route.status} />
