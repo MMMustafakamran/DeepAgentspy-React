@@ -50,47 +50,8 @@ BOOKED_SCHEMA = a2ui.load_schema(_SCHEMAS_DIR / "booked_schema.json")
 
 
 
-#======================== SOLUTION - DO NO USE UNTIL DOCS REFELCT IT ===============
-from langchain.tools import tool
-
-
-# class Flight(TypedDict):
-#     """The data the LLM fills in for the card.
-
-#     The page's `Flight` has thirteen keys because its schema renders a list of
-#     result rows; the schema this repo ships renders one itinerary card, so the
-#     fields are the four that card binds to. The reason for declaring it at all
-#     is the page's: LangChain serialises the TypedDict into the tool's JSON
-#     schema, and that is what tells the LLM what data to generate.
-#     """
-
-#     origin: str
-#     destination: str
-#     airline: str
-#     price: str
-
-
-# @tool
-# def search_flights(flight: Flight) -> str:
-#     """Search for flights and display the result as a rich card.
-
-#     Use 3-letter airport codes for origin and destination, and a price string
-#     like "$289".
-
-#     The card is rendered to the user by the time this returns — the JSON it
-#     returns is the surface descriptor, not a status. Call this once per trip,
-#     then reply with one short sentence.
-#     """
-#     return a2ui.render(
-#         operations=[
-#             a2ui.create_surface(SURFACE_ID, CATALOG_ID),
-#             a2ui.update_components(SURFACE_ID, FLIGHT_SCHEMA),
-#             a2ui.update_data_model(SURFACE_ID, dict(flight)),
-#         ],
-#     )
-
 #region search-flights
-
+from langchain.tools import tool
 
 class Flight(TypedDict):
     id: str
@@ -107,34 +68,18 @@ class Flight(TypedDict):
     statusIcon: str
     price: str
 
+
+
 @tool
 def search_flights(flights: list[Flight]) -> str:
     """Search for flights and display results as rich cards."""
     return a2ui.render(
         operations=[
-            a2ui.surface_update(SURFACE_ID, FLIGHT_SCHEMA),
-            a2ui.data_model_update(SURFACE_ID, {"flights": flights}),
-            a2ui.begin_rendering(SURFACE_ID, "root"),
+            a2ui.create_surface(SURFACE_ID),
+            a2ui.update_components(SURFACE_ID, FLIGHT_SCHEMA),
+            a2ui.update_data_model(SURFACE_ID, {"flights": flights}),
         ],
-        action_handlers={
-            # Exact match: fires when a button with action.name="book_flight" is clicked
-            "book_flight": [
-                a2ui.surface_update(SURFACE_ID, BOOKED_SCHEMA),
-                a2ui.data_model_update(SURFACE_ID, {
-                    "title": "Booking Confirmed",
-                    "detail": "Your flight has been booked.",
-                }),
-                a2ui.begin_rendering(SURFACE_ID, "root"),
-            ],
-            # Catch-all: fires for any button action without a specific match
-            "*": [
-                a2ui.data_model_update(SURFACE_ID, {
-                    "status": "Action received",
-                }),
-            ],
-        },
     )
-
 
 
 #endregion

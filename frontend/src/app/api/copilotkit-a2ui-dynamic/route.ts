@@ -30,6 +30,9 @@ const runtime = new CopilotRuntime({
       langsmithApiKey: LANGSMITH_API_KEY,
     }),
   },
+  a2ui: {
+    injectA2UITool: true,
+  },
 });
 
 export const POST = async (req: NextRequest) => {
