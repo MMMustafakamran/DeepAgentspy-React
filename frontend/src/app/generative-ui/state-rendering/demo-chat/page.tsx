@@ -19,11 +19,13 @@ function SearchesPanel() {
     agentId: AGENT_ID,
   });
 
-  const searches =
-    (agent.state.searches as { query: string; done: boolean }[]) ?? [];
+  const state = (agent.state ?? {}) as {
+    searches?: { query: string; done: boolean }[];
+  };
+  const searches = state.searches ?? [];
 
   return (
-     <div>
+    <div>
       {searches.map((search, index) => (
         <div key={index}>
           {search.done ? "✅" : "⏳"} {search.query}
