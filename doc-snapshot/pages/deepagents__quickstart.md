@@ -1,6 +1,7 @@
 # Quickstart
 
 > Get started with Deep Agents and CopilotKit in minutes.
+
 <OpsPlatformCTA
   variant="card"
   title="Ship Deep Agents to production"
@@ -267,16 +268,13 @@ Before you begin, you'll need the following:
 
         <Tabs groupId="deployment_method" items={['Deep Agent', 'FastAPI']}>
             <Tab value="Deep Agent">
-                ```tsx title="app/api/copilotkit/route.ts"
+                ```tsx title="app/api/copilotkit/[[...slug]]/route.ts" doctest="component"
                 import {
-                    CopilotRuntime,
-                    ExperimentalEmptyAdapter,
-                    copilotRuntimeNextJSAppRouterEndpoint,
-                } from "@copilotkit/runtime";
+                  CopilotRuntime,
+                  createCopilotRuntimeHandler,
+                  InMemoryAgentRunner,
+                } from "@copilotkit/runtime/v2";
                 import { LangGraphAgent } from "@copilotkit/runtime/langgraph";
-                import { NextRequest } from "next/server";
-
-                const serviceAdapter = new ExperimentalEmptyAdapter();
 
                 const runtime = new CopilotRuntime({
                     agents: {
@@ -285,49 +283,44 @@ Before you begin, you'll need the following:
                             graphId: "sample_agent",
                             langsmithApiKey: process.env.LANGSMITH_API_KEY || "",
                         }),
-                    }
+                    },
+                  runner: new InMemoryAgentRunner(),
                 });
 
-                export const POST = async (req: NextRequest) => {
-                    const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
-                        runtime,
-                        serviceAdapter,
-                        endpoint: "/api/copilotkit",
-                    });
+                const handler = createCopilotRuntimeHandler({
+                  runtime,
+                  basePath: "/api/copilotkit",
+                });
 
-                    return handleRequest(req);
-                };
+                export const GET = handler;
+                export const POST = handler;
                 ```
             </Tab>
             <Tab value="FastAPI">
-                ```tsx title="app/api/copilotkit/route.ts"
+                ```tsx title="app/api/copilotkit/[[...slug]]/route.ts"
                 import {
-                    CopilotRuntime,
-                    ExperimentalEmptyAdapter,
-                    copilotRuntimeNextJSAppRouterEndpoint,
-                } from "@copilotkit/runtime";
+                  CopilotRuntime,
+                  createCopilotRuntimeHandler,
+                  InMemoryAgentRunner,
+                } from "@copilotkit/runtime/v2";
                 import { LangGraphHttpAgent } from "@copilotkit/runtime/langgraph";
-                import { NextRequest } from "next/server";
-
-                const serviceAdapter = new ExperimentalEmptyAdapter();
 
                 const runtime = new CopilotRuntime({
                     agents: {
                         sample_agent: new LangGraphHttpAgent({
                             url: process.env.LANGGRAPH_DEPLOYMENT_URL || "http://localhost:8123",
                         }),
-                    }
+                    },
+                  runner: new InMemoryAgentRunner(),
                 });
 
-                export const POST = async (req: NextRequest) => {
-                    const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
-                        runtime,
-                        serviceAdapter,
-                        endpoint: "/api/copilotkit",
-                    });
+                const handler = createCopilotRuntimeHandler({
+                  runtime,
+                  basePath: "/api/copilotkit",
+                });
 
-                    return handleRequest(req);
-                };
+                export const GET = handler;
+                export const POST = handler;
                 ```
             </Tab>
         </Tabs>
@@ -347,7 +340,7 @@ Before you begin, you'll need the following:
             return (
                 <html lang="en">
                     <body>
-                        <CopilotKit runtimeUrl="/api/copilotkit" agent="sample_agent">
+                        <CopilotKit runtimeUrl="/api/copilotkit" agent="sample_agent" useSingleEndpoint={false}>
                             {children}
                         </CopilotKit>
                     </body>
@@ -440,6 +433,18 @@ Before you begin, you'll need the following:
                 ```
             </Tab>
         </Tabs>
+    </Step>
+    <Step>
+        ### Open Inspector and confirm setup
+
+On localhost, click the Inspector button in the corner of the app.
+
+1. Open **Agents**, then **Agent**. Your agent is listed.
+2. Send a chat message. Open **Agents**, then **AG-UI Events**. Events are moving.
+3. Open **Threads**. The list is unlocked (Intelligence is on), or locked with Enable Intelligence (Intelligence is off).
+
+More detail: [Inspector](/deepagents/inspector).
+
     </Step>
 
 </Steps>
