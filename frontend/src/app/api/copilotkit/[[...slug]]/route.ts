@@ -1,10 +1,9 @@
 import {
   CopilotRuntime,
-  ExperimentalEmptyAdapter,
-  copilotRuntimeNextJSAppRouterEndpoint,
-} from "@copilotkit/runtime";
+  createCopilotRuntimeHandler,
+  InMemoryAgentRunner,
+} from "@copilotkit/runtime/v2";
 import { LangGraphAgent } from "@copilotkit/runtime/langgraph";
-import { NextRequest } from "next/server";
 
 import {
   A2UI_FIXED_GRAPH_ID,
@@ -20,7 +19,6 @@ import {
 // harness has one graph per doc route, so every id in `langgraph.json` gets a
 // `LangGraphAgent` pointed at the same dev server with its own `graphId`. The
 // constructor arguments are otherwise exactly the page's.
-const serviceAdapter = new ExperimentalEmptyAdapter();
 
 const agents = Object.fromEntries(
   GRAPH_IDS.map((graphId) => [
@@ -44,15 +42,14 @@ const runtime = new CopilotRuntime({
   // The dynamic-schema agent deliberately does not go through this runtime. It
   // has its own at /api/copilotkit-a2ui-dynamic, where injection has to stay
   // on — that is the whole mechanism of the Dynamic Schema page.
+  runner: new InMemoryAgentRunner(),
   a2ui: { injectA2UITool: false, agents: [A2UI_FIXED_GRAPH_ID] },
 });
 
-export const POST = async (req: NextRequest) => {
-  const { handleRequest } = copilotRuntimeNextJSAppRouterEndpoint({
-    runtime,
-    serviceAdapter,
-    endpoint: "/api/copilotkit",
-  });
+const handler = createCopilotRuntimeHandler({
+  runtime,
+  basePath: "/api/copilotkit",
+});
 
-  return handleRequest(req);
-};
+export const GET = handler;
+export const POST = handler;
