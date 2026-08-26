@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "docsRoot": "https://docs.copilotkit.ai/deepagents",
-  "syncedAt": "2026-08-25T06:23:53.614Z",
+  "syncedAt": "2026-08-26T10:23:57.993Z",
   "pages": {
     "/deepagents": {
       "file": "deepagents.md",
@@ -14,7 +14,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Tue, 25 Aug 2026 06:23:54 GMT"
+      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
     },
     "/deepagents/frontend-tools": {
       "file": "deepagents__frontend-tools.md",
@@ -26,7 +26,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Tue, 25 Aug 2026 06:23:54 GMT"
+      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
     },
     "/deepagents/generative-ui/a2ui/advanced": {
       "file": "deepagents__generative-ui__a2ui__advanced.md",
@@ -38,7 +38,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Tue, 25 Aug 2026 06:23:54 GMT"
+      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
     },
     "/deepagents/generative-ui/a2ui/dynamic-schema": {
       "file": "deepagents__generative-ui__a2ui__dynamic-schema.md",
@@ -50,7 +50,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Tue, 25 Aug 2026 06:23:54 GMT"
+      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
     },
     "/deepagents/generative-ui/a2ui/fixed-schema": {
       "file": "deepagents__generative-ui__a2ui__fixed-schema.md",
@@ -62,7 +62,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Tue, 25 Aug 2026 06:23:54 GMT"
+      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
     },
     "/deepagents/generative-ui/a2ui/styling": {
       "file": "deepagents__generative-ui__a2ui__styling.md",
@@ -74,7 +74,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Tue, 25 Aug 2026 06:23:54 GMT"
+      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
     },
     "/deepagents/generative-ui/state-rendering": {
       "file": "deepagents__generative-ui__state-rendering.md",
@@ -86,7 +86,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Tue, 25 Aug 2026 06:23:55 GMT"
+      "date": "Wed, 26 Aug 2026 10:23:59 GMT"
     },
     "/deepagents/generative-ui/tool-rendering": {
       "file": "deepagents__generative-ui__tool-rendering.md",
@@ -98,7 +98,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Tue, 25 Aug 2026 06:23:54 GMT"
+      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
     },
     "/deepagents/generative-ui/your-components/interrupt-based": {
       "file": "deepagents__generative-ui__your-components__interrupt-based.md",
@@ -110,19 +110,19 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Tue, 25 Aug 2026 06:23:54 GMT"
+      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
     },
     "/deepagents/quickstart": {
       "file": "deepagents__quickstart.md",
-      "sha256": "8415e0cdd54074c7b77995fbb988b309119f5af9de4f4729a5543b8fbb763fa7",
-      "bytes": 15483,
-      "lines": 451,
+      "sha256": "8d89c1891579b0c5aca462be4f7677638bac5447470a8b9cfdb98d93e1852ed0",
+      "bytes": 17642,
+      "lines": 490,
       "routes": [
         "/quickstart"
       ],
       "status": "ok",
       "age": 0,
-      "date": "Tue, 25 Aug 2026 06:23:54 GMT"
+      "date": "Wed, 26 Aug 2026 10:23:58 GMT"
     },
     "/deepagents/shared-state/in-app-agent-read": {
       "file": "deepagents__shared-state__in-app-agent-read.md",
@@ -134,7 +134,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Tue, 25 Aug 2026 06:23:54 GMT"
+      "date": "Wed, 26 Aug 2026 10:23:59 GMT"
     },
     "/deepagents/shared-state/in-app-agent-write": {
       "file": "deepagents__shared-state__in-app-agent-write.md",
@@ -146,7 +146,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Tue, 25 Aug 2026 06:23:55 GMT"
+      "date": "Wed, 26 Aug 2026 10:23:59 GMT"
     },
     "/deepagents/shared-state/predictive-state-updates": {
       "file": "deepagents__shared-state__predictive-state-updates.md",
@@ -158,7 +158,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Tue, 25 Aug 2026 06:23:55 GMT"
+      "date": "Wed, 26 Aug 2026 10:23:59 GMT"
     },
     "/deepagents/shared-state/state-inputs-outputs": {
       "file": "deepagents__shared-state__state-inputs-outputs.md",
@@ -170,7 +170,7 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Tue, 25 Aug 2026 06:23:55 GMT"
+      "date": "Wed, 26 Aug 2026 10:23:59 GMT"
     },
     "/deepagents/shared-state/workflow-execution": {
       "file": "deepagents__shared-state__workflow-execution.md",
@@ -182,11 +182,11 @@
       ],
       "status": "ok",
       "age": 0,
-      "date": "Tue, 25 Aug 2026 06:23:55 GMT"
+      "date": "Wed, 26 Aug 2026 10:23:59 GMT"
     }
   },
   "sitemap": {
-    "fetchedAt": "2026-08-25T06:23:53.614Z",
+    "fetchedAt": "2026-08-26T10:23:57.993Z",
     "urlsUnderRoot": 137,
     "knownUnmapped": [
       "https://docs.copilotkit.ai/deepagents/agent-config",
