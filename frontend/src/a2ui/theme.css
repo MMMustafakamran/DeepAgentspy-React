@@ -17,21 +17,26 @@
  * below, which is what it was evidently meant to be. See the Styling route.
  */
 
-@import url('https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Plus+Jakarta+Sans:wght@400;500;600;700&display=swap");
 
 .a2ui-surface {
   /* Colors */
-  --primary: #111111;
-  --primary-foreground: #ffffff;
-  --card: #ffffff;
-  --border: #e0e0e0;
+  --primary: #c22424;
+  --primary-foreground: #28c84b;
+  --card: #0c5bab;
+  --border: #89045b;
   --radius: 12px;
-  --foreground: #111111;
+  --foreground: #ccec17;
   --input: #d4d4d4;
-  --background: #fafafa;
+  --background: #d316a1;
 
   /* Typography */
-  font-family: "Plus Jakarta Sans", -apple-system, BlinkMacSystemFont, system-ui, sans-serif !important;
+  font-family:
+    "Plus Jakarta Sans",
+    -apple-system,
+    BlinkMacSystemFont,
+    system-ui,
+    sans-serif !important;
   letter-spacing: -0.01em;
 }
 
@@ -57,13 +62,13 @@
 
 /* Dark mode */
 .dark .a2ui-surface {
-  --primary: #e5e5e5;
-  --primary-foreground: #111111;
-  --card: #1a1a1a;
+  --primary: #d22626;
+  --primary-foreground: #1a3080;
+  --card: #21a02e;
   --border: #333333;
-  --foreground: #e5e5e5;
-  --input: #444444;
-  --background: #111111;
+  --foreground: #aeb61b;
+  --input: #950578;
+  --background: #d61212;
 }
 
 @media (prefers-color-scheme: dark) {

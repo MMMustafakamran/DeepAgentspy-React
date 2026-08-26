@@ -26,5 +26,9 @@ import type { ReactNode } from "react";
 const RUNTIME_URL = "/api/copilotkit";
 
 export function Providers({ children }: { children: ReactNode }) {
-  return <CopilotKit runtimeUrl={RUNTIME_URL}>{children}</CopilotKit>;
+  return (
+    <CopilotKit runtimeUrl={RUNTIME_URL} useSingleEndpoint={false}>
+      {children}
+    </CopilotKit>
+  );
 }
