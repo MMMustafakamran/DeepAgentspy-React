@@ -13,6 +13,7 @@
         "a2ui_fixed_agent": "./src/a2ui_fixed.py:agent",
         "a2ui_dynamic_agent": "./src/a2ui_dynamic.py:graph",
         "shared_state_agent": "./src/shared_state.py:agent",
+        "shared_state_fixed_agent": "./src/shared_state_fixed.py:agent",
         "predictive_state_agent": "./src/predictive_state.py:agent",
         "predictive_manual_graph": "./src/predictive_state_manual.py:graph",
         "predictive_tool_graph": "./src/predictive_state_tool.py:graph",

@@ -4,6 +4,7 @@ import { CopilotChat, useInterrupt } from "@copilotkit/react-core/v2";
 import { useState } from "react";
 
 import { DemoFrame } from "@/components/demo-frame";
+import { QaNote } from "@/components/qa-note";
 
 const SINGLE_AGENT_ID = "interrupt_agent";
 const MULTI_AGENT_ID = "interrupt_multi_agent";
@@ -164,6 +165,11 @@ export default function Page() {
       subtitle={`graph: ${variant === "single" ? SINGLE_AGENT_ID : MULTI_AGENT_ID}`}
     >
       <div className="flex h-full flex-col">
+        <QaNote
+          try="Say anything, give the agent a name when it asks, then ask what it is called."
+          expected="It answers with the name you gave it."
+          actual="It calls itself Deep Agent. The name was stored and never used."
+        />
         <div className="flex shrink-0 gap-2 border-b border-slate-200 px-4 py-2 dark:border-slate-800">
           {(
             [

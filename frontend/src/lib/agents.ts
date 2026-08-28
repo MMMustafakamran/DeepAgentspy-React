@@ -19,6 +19,10 @@ export const GRAPH_IDS = [
   "a2ui_fixed_agent",
   "a2ui_dynamic_agent",
   "shared_state_agent",
+  // The same agent with `CopilotKitMiddleware(expose_state=[...])`, which the
+  // two shared-state doc pages omit. Drives the `/fixed` demo routes, whose
+  // only purpose is to be recorded beside the failing one.
+  "shared_state_fixed_agent",
   "predictive_state_agent",
   // The two custom-graph variants of Predictive State Updates. Neither is a
   // Deep Agent: the page's Python tab gives their node bodies and its

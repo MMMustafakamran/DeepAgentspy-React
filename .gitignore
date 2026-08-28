@@ -30,3 +30,26 @@ __pycache__/
 # The snapshot itself (doc-snapshot/pages/, manifest.json, CHANGELOG.md)
 # IS committed; it is the baseline every diff is taken against.
 doc-snapshot/reports/
+
+# Autorecorder output. Recordings are build artifacts, reproducible via
+# `npm run record`; see autorecorder/videos/.gitignore for why committing them
+# is a mistake worth not repeating (17 clips at ~5MB, rewritten on every
+# re-record, took a sibling repo's .git to 348MB).
+autorecorder/videos/*.webm
+autorecorder/videos/.temp_chunks/
+
+# Run artifacts, regenerated every run by ci/automate.mjs.
+autorecorder/videos/RUN_REPORT.md
+autorecorder/videos/RUN_REPORT.json
+autorecorder/videos/RECORD_RESULTS*.json
+autorecorder/videos/DOCUMENTED_REPORT.md
+autorecorder/videos/logs/
+
+# Generated after install by ci/write-versions.mjs. Describes one run's
+# resolved dependency tree, so committing it would immediately be a lie.
+frontend/VERSIONS.md
+
+# The previous tester's handover: QA report and Loom recordings, kept locally
+# for context while the recorder is built against them. Not ours to publish,
+# and to be deleted once the takes reproduce what it describes.
+previous-testingoutcomes/

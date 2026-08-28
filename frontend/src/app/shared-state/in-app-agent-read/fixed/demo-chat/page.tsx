@@ -3,17 +3,23 @@
 import { CopilotChat, useAgent } from "@copilotkit/react-core/v2";
 
 import { DemoFrame } from "@/components/demo-frame";
-import { QaNote } from "@/components/qa-note";
 
-const AGENT_ID = "shared_state_agent";
-
-//#region read-state
 /**
- * The page's `YourMainContent`, read-only.
+ * The Reading agent state demo, against the graph the doc page is missing a line of.
  *
- * No subscription, no effect — `agent.state` is reactive, so this re-renders
- * whenever a state delta arrives over AG-UI.
+ * The React here is byte-for-byte the sibling at `../../demo-chat`. Only
+ * `AGENT_ID` differs, and it points at `shared_state_fixed_agent` --
+ * `src/shared_state_fixed.py`, which is `src/shared_state.py` plus
+ * `CopilotKitMiddleware(expose_state=["language"])` and a middleware that seeds
+ * the key on the first turn.
+ *
+ * That equality is the point. This route exists to be recorded immediately
+ * after the failing one, and the only claim the pair makes is that nothing on
+ * the frontend had to change. Edit this page and you have to make the same edit
+ * next door, or the comparison stops being one.
  */
+const AGENT_ID = "shared_state_fixed_agent";
+
 function YourMainContent() {
   const { agent } = useAgent({
     agentId: AGENT_ID,
@@ -36,25 +42,17 @@ function YourMainContent() {
     </div>
   );
 }
-//#endregion
 
 export default function Page() {
   return (
     <DemoFrame
       parentPath="/shared-state/in-app-agent-read"
-      subtitle={`graph: ${AGENT_ID}`}
+      subtitle={`with expose_state · graph: ${AGENT_ID}`}
     >
-      <div className="flex h-full flex-col">
-        <QaNote
-          try="Ask the agent to switch language, e.g. &ldquo;Set the language to Spanish.&rdquo;"
-          expected="Language on the left updates to spanish as the agent writes it."
-          actual="The agent answers in Spanish but the panel never updates."
-        />
-        <div className="grid min-h-0 flex-1 grid-cols-1 md:grid-cols-2">
+      <div className="grid h-full grid-cols-1 md:grid-cols-2">
         <YourMainContent />
         <div className="min-h-0 border-t border-slate-200 md:border-l md:border-t-0 dark:border-slate-800">
           <CopilotChat agentId={AGENT_ID} className="h-full" />
-        </div>
         </div>
       </div>
     </DemoFrame>

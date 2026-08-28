@@ -405,6 +405,63 @@ Commit `doc-snapshot/` — `pages/`, `manifest.json` and `CHANGELOG.md` are the 
 
 ---
 
+## Automated recording and the daily QA report
+
+`autorecorder/` records one demo video per doc page — read the doc, show the
+code in a simulated VS Code, then drive the live feature — and `ci/` runs the
+whole thing: drift check, dependency install, both servers, the recordings, and
+the report they are evidence for.
+
+```bash
+npm run automate           # everything, from a cold checkout
+npm run automate:issues    # only the pages with a known defect
+npm run record -- --list   # what is registered
+npm run record:doctor      # is the recorder's config still valid?
+```
+
+The pipeline is documented in [`ci/README.md`](ci/README.md); the recorder in
+[`autorecorder/README.md`](autorecorder/README.md).
+
+### Pages that are supposed to fail
+
+Five routes are on the QA report as broken, and their clips exist to **show**
+that rather than to work around it. Each declares a `knownIssue` in
+`autorecorder/config/pages.config.ts`, and that one object drives three things:
+the run reports `[ISSUE]` instead of `[PASS]` (and still exits 0, so five
+documented defects do not turn the nightly red), the recorder types the report
+into a simulated Notepad at the end of the clip, and `ci/build-report.mjs`
+renders it into `DOCUMENTED_REPORT.md`. The sentence on screen and the row that
+reaches a manager are the same string, written once.
+
+`[ISSUE]` means the page is on the known-issues list and recorded cleanly. It
+does **not** mean the defect was confirmed today — nothing automated can
+establish that. Watch the clip before sending the report on.
+
+### Paired routes
+
+Most of these defects are an absence — a label that never changes, a list that
+stays empty — and a clip of an absence invites one question: was the demo just
+wired up wrong? The answer has to be on screen, so where the fix is known the
+route is paired:
+
+| Doc's code, verbatim | Same page, with the omitted line |
+|---|---|
+| `/shared-state/in-app-agent-read` | `/shared-state/in-app-agent-read/fixed` |
+| `/shared-state/in-app-agent-write` | `/shared-state/in-app-agent-write/fixed` |
+
+The `/fixed` routes differ from their siblings by exactly one thing: they
+address `shared_state_fixed_agent` (`backend/src/shared_state_fixed.py`), which
+is `shared_state.py` plus `CopilotKitMiddleware(expose_state=["language"])` and
+a middleware that seeds the key on the first turn. Both omissions are §9 item 9
+below. Keep those files diffable — the value of the pair is that nothing else
+differs.
+
+Only pair a route where the fix is genuinely known. Two of these defects have no
+established fix; a `/fixed` route that quietly did something else would be worse
+evidence than no pair at all.
+
+---
+
 ## 11. Project structure
 
 ```
