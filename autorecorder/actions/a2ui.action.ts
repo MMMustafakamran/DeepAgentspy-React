@@ -65,7 +65,14 @@ export const runA2uiSurfaceAction: PageActionHandler = async (
   // A2UI surfaces arrive after the text does -- the operations container is
   // rendered once the tool result lands -- so the wait comes first and the
   // cursor moves afterwards.
-  await waitForAgentResponseCompletion(page, 1500, msgCount);
+  //
+  // 75s to start, not the default 30s. On the dynamic-schema agent a *second*
+  // model writes the whole component tree before the first word is said, and
+  // 30s was a coin flip: Dynamic Schema and Advanced cleared it on CI while
+  // Styling -- same agent, same runtime, same prompt -- did not, and was
+  // reported as a dead page. A limit that fails one of three identical calls is
+  // measuring the limit, not the app.
+  await waitForAgentResponseCompletion(page, 1500, msgCount, undefined, 75000);
   await restOnSurface(page, config.waitAfterPromptMs ?? 5000);
 };
 
@@ -116,7 +123,7 @@ export const runA2uiFixedSchemaAction: PageActionHandler = async (
     }
     if (catalogErrors.length === 0) {
       console.warn(
-        `   ⚠️ [A2UI Fixed] Nothing matched /catalog|a2ui/ -- the reported defect may ` +
+        `   ⚠️ [A2UI Fixed] Nothing matched /catalog/ -- the reported defect may ` +
           `not have reproduced. Watch the clip before filing this one.`,
       );
     }

@@ -77,7 +77,21 @@ function readResults() {
       continue;
     }
     meta ??= parsed;
-    for (const r of parsed.results ?? []) byId.set(r.id, r);
+
+    // Staleness is decided per file, against that file's own `generatedAt`.
+    //
+    // Comparing every row to the newest stamp in the whole set was wrong, and
+    // wrong in the worst direction: three shards finish minutes apart, so a
+    // fifteen-page run produced three timestamps and the report told the reader
+    // that ten freshly-recorded pages were carried over from an earlier run.
+    //
+    // A file's `generatedAt` is exactly the stamp its own run wrote, so a row
+    // older than it is carried forward and a row equal to it is fresh. No
+    // heuristics, no time windows, and it holds whether there is one file or
+    // twenty.
+    for (const r of parsed.results ?? []) {
+      byId.set(r.id, { ...r, stale: !r.recordedAt || r.recordedAt !== parsed.generatedAt });
+    }
   }
 
   // Registry order, so the report reads in doc-nav order however the shards
@@ -163,15 +177,11 @@ export function buildDocumentedReport(outPath) {
   // ages, and a stale row reads exactly like a fresh one. Say so when it
   // happens, and name the oldest, rather than letting the date at the top imply
   // every row was produced then.
-  const stamps = results.map((r) => r.recordedAt).filter(Boolean).sort();
-  const newest = stamps[stamps.length - 1];
-
-  // An undated row is a row written before entries carried a timestamp. Treat it
-  // as unknown age rather than current: the failure mode being guarded against
-  // is a stale row that reads exactly like a fresh one, and "no date" reads
-  // fresher than an old date does.
+  // `stale` is set per file in readResults. An undated row counts as stale:
+  // the failure mode being guarded against is an old row that reads exactly
+  // like a fresh one, and "no date" reads fresher than an old date does.
   const stale = results
-    .filter((r) => r.recordedAt !== newest)
+    .filter((r) => r.stale)
     .map((r) => `${r.name} (${r.recordedAt ?? 'age unknown'})`);
 
   if (stale.length > 0) {

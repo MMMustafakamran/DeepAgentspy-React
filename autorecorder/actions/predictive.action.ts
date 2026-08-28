@@ -1,5 +1,5 @@
 import { type Page } from 'playwright';
-import { sendPrompt, waitForAgentResponseCompletion } from '../core/actions';
+import { AgentSilentError, sendPrompt, waitForAgentResponseCompletion } from '../core/actions';
 import { writeIssueNote } from '../core/issue-note';
 import { humanClick, humanGlide, sleep } from '../core/overlays/cursor';
 import { type PageActionHandler, type PageRecordConfig } from '../core/types';
@@ -70,15 +70,37 @@ async function runVariant(
   config: PageRecordConfig,
   key: VariantKey,
   startTimeoutMs = 30000,
+  waitForStepsMs = 0,
 ): Promise<void> {
   await selectVariant(page, key);
 
   const msgCount = await sendPrompt(page, config.prompt, { timeoutMs: 12000 });
 
+  // On the custom graphs the steps are the evidence, and on the manual one they
+  // are the *only* evidence -- it renders them and then never replies. Waiting
+  // for them here means the clip shows the thing that worked before the take
+  // runs out of patience on the thing that did not.
+  //
+  // Not done on `prebuilt`: its finding is that no step ever appears, so a wait
+  // there buys a minute of dead video to prove what an empty panel already says.
+  if (waitForStepsMs > 0) {
+    const appeared = await page
+      .locator('h3:has-text("Steps"), ul li')
+      .first()
+      .waitFor({ state: 'visible', timeout: waitForStepsMs })
+      .then(() => true)
+      .catch(() => false);
+    console.log(
+      appeared
+        ? `   ✓ Steps rendered on "${TABS[key]}".`
+        : `   ⚠️ No steps rendered on "${TABS[key]}" within ${waitForStepsMs / 1000}s.`,
+    );
+  }
+
   // Mid-stream is the only moment the steps are interesting: this is when rows
   // should be filling in. Waiting for the reply first and looking afterwards
   // shows the aftermath rather than the behaviour.
-  await sleep(2200);
+  await sleep(waitForStepsMs > 0 ? 600 : 2200);
   await restOnSteps(page, 2200);
 
   await waitForAgentResponseCompletion(
@@ -142,17 +164,38 @@ export const runPredictivePrebuiltAction: PageActionHandler = async (
 /**
  * The two custom-graph variants, each as its own take.
  *
- * 90s rather than the default 30s, and still fatal: on these pages the graph IS
- * the subject, so silence is a real finding and must fail. What 30s was doing
- * was reporting a graph measured at 50s as dead, which is a different claim and
- * a wrong one.
+ * 90s to start rather than the default 30s. These graphs emit four steps a
+ * second apart before they say anything, and one has been measured at 50s end
+ * to end; 30s was reporting a working graph as dead.
  */
 const CUSTOM_GRAPH_START_TIMEOUT_MS = 90000;
 
+/**
+ * Manual: the steps render and the reply never comes.
+ *
+ * That silence is the finding -- the QA report records it and three runs have
+ * now reproduced it -- so it is caught here rather than left to propagate. The
+ * engine would report `[ISSUE]` either way thanks to `expectsNoResponse`, but
+ * an exception escaping this handler would skip the Notepad note, and a defect
+ * take that does not write its own report is half a take.
+ */
 export const runPredictiveManualAction: PageActionHandler = async (page, config) => {
-  await runVariant(page, config, 'manual', CUSTOM_GRAPH_START_TIMEOUT_MS);
+  try {
+    await runVariant(page, config, 'manual', CUSTOM_GRAPH_START_TIMEOUT_MS, 45000);
+    console.warn(
+      `   ⚠️ [Predictive manual] The agent DID reply this time -- the documented ` +
+        `defect did not reproduce. Check whether it has been fixed before filing it again.`,
+    );
+  } catch (e) {
+    if (!(e instanceof AgentSilentError)) throw e;
+    console.log(`   🐞 [Predictive manual] Steps rendered, no reply -- as reported.`);
+  }
+
+  if (config.knownIssue) {
+    await writeIssueNote(page, config.id, config.knownIssue);
+  }
 };
 
 export const runPredictiveToolAction: PageActionHandler = async (page, config) => {
-  await runVariant(page, config, 'tool', CUSTOM_GRAPH_START_TIMEOUT_MS);
+  await runVariant(page, config, 'tool', CUSTOM_GRAPH_START_TIMEOUT_MS, 45000);
 };

@@ -355,6 +355,30 @@ export const PAGES = definePages([
     ],
     prompt: 'Plan a three-step research task about solar panel recycling and report each step.',
     waitAfterPromptMs: 5000,
+    knownIssue: {
+      area:
+        'Deep Agents - App control - Shared state - State streaming - Custom graph (manual)',
+      problem:
+        'The steps render correctly, but the agent never sends a reply to the chat. The run ' +
+        'finishes with the progress list filled in and no assistant message at all.',
+      impact:
+        'The variant is only half usable: progress is visible, but the user never gets an ' +
+        'answer, so the graph cannot be used for anything conversational.',
+      likelyCause:
+        'The node emits state and ends without appending an assistant message to the graph ' +
+        "output, so there is nothing for the frontend to render as a reply.",
+      // The finding IS the silence, so it must not be read as a broken take.
+      expectsNoResponse: true,
+      note: [
+        'predictive custom graph manual - steps show but no reply',
+        '',
+        'asked for a multi step task',
+        'the steps list fills in fine so state streaming works',
+        '',
+        'but the agent never answers in the chat. waited 90s',
+        'tool based variant does reply so its specific to the manual graph',
+      ].join('\n'),
+    },
   },
   {
     id: 'predictive-tool',
