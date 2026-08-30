@@ -8,6 +8,62 @@ Holds the 3 most recent dated entries. When a change lands on a fourth
 date, the oldest entry is dropped. Entries are counted, not aged, so a gap of
 weeks between changes does not expire anything.
 
+## 2026-08-30
+
+### 13:45 UTC — 3 pages, highest severity high
+
+**High — Interrupt-based HITL**
+
+`/deepagents/generative-ui/your-components/interrupt-based` · route `/generative-ui/your-components/interrupt-based` · under “Set up your agent state” · in a `python` block
+
+78 code lines, 1 heading, 7 prose lines changed.
+
+````diff
+- # ...
+- from copilotkit import CopilotKitState # extends MessagesState
+- # ...
++ from typing import NotRequired
+- # This is the state of the agent.
+- # It inherits from the CopilotKitState properties from CopilotKit.
++ from copilotkit import CopilotKitState
++ 
+````
+
+**High — Predictive State Updates**
+
+`/deepagents/shared-state/predictive-state-updates` · route `/shared-state/predictive-state-updates` · under “Emit the intermediate state” · in a `python` block
+
+46 code lines changed.
+
+````diff
++ import uuid
++ 
++ from copilotkit import CopilotKitState
+- from langgraph.types import Command
+- from langgraph.graph import END
+- from langchain.tools import tool
+- from langchain_openai import ChatOpenAI
+- from langchain_core.messages import SystemMessage, AIMessage
+````
+
+**Low — Quickstart**
+
+`/deepagents/quickstart` · route `/quickstart` · under “Quickstart”
+
+7 prose lines changed.
+
+````diff
+- <OpsPlatformCTA
+- variant="card"
+- title="Ship Deep Agents to production"
+- body="Add persistent threads and the inspector with CopilotKit Intelligence."
+- ctaLabel="Create a free account"
++ <IntelligenceOnboardingPrompt
++ feature="learning"
+````
+
+---
+
 ## 2026-08-26
 
 ### 10:23 UTC — 2 pages, highest severity high
@@ -45,6 +101,8 @@ weeks between changes does not expire anything.
 + ```tsx title="app/api/copilotkit/[[...slug]]/route.ts" doctest="component"
 - CopilotRuntime,
 ````
+
+---
 
 ---
 
