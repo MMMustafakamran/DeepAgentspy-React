@@ -22,48 +22,95 @@ async def chat_node(state: AgentState, config: RunnableConfig) -> Command[Litera
 
     # ...`;
 
-const DOC_TOOL = `from copilotkit.langgraph import copilotkit_customize_config
+const DOC_TOOL = `import uuid
 # ... (full imports on the doc page)
 
-@tool
-def step_progress_tool(steps: list[str]):
-    """Reads and reports steps"""
+class AgentState(CopilotKitState):
+    observed_steps: list[str]
 
-async def frontend_actions_node(state: AgentState, config: RunnableConfig):
-    config = copilotkit_customize_config(
+@tool
+def step_progress_tool(steps: list[str], runtime: ToolRuntime) -> Command:
+    """Report the current steps being executed."""
+    return Command(
+        update={
+            "observed_steps": steps,
+            "messages": [
+                ToolMessage(
+                    content="Steps recorded to shared state.",
+                    name="step_progress_tool",
+                    id=str(uuid.uuid4()),
+                    tool_call_id=runtime.tool_call_id,
+                )
+            ],
+        }
+    )
+
+tools = [step_progress_tool]
+model = ChatOpenAI(model="gpt-5.4")
+
+async def chat_node(state: AgentState, config: RunnableConfig):
+    streaming_config = copilotkit_customize_config(
         config,
         emit_intermediate_state=[
             {
                 "state_key": "observed_steps",
                 "tool": "step_progress_tool",
-                "tool_argument": "steps"
+                "tool_argument": "steps",
             },
         ]
     )
 
-    system_message = SystemMessage(
-        content=f"You are a task performer. Pretend doing tasks you are given, report the steps using step_progress_tool."
-    )
-
-    model = ChatOpenAI(model="gpt-4").bind_tools(
+    model_with_tools = model.bind_tools(
         [
             *state["copilotkit"]["actions"],
-            step_progress_tool
+            *tools,
         ],
+        parallel_tool_calls=False,
     )
 
-    response = await model.ainvoke([system_message, *state["messages"]], config)
+    response = await model_with_tools.ainvoke(
+        [
+            SystemMessage(
+                content="You are a task performer. Report your steps "
+                "using step_progress_tool."
+            ),
+            *state["messages"],
+        ],
+        streaming_config,
+    )
+    return {"messages": [response]}
 
-    if isinstance(response, AIMessage) and response.tool_calls and response.tool_calls[0].get("name") == 'step_progress_tool':
-        return Command(
-            goto=END,
-            update={
-                "messages": response,
-                "observed_steps": response.tool_calls[0].get("args", None).get('steps')
-            }
-        )
+def route_after_chat(state: AgentState):
+    last_message = state["messages"][-1]
+    if not isinstance(last_message, AIMessage) or not last_message.tool_calls:
+        return END
 
-    return Command(goto=END, update={"messages": response})`;
+    frontend_action_names = {
+        action["name"] for action in state["copilotkit"]["actions"]
+    }
+    if any(
+        call["name"] not in frontend_action_names
+        for call in last_message.tool_calls
+    ):
+        return "tool_node"
+
+    # Frontend action calls are returned to CopilotKit for execution in the UI.
+    return END
+
+workflow = (
+    StateGraph(AgentState)
+    .add_node("chat_node", chat_node)
+    .add_node("tool_node", ToolNode(tools))
+    .add_edge(START, "chat_node")
+    .add_edge("tool_node", "chat_node")
+    .add_conditional_edges(
+        "chat_node",
+        route_after_chat,
+        ["tool_node", END],
+    )
+)
+
+graph = workflow.compile(checkpointer=MemorySaver())`;
 
 export default function Page() {
   return (
@@ -130,8 +177,10 @@ export default function Page() {
         <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
           Full control: you call <code>copilotkit_emit_state</code> yourself
           wherever you want a checkpoint. Four fixed steps, one second apart, so
-          the pacing is visible. No Deep Agent involved — one node, two edges,
-          compiled with a <code>MemorySaver</code>.
+          the pacing is visible. No Deep Agent involved — one node, two edges.
+          The doc&apos;s TypeScript tab compiles with a{" "}
+          <code>MemorySaver</code>; this graph cannot, for the reason set out
+          under Variant 3.
         </p>
         <div className="mt-4">
           <TryIt
@@ -212,7 +261,7 @@ export default function Page() {
           <SourceCodeGroup
             files={[
               { file: "backend/src/predictive_state_tool.py", region: "agent-state" },
-              { file: "backend/src/predictive_state_tool.py", region: "frontend-actions-node" },
+              { file: "backend/src/predictive_state_tool.py", region: "chat-node" },
               { file: "backend/src/predictive_state_tool.py", region: "graph" },
             ]}
           />
@@ -227,13 +276,51 @@ export default function Page() {
           <CodeBlock code={DOC_TOOL} language="python" filename="the doc page" />
         </div>
         <p className="mt-3 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
-          Only the state class and the graph builder are missing, and both come
-          from the same page. No <code>ToolNode</code> here, unlike the
-          TypeScript tab: this node routes to <code>END</code> on both paths, so
-          the tool is never executed — the model&apos;s <em>argument</em> is the
-          payload, which is why the tool body is empty.
+          Since the 30 Aug revision this snippet is complete — state class,
+          tool, node, router, graph and <code>compile</code> are all on the
+          page. The tool is no longer an empty body whose <em>argument</em> was
+          the whole payload: it takes a <code>ToolRuntime</code> and returns a{" "}
+          <code>Command</code> that writes <code>observed_steps</code> and
+          appends a <code>ToolMessage</code>, so it actually executes, and
+          there is now a real <code>ToolNode</code> with a{" "}
+          <code>route_after_chat</code> edge to run it.{" "}
+          <code>emit_intermediate_state</code> still streams the{" "}
+          <code>steps</code> argument as the model writes it — that half is
+          unchanged; what the tool&apos;s <code>Command</code> replaced is the
+          old <code>Command(goto=END, ...)</code> reconciliation.
         </p>
       </Panel>
+
+      <Callout
+        tone="warn"
+        title="The published compile call takes the whole server down"
+      >
+        <p>
+          Variant 3 now ends with{" "}
+          <code>
+            graph = workflow.compile(checkpointer=MemorySaver())
+          </code>
+          . That line cannot run on the server these same docs tell you to use.{" "}
+          <code>langgraph dev</code> rejects a graph carrying its own
+          checkpointer — <em>&ldquo;includes a custom checkpointer … persistence
+          is handled automatically by the platform&rdquo;</em> — and the load
+          error is fatal: <code>Application startup failed. Exiting.</code>
+        </p>
+        <p className="mt-2">
+          It is not scoped to this graph. Startup aborts for the whole app, so
+          all fifteen graphs in <code>langgraph.json</code> go down together and
+          every route in this harness becomes unreachable, not just this one.
+          Verified against <code>langgraph-api 0.12.0</code>.
+        </p>
+        <p className="mt-2">
+          This repo keeps broken pages broken so the clip can show the defect,
+          but a defect that stops the server booting cannot be filmed — it only
+          removes every clip. So the checkpointer is the one line dropped from
+          the otherwise-verbatim snippet, and it is reported here instead. The
+          page gives no hint that <code>MemorySaver</code> applies only when the
+          graph runs standalone.
+        </p>
+      </Callout>
 
       <Callout tone="warn" title="state['copilotkit']['actions'] goes in unconverted">
         <p>

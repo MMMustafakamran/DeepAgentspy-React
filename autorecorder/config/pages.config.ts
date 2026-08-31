@@ -103,7 +103,7 @@ export const PAGES = definePages([
     endLine: 39,
     // The `agents` region, because `_SYSTEM_PROMPT` is where the defect lives:
     // the hook stores the name in `agent_name` and the prompt never reads it.
-    extraTabs: [{ filePath: 'backend/src/interrupt_based.py', startLine: 64, endLine: 100 }],
+    extraTabs: [{ filePath: 'backend/src/interrupt_based.py', startLine: 73, endLine: 116 }],
     prompt: 'Hello, can you help me with something?',
     prompts: ['Hello, can you help me with something?', 'What should I call you?'],
     waitAfterPromptMs: 4000,
@@ -118,6 +118,13 @@ export const PAGES = definePages([
       likelyCause:
         'The system prompt does not read the stored state value holding the name, so the model ' +
         'falls back to its default identity even though `agent_name` was written.',
+      // Filed against the pre-30-Aug doc. That revision changed both halves of
+      // this exact cause: the system prompt now names `agent_name` and tells
+      // the model to use it, and `CopilotKitMiddleware(expose_state=
+      // ["agent_name"])` exposes the value the hook writes. The harness was
+      // updated to match, so this recording is the re-check -- if the agent
+      // answers with the name it was given, the issue is resolved upstream and
+      // this entry comes out.
       note: [
         'interrupt based - name is not used',
         '',
@@ -387,13 +394,44 @@ export const PAGES = definePages([
     docPath: 'shared-state/predictive-state-updates?agent-type=custom-graph',
     route: 'shared-state/predictive-state-updates',
     ideFile: 'backend/src/predictive_state_tool.py',
-    startLine: 37,
-    endLine: 91,
+    startLine: 49,
+    endLine: 134,
+    // The `graph` region, because the checkpointer note is where the defect
+    // lives -- the page's own compile call is the thing that cannot run.
     extraTabs: [
-      { filePath: 'backend/src/predictive_state_tool.py', startLine: 94, endLine: 104 },
+      { filePath: 'backend/src/predictive_state_tool.py', startLine: 137, endLine: 180 },
     ],
     prompt: 'Plan a three-step research task about solar panel recycling and report each step.',
     waitAfterPromptMs: 5000,
+    knownIssue: {
+      area:
+        'Deep Agents - App control - Shared state - State streaming - Custom graph (tool-based)',
+      problem:
+        "The snippet's last line, `graph = workflow.compile(checkpointer=MemorySaver())`, " +
+        'cannot run on the server the same docs tell you to use. `langgraph dev` raises ' +
+        'ValueError on a graph that carries its own checkpointer and then exits.',
+      impact:
+        'Copying the page as published does not yield a degraded page -- it yields no server. ' +
+        'The load error aborts startup for the whole app, so all fifteen graphs in ' +
+        'langgraph.json go down together and every route in the harness is unreachable, not ' +
+        'just this one.',
+      likelyCause:
+        'LangGraph API manages persistence itself and rejects a user-supplied checkpointer. ' +
+        'The page adds MemorySaver without noting that it only applies when the graph is run ' +
+        'standalone, not under `langgraph dev` / LangGraph Platform.',
+      note: [
+        'predictive tool based - published compile call kills the server',
+        '',
+        'new 30 aug revision ends with compile(checkpointer=MemorySaver())',
+        'pasted it in verbatim and langgraph dev refused to boot at all',
+        '',
+        'ValueError ... includes a custom checkpointer ... Application startup failed. Exiting.',
+        'langgraph-api 0.12.0',
+        '',
+        'not just this graph - the whole app dies so nothing else records either',
+        'had to drop the checkpointer to get a run at all, see the note in the file',
+      ].join('\n'),
+    },
   },
   {
     id: 'state-inputs-outputs',

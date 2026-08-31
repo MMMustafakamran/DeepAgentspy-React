@@ -68,13 +68,28 @@ export default function Page() {
         </p>
       </Callout>
 
-      <Callout tone="warn" title="Two gaps in the page">
+      <Callout tone="info" title="Closed by the 30 Aug revision">
         <p>
-          <strong>No agent is ever constructed.</strong> The page shows the
-          middleware classes and stops. The two{" "}
-          <code>create_deep_agent</code> calls in the <code>agents</code> block
-          above are written to the shape it describes.
+          This route used to report that the page never constructed an agent —
+          it showed the middleware classes and stopped. The 30 Aug revision
+          prints the <code>create_deep_agent</code> call end to end, including
+          the{" "}
+          <code>CopilotKitMiddleware(expose_state=[&quot;agent_name&quot;])</code>{" "}
+          entry that replaced the old &ldquo;add{" "}
+          <code>copilotkitMiddleware</code> to the graph&rdquo; instruction, and
+          a system prompt that names <code>agent_name</code> and tells the model
+          to use it. <code>agent</code> in the <code>agents</code> block above is
+          now that call verbatim, and the optional state field is{" "}
+          <code>NotRequired[str]</code> rather than a bare <code>str</code>.
         </p>
+        <p className="mt-2">
+          That is also the exact cause this route had filed against it — the
+          name reaching state but never reaching the prompt. Whether the fix
+          lands is what the next recording checks.
+        </p>
+      </Callout>
+
+      <Callout tone="warn" title="One gap left in the page">
         <p className="mt-2">
           <strong>
             The second <code>AgentState</code> is elided.

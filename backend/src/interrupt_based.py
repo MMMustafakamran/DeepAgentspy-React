@@ -10,24 +10,33 @@ Two agents, one per section of the page:
   hook, each carrying a `type` the frontend's `useInterrupt({ enabled })`
   predicates dispatch on.
 
-Both classes and the `AgentState` are the page's Python verbatim. What the page
-never shows is the `create_deep_agent(...)` call that consumes them, so those
-two calls at the bottom are written to the shape the page describes.
+The `AgentState`, both middleware classes and the `create_deep_agent` call for
+`agent` are the page's Python verbatim as of the 30 Aug revision, which now
+prints that call end to end — including the `CopilotKitMiddleware(expose_state=
+["agent_name"])` entry that replaced the old "add copilotkitMiddleware to the
+graph" instruction. `multi_agent` is still not a call the page shows, so it
+stays written to the shape the page describes.
+
+`model=` is the one deliberate departure: the page hardcodes `openai:gpt-4o`
+and every agent in this backend reads `src.shared.MODEL` instead, so a tester
+needs access to one model rather than four. See `src/shared.py`.
 """
 
 from typing import Any
 
 #region agent-state
-from copilotkit import CopilotKitState  # extends MessagesState
+from typing import NotRequired
+
+from copilotkit import CopilotKitState
 
 
-# This is the state of the agent.
-# It inherits from the CopilotKitState properties from CopilotKit.
 class AgentState(CopilotKitState):
-    agent_name: str
+    agent_name: NotRequired[str]
 #endregion
 
 #region single-interrupt
+from copilotkit import CopilotKitMiddleware
+from deepagents import create_deep_agent
 from langchain.agents.middleware import AgentMiddleware
 from langgraph.runtime import Runtime
 from langgraph.types import interrupt
@@ -62,19 +71,22 @@ class ApprovalAndNameMiddleware(AgentMiddleware[AgentState, Any]):
 #endregion
 
 #region agents
-from deepagents import create_deep_agent
-
 from src.shared import MODEL
 
+# The page's prompt verbatim. The comma splice after "chooses a name" is the
+# page's own -- the sentence never finishes that clause before starting a new
+# one. Left as published; it is reported, not fixed.
 _SYSTEM_PROMPT = (
-    "You are a helpful assistant. Once the user has given you a name, use it "
-    "when you refer to yourself."
+    "You are a helpful assistant. After the user chooses a name, "
+    "Current agent state contains agent_name. Use that value as your own name."
 )
 
 agent = create_deep_agent(
     model=MODEL,
-    tools=[],
-    middleware=[AgentNameMiddleware()],
+    middleware=[
+        AgentNameMiddleware(),
+        CopilotKitMiddleware(expose_state=["agent_name"]),
+    ],
     system_prompt=_SYSTEM_PROMPT,
 )
 
@@ -91,10 +103,14 @@ class MultiInterruptMiddleware(ApprovalAndNameMiddleware):
     state_schema = MultiInterruptState
 
 
+# The page never prints this call, so `expose_state` here is the page's new
+# pattern applied to this agent's own state rather than a quoted snippet.
 multi_agent = create_deep_agent(
     model=MODEL,
-    tools=[],
-    middleware=[MultiInterruptMiddleware()],
+    middleware=[
+        MultiInterruptMiddleware(),
+        CopilotKitMiddleware(expose_state=["agent_name", "approval"]),
+    ],
     system_prompt=_SYSTEM_PROMPT,
 )
 #endregion
