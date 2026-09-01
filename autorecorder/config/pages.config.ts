@@ -402,31 +402,32 @@ export const PAGES = definePages([
       area:
         'Deep Agents - App Control - State Streaming - Custom Graph - Manually Predictive',
       problem:
-        'The steps render, then the run dies with `Recursion limit of 25 reached without ' +
-        'hitting a stop condition`. No assistant message is ever sent, so the chat just ' +
-        'stays silent.',
+        'The steps render while the run is in flight and then vanish, and the agent never ' +
+        'replies. The run completes with an empty chat and nothing kept in state.',
       impact:
-        'The variant cannot answer at all. The page presents this graph as a working custom ' +
-        'graph, and following it as printed produces a run that always terminates on the ' +
-        'recursion limit instead of replying.',
+        'The variant is unusable as published: the user gets no answer, and the progress the ' +
+        'page is about does not survive the run it was emitted during, so nothing in the app ' +
+        'can read it afterwards.',
       likelyCause:
-        "The page's `chat_node` is printed with its body ending in `# ...` and no return, so " +
-        'it yields no state update and no message. Nothing on the page raises ' +
-        '`recursion_limit` either -- LangGraph stamps the default 25 and the run hits it. ' +
-        'Why a single-node graph re-enters at all is not yet established; the error is ' +
-        'recorded as observed rather than explained.',
+        "The page's `chat_node` body ends at `# ...` with no return statement, so it returns " +
+        '`None`. `copilotkit_emit_state` streams each step to the frontend as it goes, which ' +
+        'is why the rows appear live, but a node returning `None` contributes no state update ' +
+        'and no message, so the graph ends with neither. Invoking the graph directly confirms ' +
+        'it: the run returns HTTP 200 with `observed_steps` absent and the human turn as the ' +
+        'only message. The page never shows what `chat_node` is supposed to return.',
       // The finding IS the silence, so it must not be read as a broken take.
       expectsNoResponse: true,
       note: [
-        'predictive custom graph manual - dies on the recursion limit',
+        'predictive custom graph manual - steps show, then no reply',
         '',
         'asked for a multi step task',
-        'the steps list fills in fine so state streaming works',
+        'the steps list fills in while it runs so the emit half works',
         '',
-        'then it errors - recursion limit of 25 reached without hitting a stop condition',
-        'says to raise it with the recursion_limit config key, page never mentions that',
+        'but the agent never answers, and the steps dont survive the run either',
+        'called the graph directly - comes back 200 with no observed_steps and no ai message',
         '',
-        'so no reply ever lands in the chat. tool based variant answers fine',
+        'the pages chat_node just ends at # ... with no return, so it returns None',
+        'a node returning None adds no message and no state. page never shows the return',
       ].join('\n'),
     },
   },

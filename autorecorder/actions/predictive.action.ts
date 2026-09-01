@@ -1,6 +1,5 @@
 import { type Page } from 'playwright';
 import { AgentSilentError, sendPrompt, waitForAgentResponseCompletion } from '../core/actions';
-import { captureConsole, findEntries } from '../core/console-capture';
 import { writeIssueNote } from '../core/issue-note';
 import { humanClick, humanGlide, sleep } from '../core/overlays/cursor';
 import { type PageActionHandler, type PageRecordConfig } from '../core/types';
@@ -142,15 +141,18 @@ export const runPredictivePrebuiltAction: PageActionHandler = async (
 const CUSTOM_GRAPH_START_TIMEOUT_MS = 90000;
 
 /**
- * Manual: the steps render, then the run dies on the recursion limit.
+ * Manual: the steps render, then nothing.
  *
- * The silence in the chat is the visible half; the reason is in the console --
- * `Recursion limit of 25 reached without hitting a stop condition`. Capture
- * starts before the prompt because the error arrives during the run, and the
- * matcher is `/recursion limit/i` rather than anything looser: this graph's own
- * name and agent id show up in most CopilotKit errors on the page, so a broad
- * pattern would match an unrelated failure and type it into the note as if it
- * were this one.
+ * The silence is the finding, and it needs no console error to explain it --
+ * the page's `chat_node` ends at `# ...` with no return, so the node yields no
+ * message and no state update. A direct call to the graph returns 200 with
+ * `observed_steps` absent and the human turn as the only message.
+ *
+ * There was a console matcher here hunting a recursion-limit error. It is gone:
+ * this graph is `__start__ -> chat_node -> __end__`, acyclic, one super-step,
+ * and structurally cannot reach a recursion limit. The matcher found nothing on
+ * every run and warned about it each time, which is noise pointing at the wrong
+ * graph -- the tool variant is the one with a `chat_node`/`tool_node` cycle.
  *
  * `AgentSilentError` is caught rather than allowed to propagate. The engine
  * reports `[ISSUE]` either way thanks to `expectsNoResponse`, but an exception
@@ -158,8 +160,6 @@ const CUSTOM_GRAPH_START_TIMEOUT_MS = 90000;
  * write its own report is half a take.
  */
 export const runPredictiveManualAction: PageActionHandler = async (page, config) => {
-  const capture = captureConsole(page);
-
   try {
     await runVariant(page, config, 'manual', CUSTOM_GRAPH_START_TIMEOUT_MS, 45000);
     console.warn(
@@ -170,26 +170,6 @@ export const runPredictiveManualAction: PageActionHandler = async (page, config)
     if (!(e instanceof AgentSilentError)) throw e;
     console.log(`   🐞 [Predictive manual] Steps rendered, no reply -- as reported.`);
   }
-
-  const recursion = findEntries(capture, /recursion limit/i, 2);
-  console.log(`   [Predictive manual] Recursion-limit errors captured: ${recursion.length}`);
-  for (const entry of recursion) {
-    console.log(`      · [${entry.level}] ${entry.text}${entry.source ? `  (${entry.source})` : ''}`);
-  }
-  if (recursion.length === 0) {
-    // Not fatal. The silence is still on tape and still the filed finding; what
-    // is missing is the sentence that explains it, and that is worth knowing
-    // before this clip is used to argue the cause.
-    console.warn(
-      `   ⚠️ [Predictive manual] Nothing matched /recursion limit/ this run. The take ` +
-        `still shows the silence, but the note's stated cause is unwitnessed -- watch it.`,
-    );
-    for (const entry of capture.entries.slice(0, 3)) {
-      console.warn(`      · [${entry.level}] ${entry.text}`);
-    }
-  }
-
-  capture.stop();
 
   if (config.knownIssue) {
     await writeIssueNote(page, config.id, config.knownIssue);
