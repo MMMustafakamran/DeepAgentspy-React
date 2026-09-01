@@ -198,40 +198,28 @@ export const PAGES = definePages([
       'frontend/src/app/generative-ui/your-components/interrupt-based/demo-chat/page.tsx',
     startLine: 12,
     endLine: 39,
-    // The `agents` region, because `_SYSTEM_PROMPT` is where the defect lives:
-    // the hook stores the name in `agent_name` and the prompt never reads it.
+    // The `agents` region, because `_SYSTEM_PROMPT` is the half of this that is
+    // worth reading: it names `agent_name` and tells the model to use it, which
+    // is what makes the name survive the interrupt.
     extraTabs: [{ filePath: 'backend/src/interrupt_based.py', startLine: 73, endLine: 116 }],
     prompt: 'Hello, can you help me with something?',
     prompts: ['Hello, can you help me with something?', 'What should I call you?'],
     waitAfterPromptMs: 4000,
-    knownIssue: {
-      area: 'Deep Agents - Generative UI - Your Components - Interrupt-Based',
-      problem:
-        'The interrupt renders and accepts a name, but the agent does not know it afterwards. ' +
-        'Asked what it should be called, it cannot give the name back.',
-      impact:
-        'The interrupt flow looks like it works while the value the user supplied is never used, ' +
-        'so any HITL step built on this pattern silently discards its input.',
-      likelyCause:
-        'The system prompt does not read the stored state value holding the name, so the model ' +
-        'falls back to its default identity even though `agent_name` was written.',
-      // Filed against the pre-30-Aug doc. That revision changed both halves of
-      // this exact cause: the system prompt now names `agent_name` and tells
-      // the model to use it, and `CopilotKitMiddleware(expose_state=
-      // ["agent_name"])` exposes the value the hook writes. The harness was
-      // updated to match, so this recording is the re-check -- if the agent
-      // answers with the name it was given, the issue is resolved upstream and
-      // this entry comes out.
-      note: [
-        'interrupt based - name is not remembered',
-        '',
-        'gave it the name Fiqros in the interrupt box then asked what its called',
-        'it doesnt know the name',
-        '',
-        'so whatever the user types into the interrupt never reaches the prompt',
-        'anything built on this loses the answer',
-      ].join('\n'),
-    },
+    // No `knownIssue`, as of 01 Sep 2026: the page works. The entry that was
+    // here filed the interrupt's name being lost, and it was written as an
+    // explicit re-check -- the 30-Aug doc revision had changed both halves of
+    // its stated cause, so the note said that if the agent came back with the
+    // name it was given, the finding was resolved upstream and the entry came
+    // out. It did, so it has.
+    //
+    // Removing it is what stops the Notepad report being typed at the end of
+    // the take: the action writes that note only when this field is present. A
+    // clip that still reports a fixed bug is worse than one that reports
+    // nothing, which is why this is a deletion rather than a comment-out.
+    //
+    // `git log -S 'name is not remembered' -- autorecorder/config/pages.config.ts`
+    // brings back the full text if this turns out to be intermittent. The
+    // narration filed against it is parked in `autorecorder/audio/on-hold/`.
   },
   // -- Generative UI -----------------------------------------------------------
   {

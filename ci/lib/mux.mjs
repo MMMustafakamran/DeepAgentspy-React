@@ -28,13 +28,18 @@ import { AUDIO_DIR, VIDEOS_DIR } from './config.mjs';
  * The match is on the `-<videoName>.webm` suffix rather than `includes`, so the
  * numeric prefix is ignored — the videos renumber whenever the nav order
  * changes — while a name that is a substring of another still cannot collide.
+ *
+ * Only the top level of `audio/` is scanned. `audio/on-hold/` is where a
+ * narration goes when its take should ship silent for now — a page whose defect
+ * has been fixed, so the commentary describes something the video no longer
+ * shows. Moving the file back is the whole of re-enabling it.
  */
 function discoverTracks() {
   if (!fs.existsSync(AUDIO_DIR)) return [];
   return fs
-    .readdirSync(AUDIO_DIR)
-    .filter((f) => f.toLowerCase().endsWith('.m4a'))
-    .map((audioFile) => ({ audioFile, videoName: path.basename(audioFile, path.extname(audioFile)) }));
+    .readdirSync(AUDIO_DIR, { withFileTypes: true })
+    .filter((e) => e.isFile() && e.name.toLowerCase().endsWith('.m4a'))
+    .map((e) => ({ audioFile: e.name, videoName: path.basename(e.name, path.extname(e.name)) }));
 }
 
 function hasFfmpeg() {
