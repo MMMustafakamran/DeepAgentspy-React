@@ -24,7 +24,7 @@ function YourMainContent() {
     agentId: AGENT_ID,
   });
 
-  const language = (agent.state.language as string) ?? "Not set";
+  const language = (agent.state.language as string) ?? "english";
 
   const toggleLanguage = () => {
     agent.setState({ language: language === "english" ? "spanish" : "english" });

@@ -58,4 +58,11 @@ export const WARMUP_ROUTES = [
   '/quickstart/demo-chat',
   '/generative-ui/a2ui/fixed-schema/demo-chat',
   '/shared-state/predictive-state-updates/demo-chat',
+  // Both halves of the writing-agent-state pair. A rebuild arriving after the
+  // language toggle is clicked remounts the component and drops the write, so
+  // the take prompts in English and proves nothing. The `fixed` route is on the
+  // list for the same reason: the take navigates to it mid-clip, and a cold
+  // compile there stalls the comparison half.
+  '/shared-state/in-app-agent-write/demo-chat',
+  '/shared-state/in-app-agent-write/fixed/demo-chat',
 ];

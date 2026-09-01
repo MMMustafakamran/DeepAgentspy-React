@@ -42,6 +42,54 @@ async function clickLanguageToggle(page: Page): Promise<void> {
   console.log(`   ✓ Toggled the language.`);
 }
 
+/**
+ * Clicks the toggle and confirms the label actually ends up reading Spanish.
+ *
+ * Two separate things made a bare click unreliable. The demo page had drifted
+ * from the doc -- its fallback was `"Not set"` where the doc prints `"english"`
+ * -- so the first click evaluated `"Not set" === "english"` as false and wrote
+ * *english*, leaving the take one click short of Spanish. That is fixed in the
+ * page. What cannot be fixed from here is a Turbopack recompile landing
+ * mid-take: it remounts the component, `agent.state` comes back empty and the
+ * label falls back underneath a click that has already happened.
+ *
+ * So the click is verified rather than assumed. The whole finding is "the label
+ * says Spanish and the agent answers in English" -- if the label is not
+ * actually on Spanish when the prompt goes out, an English reply is the honest
+ * answer to English state and the clip proves nothing.
+ */
+async function toggleToSpanish(page: Page): Promise<boolean> {
+  for (let attempt = 1; attempt <= 3; attempt++) {
+    await clickLanguageToggle(page);
+    await sleep(900);
+
+    const text =
+      (await page
+        .locator('p:has-text("Language:")')
+        .first()
+        .textContent()
+        .catch(() => null)) ?? '';
+
+    if (/spanish/i.test(text)) {
+      if (attempt > 1) console.log(`   ✓ Label reads spanish after ${attempt} clicks.`);
+      return true;
+    }
+
+    console.warn(
+      `   ⚠️ Click ${attempt} left the label on "${text.trim() || 'unknown'}", not spanish.` +
+        ` Most likely a recompile reset the state; clicking again.`,
+    );
+  }
+
+  // Not thrown. A take that reaches the chat on the wrong language is a weak
+  // clip, not a broken recorder, and the run should still produce it and say so.
+  console.warn(
+    `   ⚠️ Could not get the label onto spanish in 3 clicks. The reply language in` +
+      ` this take proves nothing -- re-record before using it as evidence.`,
+  );
+  return false;
+}
+
 /** Rests the cursor on an element and pauses, if it is there at all. */
 async function restOn(
   page: Page,
@@ -114,10 +162,14 @@ export const runSharedStateWriteAction: PageActionHandler = async (
   page: Page,
   config: PageRecordConfig,
 ) => {
-  await sleep(900);
+  // Let the route finish compiling before anything is clicked. A Turbopack
+  // rebuild arriving after the toggle remounts the component and drops the
+  // write, which is exactly how a take ends up prompting in English.
+  await page.waitForLoadState('networkidle').catch(() => {});
+  await sleep(1200);
 
   console.log(`   [Shared State Write] Clicking "Toggle Language"...`);
-  await clickLanguageToggle(page);
+  await toggleToSpanish(page);
 
   // The label and the raw state both flip here. That is the point: the write
   // lands on the frontend, so whatever fails next is not the button.
@@ -138,7 +190,9 @@ export const runSharedStateWriteAction: PageActionHandler = async (
     // Driven identically: toggle, then prompt. The fixed graph seeds `language`
     // to english, so without this the reply would be English for an honest
     // reason and the comparison would be worthless.
-    beforePrompt: clickLanguageToggle,
+    beforePrompt: async (p) => {
+      await toggleToSpanish(p);
+    },
     waitAfterPromptMs: 1200,
   });
 
