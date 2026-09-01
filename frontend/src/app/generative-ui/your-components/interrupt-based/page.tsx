@@ -29,12 +29,14 @@ export default function Page() {
                 On <strong>One interrupt</strong>, the first message you send is
                 answered with a name prompt instead of a reply. Type a name,
                 submit, and the run resumes — ask it its name afterwards and it
-                uses the one you gave. On{" "}
-                <strong>Two, dispatched by type</strong>, an amber
-                Approve/Reject card comes first, then the blue name form.
+                uses the one you gave. This half works. On{" "}
+                <strong>Two, dispatched by type</strong>, the page&apos;s snippet
+                is printed with <code>enabled: ({"{ eventValue }"})</code> and
+                there is no such property, so neither the Approve/Reject card
+                nor the name form is ever claimed.
               </>
             }
-            fail="A raw JSON blob in the chat instead of a form means no useInterrupt claimed the event — on the conditional tab that usually means the `enabled` predicate did not match the event's `type`."
+            fail="On the conditional tab a raw JSON blob instead of a form is the expected failure, not a surprise — it is what an unclaimed interrupt looks like. On the single tab it would be a real regression."
           />
         </div>
       </Panel>
@@ -127,8 +129,9 @@ export default function Page() {
           value on the way out. The wire carries{" "}
           <code>&quot;value&quot;:
           &quot;{'{\\"type\\":\\"approval\\",…}'}&quot;</code>, so{" "}
-          <code>event.value.content</code> is <code>undefined</code>. The{" "}
-          <code>payloadOf</code> helper in the demo parses it.
+          <code>event.value.content</code> is <code>undefined</code>. The demo
+          keeps the page&apos;s form rather than parsing around it, so this stays
+          visible.
         </p>
         <p className="mt-2">
           The first section is unaffected: it passes <code>interrupt()</code> a

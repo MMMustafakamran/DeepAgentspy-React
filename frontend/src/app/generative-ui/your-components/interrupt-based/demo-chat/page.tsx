@@ -108,32 +108,23 @@ const AskComponent = ({
 );
 
 /**
- * The interrupt payload as the agent sent it.
- *
- * Two corrections to the page, both verified against a live run:
+ * Two defects in the page's "Condition UI executions" snippet, kept as printed.
  *
  * 1. `enabled` receives the whole event, `{ name, value }`. There is no
- *    `eventValue` — destructuring it yields `undefined` and the predicate never
- *    matches, so neither handler ever claims anything.
+ *    `eventValue`, so destructuring it yields `undefined` and the predicate
+ *    never matches -- `tsc` reports it as `Property 'eventValue' does not
+ *    exist on type 'InterruptEvent<any>'`, which is the finding in compile
+ *    form.
  * 2. `event.value` is a JSON **string**, not the object the agent passed. A
- *    LangGraph `interrupt()` arrives as the legacy `on_interrupt` custom event,
- *    and the runtime serialises its value on the way out. So `event.value.type`
- *    is `undefined` on a string.
+ *    LangGraph `interrupt()` arrives as the legacy `on_interrupt` custom event
+ *    and the runtime serialises its value, so `event.value.type` is `undefined`
+ *    on a string.
+ *
+ * A `payloadOf` helper used to sit here to parse (2). It was never called, and
+ * calling it would repair the page's own snippet -- which is the one thing this
+ * route must not do, since the broken form is the evidence. Removed rather than
+ * wired up.
  */
-type Payload = { type?: string; content?: string };
-
-function payloadOf(value: unknown): Payload {
-  if (typeof value === "string") {
-    try {
-      return JSON.parse(value) as Payload;
-    } catch {
-      return { content: value };
-    }
-  }
-  if (typeof value === "object" && value !== null) return value as Payload;
-  return {};
-}
-
 function ConditionalInterruptChat() {
     useInterrupt({
         agentId: MULTI_AGENT_ID,
@@ -166,9 +157,9 @@ export default function Page() {
     >
       <div className="flex h-full flex-col">
         <QaNote
-          try="Say anything, give the agent a name when it asks, then ask what it is called."
-          expected="It answers with the name you gave it."
-          actual="It calls itself Deep Agent. The name was stored and never used."
+          try="On Two, dispatched by type: say anything and wait for the approval step."
+          expected="An Approve/Reject card, then a name form, each picked by the interrupt's type."
+          actual="Neither renders. `enabled` is handed the whole event, so the page's `eventValue` is undefined and no handler claims either interrupt."
         />
         <div className="flex shrink-0 gap-2 border-b border-slate-200 px-4 py-2 dark:border-slate-800">
           {(
