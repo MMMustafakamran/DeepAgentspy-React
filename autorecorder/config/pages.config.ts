@@ -409,12 +409,19 @@ export const PAGES = definePages([
         'page is about does not survive the run it was emitted during, so nothing in the app ' +
         'can read it afterwards.',
       likelyCause:
-        "The page's `chat_node` body ends at `# ...` with no return statement, so it returns " +
-        '`None`. `copilotkit_emit_state` streams each step to the frontend as it goes, which ' +
-        'is why the rows appear live, but a node returning `None` contributes no state update ' +
-        'and no message, so the graph ends with neither. Invoking the graph directly confirms ' +
-        'it: the run returns HTTP 200 with `observed_steps` absent and the human turn as the ' +
-        'only message. The page never shows what `chat_node` is supposed to return.',
+        "The Python tab's `chat_node` is printed with two `# ...` elisions, and they hide " +
+        'everything that makes the node work: it never instantiates a model, never calls one, ' +
+        'and never returns. `ChatOpenAI`, `SystemMessage` and the model id are imported and ' +
+        'unused; there is no `.invoke` and no `return` in the body at all, so the node emits ' +
+        'four hardcoded strings, sleeps, and yields `None`. `copilotkit_emit_state` streams ' +
+        'each step as it goes, which is why the rows appear live, but a node returning `None` ' +
+        'contributes no message and no state update. The TypeScript tab of the same section ' +
+        'prints the missing half in full -- `const response = await model.invoke(...)` then ' +
+        '`return { messages: [response], observed_steps: state.observed_steps }`, its own ' +
+        'comment calling that second key "Persist the final state". Those are exactly the two ' +
+        'symptoms: no `messages` is the silence, no `observed_steps` is the vanishing. The ' +
+        'signature also promises `Command[Literal["cpk_action_node", "tool_node", "__end__"]]` ' +
+        'while the body returns nothing and the graph contains neither node.',
       // The finding IS the silence, so it must not be read as a broken take.
       expectsNoResponse: true,
       note: [
@@ -426,8 +433,12 @@ export const PAGES = definePages([
         'but the agent never answers, and the steps dont survive the run either',
         'called the graph directly - comes back 200 with no observed_steps and no ai message',
         '',
-        'the pages chat_node just ends at # ... with no return, so it returns None',
-        'a node returning None adds no message and no state. page never shows the return',
+        'the python tab hides the working half behind two # ... markers',
+        'no model is ever created or called in that node, and it never returns',
+        '',
+        'the typescript tab right next to it prints both - model.invoke, then',
+        'return { messages: [response], observed_steps: ... } "persist the final state"',
+        'thats the silence and the vanishing steps, one missing key each',
       ].join('\n'),
     },
   },
