@@ -393,8 +393,33 @@ export const PAGES = definePages([
     ideFile: 'backend/src/predictive_state_manual.py',
     startLine: 39,
     endLine: 64,
+    // The diagnosis, as three tabs in the order a tester opens them.
+    //
+    // `ideFile` is the shipped node: the unused `ChatOpenAI` import at the top
+    // and the body ending at `# ...` are both in frame at once. Then the doc's
+    // own Python tab, so the elisions are visibly the page's and not ours. Then
+    // the TypeScript tab from the same section, which prints the two lines the
+    // Python reader never gets -- `model.invoke`, and the return carrying
+    // `messages` and `observed_steps`. Those are the silence and the vanishing
+    // steps, one key each.
+    //
+    // The doc snapshot rather than the live page because the IDE step reads
+    // files from the repo, and because pinning the snapshot means the clip
+    // keeps showing the revision the finding was filed against.
     extraTabs: [
-      { filePath: 'backend/src/predictive_state_manual.py', startLine: 67, endLine: 77 },
+      {
+        filePath: 'doc-snapshot/pages/deepagents__shared-state__predictive-state-updates.md',
+        startLine: 149,
+        endLine: 165,
+      },
+      {
+        filePath: 'doc-snapshot/pages/deepagents__shared-state__predictive-state-updates.md',
+        // From the emit loop, not from the model call, so the tab opens on the
+        // same four-step loop the Python tab ends with -- then keeps going into
+        // the two lines Python replaces with `# ...`. The parallel is the point.
+        startLine: 186,
+        endLine: 203,
+      },
     ],
     prompt: 'Plan a three-step research task about solar panel recycling and report each step.',
     waitAfterPromptMs: 5000,

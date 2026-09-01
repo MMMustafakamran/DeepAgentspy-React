@@ -160,6 +160,18 @@ const CUSTOM_GRAPH_START_TIMEOUT_MS = 90000;
  * write its own report is half a take.
  */
 export const runPredictiveManualAction: PageActionHandler = async (page, config) => {
+  // Counted before the run ends, while the emitted rows are still on screen.
+  let peak = 0;
+  const watch = setInterval(() => {
+    page
+      .locator('ul li')
+      .count()
+      .then((n) => {
+        if (n > peak) peak = n;
+      })
+      .catch(() => {});
+  }, 700);
+
   try {
     await runVariant(page, config, 'manual', CUSTOM_GRAPH_START_TIMEOUT_MS, 45000);
     console.warn(
@@ -169,6 +181,32 @@ export const runPredictiveManualAction: PageActionHandler = async (page, config)
   } catch (e) {
     if (!(e instanceof AgentSilentError)) throw e;
     console.log(`   🐞 [Predictive manual] Steps rendered, no reply -- as reported.`);
+  } finally {
+    clearInterval(watch);
+  }
+
+  // The second half of the finding, and the half nothing was filming.
+  //
+  // The rows are emitted, so they appear; the node returns nothing, so they do
+  // not survive the run that drew them. Watching the panel go back to its empty
+  // state -- after it visibly had four rows in it -- is what makes "the steps do
+  // not persist" a thing on tape rather than a claim in the note. A tester
+  // watching this would do exactly this: look back at the panel once the
+  // spinner stops.
+  await sleep(1500);
+  const after = await page.locator('ul li').count();
+  await restOnSteps(page, 4000);
+
+  console.log(
+    `   [Predictive manual] Steps peaked at ${peak} row(s) during the run, ${after} after it.`,
+  );
+  if (peak > 0 && after === 0) {
+    console.log(`   🐞 [Predictive manual] The emitted steps did not survive the run.`);
+  } else if (peak === 0) {
+    console.warn(
+      `   ⚠️ [Predictive manual] No steps were ever drawn, so the clip shows an empty ` +
+        `panel throughout and cannot make the "emitted but not persisted" point.`,
+    );
   }
 
   if (config.knownIssue) {
