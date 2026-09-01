@@ -1,5 +1,6 @@
 import { type Page } from 'playwright';
 import { AgentSilentError, sendPrompt, waitForAgentResponseCompletion } from '../core/actions';
+import { captureConsole, findEntries } from '../core/console-capture';
 import { writeIssueNote } from '../core/issue-note';
 import { humanClick, humanGlide, sleep } from '../core/overlays/cursor';
 import { type PageActionHandler, type PageRecordConfig } from '../core/types';
@@ -11,13 +12,15 @@ import { type PageActionHandler, type PageRecordConfig } from '../core/types';
  * / `Custom graph · tool`) because the doc page documents all three against the
  * same `observed_steps` key. Each take picks its tab and drives it.
  *
- * The prebuilt take does one thing more. Its defect is an *absence* -- a list
- * that stays empty -- and absence is the hardest thing to film: an empty panel
- * beside a working chat looks like a page that has not been asked anything yet.
- * So after the prebuilt variant fails, the take switches to the manual variant
- * and asks the identical question, and the steps appear. Two tabs of the same
- * page, one prompt, one of them filling in. Nothing else in this suite makes
- * the point as economically.
+ * The prebuilt take used to do one thing more: after its own variant failed it
+ * switched to the manual tab and asked the identical question there, so the
+ * steps filling in on one tab and staying empty on the other made the absence
+ * legible. That contrast is gone -- the prebuilt take now stays on its own tab
+ * for the whole clip. Prompting a second variant inside another variant's take
+ * put a run of the manual graph into a video filed against the prebuilt one,
+ * and the manual graph has a defect of its own; two findings in one clip is
+ * worse than a weaker clip. The manual variant is recorded separately and can
+ * be watched beside this one.
  */
 
 const TABS = {
@@ -112,49 +115,17 @@ async function runVariant(
   );
 }
 
-/** Prebuilt agent — the reported defect, recorded against the manual variant. */
+/** Prebuilt agent -- its own tab, start to finish. Nothing else is driven. */
 export const runPredictivePrebuiltAction: PageActionHandler = async (
   page: Page,
   config: PageRecordConfig,
 ) => {
   await runVariant(page, config, 'prebuilt');
 
-  await restOnSteps(page, 2600);
-
-  // The same question, the same page, a different variant.
-  //
-  // Deliberately NOT waiting for a reply here. The custom-graph variants have a
-  // defect of their own -- the QA report records them as "showing the steps but
-  // no response from the agent on frontend", and a run of this take confirmed
-  // it, timing out at 90s against a graph whose steps had already rendered.
-  // Waiting for an answer that is documented not to arrive would fail the take
-  // for the wrong reason every time.
-  //
-  // What is being contrasted is the steps list, so that is what to wait for.
-  // The prebuilt tab leaves it empty; this one fills it. That is the argument,
-  // and it is complete without either side saying a word.
-  await selectVariant(page, 'manual');
-  await sendPrompt(page, config.prompt, { timeoutMs: 12000 });
-
-  const stepsAppeared = await page
-    .locator('h3:has-text("Steps"), ul li')
-    .first()
-    .waitFor({ state: 'visible', timeout: 60000 })
-    .then(() => true)
-    .catch(() => false);
-
-  if (stepsAppeared) {
-    console.log(`   ✓ [Predictive] Steps rendered on the custom-graph variant.`);
-    await restOnSteps(page, 4000);
-  } else {
-    // Corroboration, not the finding. The prebuilt half is already on tape, so
-    // a missing contrast weakens the clip rather than invalidating it.
-    console.warn(
-      `   ⚠️ [Predictive] The custom-graph variant rendered no steps either within 60s.` +
-        ` The prebuilt half is recorded; the clip just lacks its comparison.`,
-    );
-    await sleep(2500);
-  }
+  // A long, deliberate look at the panel that should have filled in and did
+  // not. With the manual-tab comparison gone this is the whole of the evidence,
+  // so it gets the dwell the second half used to spend.
+  await restOnSteps(page, 5200);
 
   if (config.knownIssue) {
     await writeIssueNote(page, config.id, config.knownIssue);
@@ -171,15 +142,24 @@ export const runPredictivePrebuiltAction: PageActionHandler = async (
 const CUSTOM_GRAPH_START_TIMEOUT_MS = 90000;
 
 /**
- * Manual: the steps render and the reply never comes.
+ * Manual: the steps render, then the run dies on the recursion limit.
  *
- * That silence is the finding -- the QA report records it and three runs have
- * now reproduced it -- so it is caught here rather than left to propagate. The
- * engine would report `[ISSUE]` either way thanks to `expectsNoResponse`, but
- * an exception escaping this handler would skip the Notepad note, and a defect
- * take that does not write its own report is half a take.
+ * The silence in the chat is the visible half; the reason is in the console --
+ * `Recursion limit of 25 reached without hitting a stop condition`. Capture
+ * starts before the prompt because the error arrives during the run, and the
+ * matcher is `/recursion limit/i` rather than anything looser: this graph's own
+ * name and agent id show up in most CopilotKit errors on the page, so a broad
+ * pattern would match an unrelated failure and type it into the note as if it
+ * were this one.
+ *
+ * `AgentSilentError` is caught rather than allowed to propagate. The engine
+ * reports `[ISSUE]` either way thanks to `expectsNoResponse`, but an exception
+ * escaping here would skip the Notepad note, and a defect take that does not
+ * write its own report is half a take.
  */
 export const runPredictiveManualAction: PageActionHandler = async (page, config) => {
+  const capture = captureConsole(page);
+
   try {
     await runVariant(page, config, 'manual', CUSTOM_GRAPH_START_TIMEOUT_MS, 45000);
     console.warn(
@@ -190,6 +170,26 @@ export const runPredictiveManualAction: PageActionHandler = async (page, config)
     if (!(e instanceof AgentSilentError)) throw e;
     console.log(`   🐞 [Predictive manual] Steps rendered, no reply -- as reported.`);
   }
+
+  const recursion = findEntries(capture, /recursion limit/i, 2);
+  console.log(`   [Predictive manual] Recursion-limit errors captured: ${recursion.length}`);
+  for (const entry of recursion) {
+    console.log(`      · [${entry.level}] ${entry.text}${entry.source ? `  (${entry.source})` : ''}`);
+  }
+  if (recursion.length === 0) {
+    // Not fatal. The silence is still on tape and still the filed finding; what
+    // is missing is the sentence that explains it, and that is worth knowing
+    // before this clip is used to argue the cause.
+    console.warn(
+      `   ⚠️ [Predictive manual] Nothing matched /recursion limit/ this run. The take ` +
+        `still shows the silence, but the note's stated cause is unwitnessed -- watch it.`,
+    );
+    for (const entry of capture.entries.slice(0, 3)) {
+      console.warn(`      · [${entry.level}] ${entry.text}`);
+    }
+  }
+
+  capture.stop();
 
   if (config.knownIssue) {
     await writeIssueNote(page, config.id, config.knownIssue);
