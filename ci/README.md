@@ -12,6 +12,7 @@ ci/
 ├── build-report.mjs      DOCUMENTED_REPORT.md — the QA report that gets sent on
 ├── check-doc-drift.mjs   compares doc-snapshot/ against the live docs
 ├── list-pages.mjs        prints the recorder's page ids
+├── mux-audio.mjs         mux voiceovers onto videos a past run already made
 ├── validate-pages.mjs    rejects unknown ids before a run starts
 ├── resolve-selection.mjs expands dispatch checkboxes + ids into a page list
 ├── run-name.mjs          names the run's artifacts (DeepAgentspy-react-28Aug2026-0527UTC)
@@ -34,6 +35,7 @@ ci/
 | `npm run automate:pull` | Same, after `git pull` |
 | `npm run automate:locked` | Same, but installing the committed lockfiles |
 | `npm run report` | Rebuild the QA report from the last run's results |
+| `npm run mux` | Mux voiceovers onto videos a past run already made |
 | `npm run drift` | Doc drift check on its own |
 | `npm run drift:sync` | Update `doc-snapshot/` to match live docs |
 | `npm run ci:pages` | List valid page ids |
@@ -74,6 +76,31 @@ node ci/automate.mjs --limit=3 --ignore-doc-drift
 6. **Record** — hand off to the recorder with the forwarded flags.
 7. **Mux + report** — always runs, success or failure. Writes `RUN_REPORT.*` and
    `DOCUMENTED_REPORT.md`.
+
+## Voiceovers
+
+Pairing is by filename. `autorecorder/audio/<videoName>.m4a` narrates the video
+whose name ends in `-<videoName>.webm`, so `audio/InterruptBased.m4a` lands on
+`DAPY-react-06-InterruptBased.webm`, and step 7 applies it. To narrate a page,
+name the file after that page's `videoName` in `pages.config.ts` and drop it in
+— there is no list to keep in sync.
+
+The match ignores the numeric prefix, because the videos renumber whenever the
+nav order changes, but it anchors on the `-<videoName>.webm` suffix rather than
+a loose substring, so a name that is a substring of another cannot collide.
+
+The audio is re-encoded to Opus, since WebM cannot carry AAC, and padded with
+silence to the video's length: a voiceover is normally shorter than the take it
+narrates, and `-shortest` without that padding would cut the video down to the
+length of the audio. Missing ffmpeg is a skip, not a failure.
+
+To narrate videos a past run already produced — a downloaded CI artifact, say —
+point `mux-audio.mjs` at the folder:
+
+```bash
+npm run mux                              # autorecorder/videos/
+npm run mux -- videos/ci-33432688973     # a specific folder
+```
 
 ## The two services
 

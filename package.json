@@ -14,6 +14,7 @@
     "record:list": "npm --prefix autorecorder run record -- --list",
     "record:doctor": "npm --prefix autorecorder run doctor",
     "record:doctor:online": "npm --prefix autorecorder run doctor:online",
+    "mux": "node ci/mux-audio.mjs",
     "report": "node ci/build-report.mjs",
     "drift": "node ci/check-doc-drift.mjs",
     "drift:sync": "node ci/check-doc-drift.mjs --update",

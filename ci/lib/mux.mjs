@@ -2,8 +2,8 @@
  * Voiceover muxing — the only implementation.
  *
  * This used to exist twice: once here (run per shard) and again in the
- * workflow's consolidate job. In CI both fired, so a shard that recorded
- * Readables got its audio muxed, and consolidate then muxed the same track
+ * workflow's consolidate job. In CI both fired, so a shard that recorded a
+ * narrated page got its audio muxed, and consolidate then muxed the same track
  * onto the already-muxed file. Muxing now happens once, where the video is
  * produced; the workflow just installs ffmpeg and lets this run.
  *
@@ -16,14 +16,26 @@ import path from 'node:path';
 import { AUDIO_DIR, VIDEOS_DIR } from './config.mjs';
 
 /**
- * Which audio track belongs to which video. Match is done on the video
- * filename, which carries the demo name (e.g. `MSPY-react-14-Readables.webm`).
+ * Pairing is by filename: `audio/<videoName>.m4a` narrates the video whose name
+ * ends in `-<videoName>.webm`. So `audio/InterruptBased.m4a` lands on
+ * `DAPY-react-06-InterruptBased.webm`, and narrating a new page is a matter of
+ * dropping a correctly named file in — there is no list here to keep in sync.
+ *
+ * There used to be one, because the takes were named by hand and drifted from
+ * the video names (`deepagentsreact-a2uifixedscheme-error.m4a` for
+ * `A2uiFixedSchema`). Renaming the files to match retired the table.
+ *
+ * The match is on the `-<videoName>.webm` suffix rather than `includes`, so the
+ * numeric prefix is ignored — the videos renumber whenever the nav order
+ * changes — while a name that is a substring of another still cannot collide.
  */
-// Empty on purpose. No take in this repo has a voiceover yet; the issue clips
-// carry their report as on-screen text in Notepad instead, which needs no
-// audio and survives being watched with the sound off. Drop an .m4a in
-// `autorecorder/audio/` and add its entry here to mux one in.
-const AUDIO_TRACKS = [];
+function discoverTracks() {
+  if (!fs.existsSync(AUDIO_DIR)) return [];
+  return fs
+    .readdirSync(AUDIO_DIR)
+    .filter((f) => f.toLowerCase().endsWith('.m4a'))
+    .map((audioFile) => ({ audioFile, videoName: path.basename(audioFile, path.extname(audioFile)) }));
+}
 
 function hasFfmpeg() {
   try {
@@ -34,36 +46,52 @@ function hasFfmpeg() {
   }
 }
 
-export function muxAudioFiles() {
-  const tracks = AUDIO_TRACKS.filter((t) => fs.existsSync(path.join(AUDIO_DIR, t.audioFile)));
+/**
+ * Mux every track whose video is present in `dir`.
+ *
+ * `dir` defaults to the recorder's output folder, which is where the automated
+ * run leaves its videos. It is a parameter so the same code can be pointed at a
+ * downloaded CI artifact folder (`videos/ci-<run-id>/`) after the fact.
+ */
+export function muxAudioFiles(dir = VIDEOS_DIR) {
+  const tracks = discoverTracks();
   if (tracks.length === 0) return;
-  if (!fs.existsSync(VIDEOS_DIR)) return;
+  if (!fs.existsSync(dir)) return;
 
   if (!hasFfmpeg()) {
     console.log('ℹ️ [Audio Mux] ffmpeg not found in PATH; skipping (videos stay silent).');
     return;
   }
 
-  const files = fs.readdirSync(VIDEOS_DIR);
+  const files = fs.readdirSync(dir);
 
   for (const track of tracks) {
     const audioPath = path.join(AUDIO_DIR, track.audioFile);
-    const video = files.find(
-      (f) => f.includes(track.videoMatch) && f.endsWith('.webm') && !f.startsWith('temp_'),
-    );
+    const suffix = `-${track.videoName}.webm`;
+    const video = files.find((f) => f.endsWith(suffix) && !f.startsWith('temp_'));
 
     if (!video) {
-      console.log(`ℹ️ [Audio Mux] No ${track.videoMatch} video in this run; skipping ${track.audioFile}.`);
+      console.log(
+        `ℹ️ [Audio Mux] No *${suffix} in this run; skipping ${track.audioFile}.`,
+      );
       continue;
     }
 
-    const inputPath = path.join(VIDEOS_DIR, video);
-    const tempPath = path.join(VIDEOS_DIR, `temp_${video}`);
+    const inputPath = path.join(dir, video);
+    const tempPath = path.join(dir, `temp_${video}`);
     console.log(`\n🎵 [Audio Mux] Adding ${track.audioFile} to ${video}...`);
 
     try {
+      // `-af apad` + `-shortest`, not `-shortest` alone. A voiceover is usually
+      // shorter than the take it narrates -- 57s of audio over a 92s demo, in
+      // the case that turned this up -- and `-shortest` on its own ends the
+      // file with the audio, silently truncating the video by the difference.
+      // `apad` pads the audio with silence indefinitely, so `-shortest` lands
+      // on the video's end instead and the whole demo survives with a quiet
+      // tail. Audio longer than the video is still cut to the video, which is
+      // the behaviour you want in that direction.
       execSync(
-        `ffmpeg -y -i "${inputPath}" -i "${audioPath}" -c:v copy -c:a libopus -map 0:v:0 -map 1:a:0 -shortest "${tempPath}"`,
+        `ffmpeg -y -i "${inputPath}" -i "${audioPath}" -c:v copy -c:a libopus -af apad -map 0:v:0 -map 1:a:0 -shortest "${tempPath}"`,
         { stdio: 'ignore' },
       );
       fs.copyFileSync(tempPath, inputPath);
