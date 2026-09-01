@@ -34,7 +34,7 @@
 import { definePages } from '../core/types';
 
 export const PAGES = definePages([
-  // ── Getting Started ──────────────────────────────────────────────────────
+  // -- Getting Started ---------------------------------------------------------
   {
     id: 'quickstart',
     name: 'Quickstart',
@@ -64,8 +64,176 @@ export const PAGES = definePages([
     prompt: "What's the weather in Karachi?",
     waitAfterPromptMs: 4000,
   },
-
-  // ── Generative UI ────────────────────────────────────────────────────────
+  // -- Generative UI > A2UI ----------------------------------------------------
+  {
+    id: 'a2ui-advanced',
+    name: 'Generative UI - A2UI - Advanced',
+    videoName: 'Advanced',
+    docPath: 'generative-ui/a2ui/advanced',
+    route: 'generative-ui/a2ui/advanced',
+    ideFile: 'frontend/src/app/generative-ui/a2ui/advanced/demo-chat/page.tsx',
+    startLine: 12,
+    endLine: 26,
+    prompt: 'Show me a pricing card for a Pro plan at $29 per month.',
+    waitAfterPromptMs: 6000,
+  },
+  {
+    id: 'a2ui-dynamic-schema',
+    name: 'Generative UI - A2UI - Dynamic Schema A2UI',
+    videoName: 'DynamicSchemaA2UI',
+    docPath: 'generative-ui/a2ui/dynamic-schema',
+    route: 'generative-ui/a2ui/dynamic-schema',
+    ideFile: 'frontend/src/app/generative-ui/a2ui/dynamic-schema/demo-chat/page.tsx',
+    startLine: 20,
+    endLine: 34,
+    extraTabs: [{ filePath: 'backend/src/a2ui_dynamic.py', startLine: 17, endLine: 34 }],
+    prompt: 'Show me a pricing card for a Pro plan at $29 per month.',
+    waitAfterPromptMs: 6000,
+  },
+  {
+    id: 'a2ui-fixed-schema',
+    name: 'Generative UI - A2UI - Fixed Schema A2UI',
+    videoName: 'FixedSchemaA2UI',
+    docPath: 'generative-ui/a2ui/fixed-schema',
+    route: 'generative-ui/a2ui/fixed-schema',
+    // The catalog, not the page: `includeBasicCatalog: true` is the line that
+    // sends the renderer looking for the basic catalog it cannot resolve.
+    ideFile: 'frontend/src/app/generative-ui/a2ui/fixed-schema/a2ui/catalog.ts',
+    startLine: 16,
+    endLine: 26,
+    extraTabs: [
+      {
+        filePath: 'frontend/src/app/generative-ui/a2ui/fixed-schema/demo-chat/page.tsx',
+        startLine: 29,
+        endLine: 40,
+      },
+      { filePath: 'backend/src/a2ui_fixed.py', startLine: 88, endLine: 104 },
+    ],
+    prompt: 'Find me flights from New York to London on March 15.',
+    waitAfterPromptMs: 5000,
+    knownIssue: {
+      area: 'Deep Agents - Generative UI - A2UI - Fixed Schema A2UI',
+      problem:
+        'A2UI rendering fails with `Catalog not found: ' +
+        'https://a2ui.org/specification/v0_9/basic_catalog.json`, so no surface is drawn.',
+      impact:
+        'The A2UI feature cannot be used at all on this page: without the catalog the renderer ' +
+        'has no component vocabulary and the generated surface never appears.',
+      likelyCause:
+        'The renderer resolves the `v0_9/basic_catalog.json` catalog from a2ui.org, and that ' +
+        'catalog is unavailable at the URL it requests.',
+      note: [
+        'a2ui fixed schema - no card renders',
+        '',
+        'asked for flights new york to london',
+        'expected a flight card. nothing drawn in the chat at all',
+        '',
+        'console has the real reason - catalog cant be resolved',
+        'no catalog means no components to draw with so a2ui is unusable here',
+      ].join('\n'),
+    },
+  },
+  {
+    id: 'a2ui-styling',
+    name: 'Generative UI - A2UI - Styling',
+    videoName: 'Styling',
+    docPath: 'generative-ui/a2ui/styling',
+    route: 'generative-ui/a2ui/styling',
+    // The page is a CSS file, so the CSS is what the IDE step should show.
+    ideFile: 'frontend/src/a2ui/theme.css',
+    startLine: 22,
+    endLine: 40,
+    extraTabs: [
+      {
+        filePath: 'frontend/src/app/generative-ui/a2ui/styling/demo-chat/page.tsx',
+        startLine: 17,
+        endLine: 31,
+      },
+    ],
+    prompt: 'Show me a pricing card for a Pro plan at $29 per month.',
+    waitAfterPromptMs: 6000,
+    // The entry this comment used to withhold. It said the page would carry no
+    // `knownIssue` until the symptom was known, because a defect invented to
+    // match a red cell is a fabricated finding. The symptom is now known and
+    // the cause is checkable without running anything -- see `likelyCause`.
+    knownIssue: {
+      area: 'Deep Agents - Generative UI - A2UI - Styling',
+      problem:
+        'None of the eight CSS custom properties the page documents changes the surface. ' +
+        'theme.css is imported at the app root and the surface does carry `.a2ui-surface`, ' +
+        'but the rendered card keeps the renderer built-in colours regardless of what the ' +
+        'variables are set to.',
+      impact:
+        'A2UI surfaces cannot be themed by the documented method. Everything the page teaches -- ' +
+        'the custom-properties table, the dark-mode block and the `.a2ui-card` width override -- ' +
+        'has no effect, and the reader has no way to tell that from the page.',
+      likelyCause:
+        '@copilotkit/a2ui-renderer 1.69.0 reads exactly one custom property, ' +
+        '`--a2ui-primary-color`, which the page never mentions. None of `--primary`, ' +
+        '`--primary-foreground`, `--card`, `--border`, `--radius`, `--foreground`, `--input` ' +
+        'or `--background` is read anywhere in the shipped package, and `.a2ui-card` is never ' +
+        'emitted, so the "Card width" selector matches no element either.',
+      note: [
+        'a2ui styling - theme.css does nothing',
+        '',
+        'set every variable in the page to a loud colour to make it obvious',
+        'asked for the pro plan pricing card',
+        'card comes out in the renderer default dark + blue, none of my colours',
+        '',
+        'surface has the .a2ui-surface class and the css is imported, so that part is fine',
+        'grepped the installed renderer - only var() in the whole package is',
+        '--a2ui-primary-color, which the page never mentions',
+        'none of the 8 documented variables are read anywhere, and nothing emits .a2ui-card',
+      ].join('\n'),
+    },
+  },
+  // -- Generative UI > Your Components -----------------------------------------
+  {
+    id: 'interrupt-based',
+    name: 'Generative UI - Your Components - Interrupt-Based',
+    videoName: 'InterruptBased',
+    docPath: 'generative-ui/your-components/interrupt-based',
+    route: 'generative-ui/your-components/interrupt-based',
+    ideFile:
+      'frontend/src/app/generative-ui/your-components/interrupt-based/demo-chat/page.tsx',
+    startLine: 12,
+    endLine: 39,
+    // The `agents` region, because `_SYSTEM_PROMPT` is where the defect lives:
+    // the hook stores the name in `agent_name` and the prompt never reads it.
+    extraTabs: [{ filePath: 'backend/src/interrupt_based.py', startLine: 73, endLine: 116 }],
+    prompt: 'Hello, can you help me with something?',
+    prompts: ['Hello, can you help me with something?', 'What should I call you?'],
+    waitAfterPromptMs: 4000,
+    knownIssue: {
+      area: 'Deep Agents - Generative UI - Your Components - Interrupt-Based',
+      problem:
+        'The interrupt renders and accepts a name, but the agent does not know it afterwards. ' +
+        'Asked what it should be called, it cannot give the name back.',
+      impact:
+        'The interrupt flow looks like it works while the value the user supplied is never used, ' +
+        'so any HITL step built on this pattern silently discards its input.',
+      likelyCause:
+        'The system prompt does not read the stored state value holding the name, so the model ' +
+        'falls back to its default identity even though `agent_name` was written.',
+      // Filed against the pre-30-Aug doc. That revision changed both halves of
+      // this exact cause: the system prompt now names `agent_name` and tells
+      // the model to use it, and `CopilotKitMiddleware(expose_state=
+      // ["agent_name"])` exposes the value the hook writes. The harness was
+      // updated to match, so this recording is the re-check -- if the agent
+      // answers with the name it was given, the issue is resolved upstream and
+      // this entry comes out.
+      note: [
+        'interrupt based - name is not remembered',
+        '',
+        'gave it the name Fiqros in the interrupt box then asked what its called',
+        'it doesnt know the name',
+        '',
+        'so whatever the user types into the interrupt never reaches the prompt',
+        'anything built on this loses the answer',
+      ].join('\n'),
+    },
+  },
+  // -- Generative UI -----------------------------------------------------------
   {
     id: 'tool-rendering',
     name: 'Generative UI - Tool Rendering',
@@ -91,146 +259,7 @@ export const PAGES = definePages([
     prompt: 'Research renewable energy storage and show me your progress.',
     waitAfterPromptMs: 4000,
   },
-  {
-    id: 'interrupt-based',
-    name: 'Generative UI - Your Components - Interrupt-based',
-    videoName: 'InterruptBased',
-    docPath: 'generative-ui/your-components/interrupt-based',
-    route: 'generative-ui/your-components/interrupt-based',
-    ideFile:
-      'frontend/src/app/generative-ui/your-components/interrupt-based/demo-chat/page.tsx',
-    startLine: 12,
-    endLine: 39,
-    // The `agents` region, because `_SYSTEM_PROMPT` is where the defect lives:
-    // the hook stores the name in `agent_name` and the prompt never reads it.
-    extraTabs: [{ filePath: 'backend/src/interrupt_based.py', startLine: 73, endLine: 116 }],
-    prompt: 'Hello, can you help me with something?',
-    prompts: ['Hello, can you help me with something?', 'What should I call you?'],
-    waitAfterPromptMs: 4000,
-    knownIssue: {
-      area: 'Deep Agents - Generative UI - Your components - Interrupt-based',
-      problem:
-        'The interrupt renders and accepts a name, but the agent does not use it afterwards -- ' +
-        'it keeps calling itself "Deep Agent" instead of the name that was entered.',
-      impact:
-        'The interrupt flow looks like it works while the value the user supplied is never used, ' +
-        'so any HITL step built on this pattern silently discards its input.',
-      likelyCause:
-        'The system prompt does not read the stored state value holding the name, so the model ' +
-        'falls back to its default identity even though `agent_name` was written.',
-      // Filed against the pre-30-Aug doc. That revision changed both halves of
-      // this exact cause: the system prompt now names `agent_name` and tells
-      // the model to use it, and `CopilotKitMiddleware(expose_state=
-      // ["agent_name"])` exposes the value the hook writes. The harness was
-      // updated to match, so this recording is the re-check -- if the agent
-      // answers with the name it was given, the issue is resolved upstream and
-      // this entry comes out.
-      note: [
-        'interrupt based - name is not used',
-        '',
-        'gave it the name Fiqros in the interrupt box then asked what its called',
-        'says Deep Agent',
-        '',
-        'so whatever the user types into the interrupt never reaches the prompt',
-        'anything built on this loses the answer',
-      ].join('\n'),
-    },
-  },
-  {
-    id: 'a2ui-fixed-schema',
-    name: 'Generative UI - A2UI - Fixed Schema',
-    videoName: 'A2uiFixedSchema',
-    docPath: 'generative-ui/a2ui/fixed-schema',
-    route: 'generative-ui/a2ui/fixed-schema',
-    // The catalog, not the page: `includeBasicCatalog: true` is the line that
-    // sends the renderer looking for the basic catalog it cannot resolve.
-    ideFile: 'frontend/src/app/generative-ui/a2ui/fixed-schema/a2ui/catalog.ts',
-    startLine: 16,
-    endLine: 26,
-    extraTabs: [
-      {
-        filePath: 'frontend/src/app/generative-ui/a2ui/fixed-schema/demo-chat/page.tsx',
-        startLine: 29,
-        endLine: 40,
-      },
-      { filePath: 'backend/src/a2ui_fixed.py', startLine: 88, endLine: 104 },
-    ],
-    prompt: 'Find me flights from New York to London on March 15.',
-    waitAfterPromptMs: 5000,
-    knownIssue: {
-      area: 'Deep Agents - Generative UI - A2UI - Fixed Schema',
-      problem:
-        'A2UI rendering fails with `Catalog not found: ' +
-        'https://a2ui.org/specification/v0_9/basic_catalog.json`, so no surface is drawn.',
-      impact:
-        'The A2UI feature cannot be used at all on this page: without the catalog the renderer ' +
-        'has no component vocabulary and the generated surface never appears.',
-      likelyCause:
-        'The renderer resolves the `v0_9/basic_catalog.json` catalog from a2ui.org, and that ' +
-        'catalog is unavailable at the URL it requests.',
-      note: [
-        'a2ui fixed schema - no card renders',
-        '',
-        'asked for flights new york to london',
-        'expected a flight card. nothing drawn in the chat at all',
-        '',
-        'console has the real reason - catalog cant be resolved',
-        'no catalog means no components to draw with so a2ui is unusable here',
-      ].join('\n'),
-    },
-  },
-  {
-    id: 'a2ui-dynamic-schema',
-    name: 'Generative UI - A2UI - Dynamic Schema',
-    videoName: 'A2uiDynamicSchema',
-    docPath: 'generative-ui/a2ui/dynamic-schema',
-    route: 'generative-ui/a2ui/dynamic-schema',
-    ideFile: 'frontend/src/app/generative-ui/a2ui/dynamic-schema/demo-chat/page.tsx',
-    startLine: 20,
-    endLine: 34,
-    extraTabs: [{ filePath: 'backend/src/a2ui_dynamic.py', startLine: 17, endLine: 34 }],
-    prompt: 'Show me a pricing card for a Pro plan at $29 per month.',
-    waitAfterPromptMs: 6000,
-  },
-  {
-    id: 'a2ui-styling',
-    name: 'Generative UI - A2UI - Styling',
-    videoName: 'A2uiStyling',
-    docPath: 'generative-ui/a2ui/styling',
-    route: 'generative-ui/a2ui/styling',
-    // The page is a CSS file, so the CSS is what the IDE step should show.
-    ideFile: 'frontend/src/a2ui/theme.css',
-    startLine: 22,
-    endLine: 40,
-    extraTabs: [
-      {
-        filePath: 'frontend/src/app/generative-ui/a2ui/styling/demo-chat/page.tsx',
-        startLine: 17,
-        endLine: 31,
-      },
-    ],
-    prompt: 'Show me a pricing card for a Pro plan at $29 per month.',
-    waitAfterPromptMs: 6000,
-    // NO knownIssue, deliberately. The QA report marks this page failed but
-    // records no symptom, no cause and no Loom -- there is nothing here to
-    // reproduce or to write into a report. Recorded as an ordinary page until
-    // it is re-tested and the symptom is known; a `knownIssue` invented to
-    // match a red cell would be a fabricated finding.
-  },
-  {
-    id: 'a2ui-advanced',
-    name: 'Generative UI - A2UI - Advanced',
-    videoName: 'A2uiAdvanced',
-    docPath: 'generative-ui/a2ui/advanced',
-    route: 'generative-ui/a2ui/advanced',
-    ideFile: 'frontend/src/app/generative-ui/a2ui/advanced/demo-chat/page.tsx',
-    startLine: 12,
-    endLine: 26,
-    prompt: 'Show me a pricing card for a Pro plan at $29 per month.',
-    waitAfterPromptMs: 6000,
-  },
-
-  // ── App Control ──────────────────────────────────────────────────────────
+  // -- App Control -------------------------------------------------------------
   {
     id: 'frontend-tools',
     name: 'App Control - Frontend Tools',
@@ -244,12 +273,10 @@ export const PAGES = definePages([
     prompt: 'Say hello to Fiqros.',
     waitAfterPromptMs: 3500,
   },
-
-  // ── Shared State ─────────────────────────────────────────────────────────
   {
     id: 'in-app-agent-read',
-    name: 'Shared State - Reading agent state',
-    videoName: 'SharedStateRead',
+    name: 'App Control - Reading agent state',
+    videoName: 'ReadingAgentState',
     docPath: 'shared-state/in-app-agent-read',
     route: 'shared-state/in-app-agent-read',
     ideFile: 'frontend/src/app/shared-state/in-app-agent-read/demo-chat/page.tsx',
@@ -259,7 +286,7 @@ export const PAGES = definePages([
     prompt: 'Set the language to Spanish.',
     waitAfterPromptMs: 4000,
     knownIssue: {
-      area: 'Deep Agents - App control - Shared state - Reading agent state',
+      area: 'Deep Agents - App Control - Reading agent state',
       problem:
         'The agent switches to Spanish when asked, but the `language` value shown in the app ' +
         'never updates -- the panel stays on its previous value while the chat answers in Spanish.',
@@ -282,8 +309,8 @@ export const PAGES = definePages([
   },
   {
     id: 'in-app-agent-write',
-    name: 'Shared State - Writing agent state',
-    videoName: 'SharedStateWrite',
+    name: 'App Control - Writing agent state',
+    videoName: 'WritingAgentState',
     docPath: 'shared-state/in-app-agent-write',
     route: 'shared-state/in-app-agent-write',
     ideFile: 'frontend/src/app/shared-state/in-app-agent-write/demo-chat/page.tsx',
@@ -293,7 +320,7 @@ export const PAGES = definePages([
     prompt: 'Tell me one interesting fact about Karachi.',
     waitAfterPromptMs: 4000,
     knownIssue: {
-      area: 'Deep Agents - App control - Shared state - Writing agent state',
+      area: 'Deep Agents - App Control - Writing agent state',
       problem:
         'The toggle button does not change the language the agent answers in. The label flips ' +
         'to Spanish and the chat carries on replying in English.',
@@ -316,9 +343,30 @@ export const PAGES = definePages([
     },
   },
   {
+    id: 'state-inputs-outputs',
+    name: 'App Control - Input/Output Schemas',
+    videoName: 'InputOutputSchemas',
+    docPath: 'shared-state/state-inputs-outputs',
+    route: 'shared-state/state-inputs-outputs',
+    ideFile: 'backend/src/state_inputs_outputs.py',
+    startLine: 31,
+    endLine: 49,
+    extraTabs: [
+      { filePath: 'backend/src/state_inputs_outputs.py', startLine: 103, endLine: 114 },
+      {
+        filePath: 'frontend/src/app/shared-state/state-inputs-outputs/demo-chat/page.tsx',
+        startLine: 10,
+        endLine: 45,
+      },
+    ],
+    prompt: 'Why is the sky blue?',
+    waitAfterPromptMs: 4000,
+  },
+  // -- App Control > State Streaming -------------------------------------------
+  {
     id: 'predictive-prebuilt',
-    name: 'Shared State - Predictive State Updates - Prebuilt agent',
-    videoName: 'PredictivePrebuilt',
+    name: 'App Control - State Streaming - Prebuilt agent',
+    videoName: 'PrebuiltAgent',
     docPath: 'shared-state/predictive-state-updates?agent-type=prebuilt',
     route: 'shared-state/predictive-state-updates',
     ideFile: 'frontend/src/app/shared-state/predictive-state-updates/demo-chat/page.tsx',
@@ -328,7 +376,7 @@ export const PAGES = definePages([
     prompt: 'Plan a three-step research task about solar panel recycling and report each step.',
     waitAfterPromptMs: 5000,
     knownIssue: {
-      area: 'Deep Agents - App control - Shared state - State streaming - Prebuilt agent',
+      area: 'Deep Agents - App Control - State Streaming - Prebuilt agent',
       problem:
         'No agent progress appears in the app. The steps list stays empty for the whole run ' +
         'while the chat answers normally.',
@@ -343,15 +391,15 @@ export const PAGES = definePages([
         'asked for a multi step task on the prebuilt tab',
         'agent progress stayed empty the whole run',
         '',
-        'same prompt on the custom graph tab and the steps show up straight away',
-        'so its the prebuilt middleware not the prompt',
+        'chat answered fine so the agent ran, the steps just never reach the panel',
       ].join('\n'),
     },
   },
+  // -- App Control > State Streaming > Custom Graph -----------------------------
   {
     id: 'predictive-manual',
-    name: 'Shared State - Predictive State Updates - Custom graph (manual)',
-    videoName: 'PredictiveManual',
+    name: 'App Control - State Streaming - Custom Graph - Manually Predictive',
+    videoName: 'ManuallyPredictive',
     docPath: 'shared-state/predictive-state-updates?agent-type=custom-graph',
     route: 'shared-state/predictive-state-updates',
     ideFile: 'backend/src/predictive_state_manual.py',
@@ -364,33 +412,40 @@ export const PAGES = definePages([
     waitAfterPromptMs: 5000,
     knownIssue: {
       area:
-        'Deep Agents - App control - Shared state - State streaming - Custom graph (manual)',
+        'Deep Agents - App Control - State Streaming - Custom Graph - Manually Predictive',
       problem:
-        'The steps render correctly, but the agent never sends a reply to the chat. The run ' +
-        'finishes with the progress list filled in and no assistant message at all.',
+        'The steps render, then the run dies with `Recursion limit of 25 reached without ' +
+        'hitting a stop condition`. No assistant message is ever sent, so the chat just ' +
+        'stays silent.',
       impact:
-        'The variant is only half usable: progress is visible, but the user never gets an ' +
-        'answer, so the graph cannot be used for anything conversational.',
+        'The variant cannot answer at all. The page presents this graph as a working custom ' +
+        'graph, and following it as printed produces a run that always terminates on the ' +
+        'recursion limit instead of replying.',
       likelyCause:
-        'The node emits state and ends without appending an assistant message to the graph ' +
-        "output, so there is nothing for the frontend to render as a reply.",
+        "The page's `chat_node` is printed with its body ending in `# ...` and no return, so " +
+        'it yields no state update and no message. Nothing on the page raises ' +
+        '`recursion_limit` either -- LangGraph stamps the default 25 and the run hits it. ' +
+        'Why a single-node graph re-enters at all is not yet established; the error is ' +
+        'recorded as observed rather than explained.',
       // The finding IS the silence, so it must not be read as a broken take.
       expectsNoResponse: true,
       note: [
-        'predictive custom graph manual - steps show but no reply',
+        'predictive custom graph manual - dies on the recursion limit',
         '',
         'asked for a multi step task',
         'the steps list fills in fine so state streaming works',
         '',
-        'but the agent never answers in the chat. waited 90s',
-        'tool based variant does reply so its specific to the manual graph',
+        'then it errors - recursion limit of 25 reached without hitting a stop condition',
+        'says to raise it with the recursion_limit config key, page never mentions that',
+        '',
+        'so no reply ever lands in the chat. tool based variant answers fine',
       ].join('\n'),
     },
   },
   {
     id: 'predictive-tool',
-    name: 'Shared State - Predictive State Updates - Custom graph (tool-based)',
-    videoName: 'PredictiveToolBased',
+    name: 'App Control - State Streaming - Custom Graph - Tool-based Predictive',
+    videoName: 'ToolBasedPredictive',
     docPath: 'shared-state/predictive-state-updates?agent-type=custom-graph',
     route: 'shared-state/predictive-state-updates',
     ideFile: 'backend/src/predictive_state_tool.py',
@@ -405,7 +460,7 @@ export const PAGES = definePages([
     waitAfterPromptMs: 5000,
     knownIssue: {
       area:
-        'Deep Agents - App control - Shared state - State streaming - Custom graph (tool-based)',
+        'Deep Agents - App Control - State Streaming - Custom Graph - Tool-based Predictive',
       problem:
         "The snippet's last line, `graph = workflow.compile(checkpointer=MemorySaver())`, " +
         'cannot run on the server the same docs tell you to use. `langgraph dev` raises ' +
@@ -432,25 +487,5 @@ export const PAGES = definePages([
         'had to drop the checkpointer to get a run at all, see the note in the file',
       ].join('\n'),
     },
-  },
-  {
-    id: 'state-inputs-outputs',
-    name: 'Shared State - Input/Output Schemas',
-    videoName: 'StateInputsOutputs',
-    docPath: 'shared-state/state-inputs-outputs',
-    route: 'shared-state/state-inputs-outputs',
-    ideFile: 'backend/src/state_inputs_outputs.py',
-    startLine: 31,
-    endLine: 49,
-    extraTabs: [
-      { filePath: 'backend/src/state_inputs_outputs.py', startLine: 103, endLine: 114 },
-      {
-        filePath: 'frontend/src/app/shared-state/state-inputs-outputs/demo-chat/page.tsx',
-        startLine: 10,
-        endLine: 45,
-      },
-    ],
-    prompt: 'Why is the sky blue?',
-    waitAfterPromptMs: 4000,
   },
 ]);
