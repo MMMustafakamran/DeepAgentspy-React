@@ -310,23 +310,16 @@ export const PAGES = definePages([
     knownIssue: {
       area: 'Deep Agents - App Control - Writing agent state',
       problem:
-        'The toggle button does not change the language the agent answers in. The label flips ' +
-        'to Spanish and the chat carries on replying in English.',
+        'When set to Spanish, the agent replies in Spanish, but the `language` field gets empty.',
       impact:
-        'UI elements cannot drive the agent, so nothing in the app can change how the agent ' +
-        'behaves without the user typing it into the chat.',
+        'UI elements cannot maintain agent state, as the language field gets emptied after the agent responds.',
       likelyCause:
-        'The written state never reaches the model. `CopilotKitMiddleware` is what puts state ' +
-        'keys into the system message and it does not do so unless `expose_state=[...]` names ' +
-        'them -- which neither shared-state page mentions.',
+        'The state delta returned by the agent run drops the `language` field, clearing the frontend state.',
       note: [
-        'writing agent state - toggle does nothing',
+        'writing agent state',
         '',
         'hit toggle language then sent a message',
-        'label says spanish and the agent keeps replying in english',
-        '',
-        'the write lands on the frontend fine - raw state shows it',
-        'it just never reaches the model. expose_state isnt set and neither page mentions it',
+        'when set to spanish it replies in spanish but language fields gets empty',
       ].join('\n'),
     },
   },
