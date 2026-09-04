@@ -8,6 +8,29 @@ Holds the 3 most recent dated entries. When a change lands on a fourth
 date, the oldest entry is dropped. Entries are counted, not aged, so a gap of
 weeks between changes does not expire anything.
 
+## 2026-09-04
+
+### 08:09 UTC — 1 page, highest severity high
+
+**High — Quickstart**
+
+`/deepagents/quickstart` · route `/quickstart` · under “Setup Copilot Runtime” · in a `tsx` block
+
+6 code lines, 4 prose lines changed.
+
+````diff
+- apiKey: process.env.INTELLIGENCE_API_KEY!,
++ apiKey: process.env.CPK_INTELLIGENCE_API_KEY!,
+- apiKey: process.env.INTELLIGENCE_API_KEY!,
++ apiKey: process.env.CPK_INTELLIGENCE_API_KEY!,
+- The runtime reads the license key from step 1. Add it to the app that serves
++ The runtime reads the project API key from step 1. Add it to the app that serves
+- INTELLIGENCE_API_KEY=your_license_key
++ CPK_INTELLIGENCE_API_KEY=cpk-...
+````
+
+---
+
 ## 2026-08-30
 
 ### 13:45 UTC — 3 pages, highest severity high
@@ -64,6 +87,8 @@ weeks between changes does not expire anything.
 
 ---
 
+---
+
 ## 2026-08-26
 
 ### 10:23 UTC — 2 pages, highest severity high
@@ -105,24 +130,3 @@ weeks between changes does not expire anything.
 ---
 
 ---
-
-## 2026-08-17
-
-### 13:24 UTC — 1 page, highest severity high
-
-**High — Input/Output Schemas** · _local snapshot edit, not an upstream change_
-
-`/deepagents/shared-state/state-inputs-outputs` · route `/shared-state/state-inputs-outputs` · under “Implementations”
-
-5 code lines, 2 headings, 4 prose lines changed.
-
-````diff
-- ## Implementations
-+ ## Implementation
-+ 
-+ class AgentState(CopilotKitState):
-+ question: str
-+ answer: str
-+ resources: list[str]
-- 
-````
