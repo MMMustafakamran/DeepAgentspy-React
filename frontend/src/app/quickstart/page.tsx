@@ -41,6 +41,27 @@ export default function Page() {
         </div>
       </Panel>
 
+      <Callout tone="info" title="The Intelligence step renamed its key; this repo takes the fallback">
+        <p>
+          Step 4&apos;s runtime snippet now reads{" "}
+          <code>CPK_INTELLIGENCE_API_KEY</code> where it read{" "}
+          <code>INTELLIGENCE_API_KEY</code>, its <code>.env.local</code>{" "}
+          placeholder went from <code>your_license_key</code> to{" "}
+          <code>cpk-...</code>, and the prose stopped calling it a license key
+          and started calling it the project API key. Both TypeScript and
+          FastAPI tabs of that step changed the same way.
+        </p>
+        <p className="mt-2">
+          Nothing here reads it. The same step&apos;s callout documents dropping{" "}
+          <code>intelligence</code> and <code>identifyUser</code> to fall back to
+          SSE with an <code>InMemoryAgentRunner</code>, and that is the path this
+          runtime route takes — so the rename is recorded rather than
+          implemented. The link under the callout also moved from{" "}
+          <code>/deepagents/premium/connect-your-runtime</code> to{" "}
+          <code>/deepagents/intelligence/connect-your-runtime</code>.
+        </p>
+      </Callout>
+
       <Panel title="The demo's page">
         <SourceCode file="frontend/src/app/quickstart/demo-chat/page.tsx" />
       </Panel>
