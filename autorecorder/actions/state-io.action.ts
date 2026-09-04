@@ -18,6 +18,8 @@ import { type PageActionHandler, type PageRecordConfig } from '../core/types';
 export const runStateIoAction: PageActionHandler = async (
   page: Page,
   config: PageRecordConfig,
+  _rootPath,
+  ctx,
 ) => {
   const question = page.locator('#question');
   if (await question.isVisible({ timeout: 8000 }).catch(() => false)) {
@@ -55,7 +57,7 @@ export const runStateIoAction: PageActionHandler = async (
     .catch(() => false);
 
   if (!answered) {
-    console.warn(`   ⚠️ No answer arrived within 45s; recording what is on screen.`);
+    ctx.warn(`No answer arrived within 45s; recording what is on screen.`);
   }
 
   // The three verdict rows, then the raw state. Reading them in that order is

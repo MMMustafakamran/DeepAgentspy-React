@@ -2,7 +2,7 @@ import { type Page } from 'playwright';
 import { promptsFor, sendPrompt, waitForAgentResponseCompletion } from '../core/actions';
 import { writeIssueNote } from '../core/issue-note';
 import { humanClick, humanGlide, sleep } from '../core/overlays/cursor';
-import { type PageActionHandler, type PageRecordConfig } from '../core/types';
+import { type ActionContext, type PageActionHandler, type PageRecordConfig } from '../core/types';
 
 /**
  * Interrupt-based HITL: the interrupt works, the answer to it does not survive.
@@ -29,7 +29,7 @@ const AGENT_NAME = 'Fiqros';
  * than through the chat selectors, which do not match a component rendered
  * inside an interrupt.
  */
-async function answerInterrupt(page: Page, answer: string): Promise<boolean> {
+async function answerInterrupt(ctx: ActionContext, page: Page, answer: string): Promise<boolean> {
   const field = page.locator('input[name="response"]').first();
 
   // `waitFor`, not `isVisible({ timeout })`. Playwright's isVisible is a
@@ -43,7 +43,7 @@ async function answerInterrupt(page: Page, answer: string): Promise<boolean> {
     .catch(() => false);
 
   if (!appeared) {
-    console.warn(`   ⚠️ The interrupt form never appeared.`);
+    ctx.warn(`The interrupt form never appeared.`);
     return false;
   }
 
@@ -78,6 +78,8 @@ async function answerInterrupt(page: Page, answer: string): Promise<boolean> {
 export const runInterruptAction: PageActionHandler = async (
   page: Page,
   config: PageRecordConfig,
+  _rootPath,
+  ctx,
 ) => {
   const [opening, followUp] = promptsFor(config);
 
@@ -85,7 +87,7 @@ export const runInterruptAction: PageActionHandler = async (
   console.log(`   [Interrupt] Opening turn to trigger before_model...`);
   await sendPrompt(page, opening, { timeoutMs: 12000 });
 
-  const answered = await answerInterrupt(page, AGENT_NAME);
+  const answered = await answerInterrupt(ctx, page, AGENT_NAME);
   if (!answered) {
     // The interrupt not rendering at all is a different, worse finding than the
     // one on the report, and it must not be filed as this one.

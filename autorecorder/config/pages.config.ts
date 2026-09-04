@@ -61,7 +61,7 @@ export const PAGES = definePages([
         endLine: 39,
       },
     ],
-    prompt: "What's the weather in Karachi?",
+    prompt: 'Hey, are you connected? What is the weather like in Karachi right now?',
     waitAfterPromptMs: 4000,
   },
   // -- Generative UI > A2UI ----------------------------------------------------
@@ -74,7 +74,7 @@ export const PAGES = definePages([
     ideFile: 'frontend/src/app/generative-ui/a2ui/advanced/demo-chat/page.tsx',
     startLine: 12,
     endLine: 26,
-    prompt: 'Show me a pricing card for a Pro plan at $29 per month.',
+    prompt: 'Can you show me a pricing card for a Pro plan at $29 a month?',
     waitAfterPromptMs: 6000,
   },
   {
@@ -87,7 +87,7 @@ export const PAGES = definePages([
     startLine: 20,
     endLine: 34,
     extraTabs: [{ filePath: 'backend/src/a2ui_dynamic.py', startLine: 17, endLine: 34 }],
-    prompt: 'Show me a pricing card for a Pro plan at $29 per month.',
+    prompt: 'Can you show me a pricing card for a Pro plan at $29 a month?',
     waitAfterPromptMs: 6000,
   },
   {
@@ -109,7 +109,7 @@ export const PAGES = definePages([
       },
       { filePath: 'backend/src/a2ui_fixed.py', startLine: 88, endLine: 104 },
     ],
-    prompt: 'Find me flights from New York to London on March 15.',
+    prompt: 'Find me flights from New York to London on March 15, please.',
     waitAfterPromptMs: 5000,
     knownIssue: {
       area: 'Deep Agents - Generative UI - A2UI - Fixed Schema A2UI',
@@ -150,7 +150,7 @@ export const PAGES = definePages([
         endLine: 31,
       },
     ],
-    prompt: 'Show me a pricing card for a Pro plan at $29 per month.',
+    prompt: 'Can you show me a pricing card for a Pro plan at $29 a month?',
     waitAfterPromptMs: 6000,
     // The entry this comment used to withhold. It said the page would carry no
     // `knownIssue` until the symptom was known, because a defect invented to
@@ -202,8 +202,8 @@ export const PAGES = definePages([
     // worth reading: it names `agent_name` and tells the model to use it, which
     // is what makes the name survive the interrupt.
     extraTabs: [{ filePath: 'backend/src/interrupt_based.py', startLine: 73, endLine: 116 }],
-    prompt: 'Hello, can you help me with something?',
-    prompts: ['Hello, can you help me with something?', 'What should I call you?'],
+    prompt: 'Hi there. Could you help me with something?',
+    prompts: ['Hi there. Could you help me with something?', 'What should I call you?'],
     waitAfterPromptMs: 4000,
     // No `knownIssue`, as of 01 Sep 2026: the page works. The entry that was
     // here filed the interrupt's name being lost, and it was written as an
@@ -232,7 +232,7 @@ export const PAGES = definePages([
     startLine: 30,
     endLine: 44,
     extraTabs: [{ filePath: 'backend/src/tool_rendering.py', startLine: 13, endLine: 33 }],
-    prompt: "What's the weather in Tokyo?",
+    prompt: 'Check the weather in Tokyo for me.',
     waitAfterPromptMs: 4000,
   },
   {
@@ -244,7 +244,7 @@ export const PAGES = definePages([
     ideFile: 'frontend/src/app/generative-ui/state-rendering/demo-chat/page.tsx',
     startLine: 9,
     endLine: 37,
-    prompt: 'Research renewable energy storage and show me your progress.',
+    prompt: 'Research renewable energy storage for me, and show me your progress as you go.',
     waitAfterPromptMs: 4000,
   },
   // -- App Control -------------------------------------------------------------
@@ -258,7 +258,7 @@ export const PAGES = definePages([
     startLine: 16,
     endLine: 29,
     extraTabs: [{ filePath: 'backend/src/frontend_tools.py', startLine: 31, endLine: 52 }],
-    prompt: 'Say hello to Fiqros.',
+    prompt: 'Can you say hello to Fiqros for me?',
     waitAfterPromptMs: 3500,
   },
   {
@@ -271,7 +271,7 @@ export const PAGES = definePages([
     startLine: 10,
     endLine: 39,
     extraTabs: [{ filePath: 'backend/src/shared_state.py', startLine: 33, endLine: 66 }],
-    prompt: 'Set the language to Spanish.',
+    prompt: 'Please set the language to Spanish.',
     waitAfterPromptMs: 4000,
     knownIssue: {
       area: 'Deep Agents - App Control - Reading agent state',
@@ -305,7 +305,7 @@ export const PAGES = definePages([
     startLine: 10,
     endLine: 55,
     extraTabs: [{ filePath: 'backend/src/shared_state.py', startLine: 33, endLine: 66 }],
-    prompt: 'Tell me one interesting fact about Karachi.',
+    prompt: 'Tell me one interesting fact about Karachi, please.',
     waitAfterPromptMs: 4000,
     knownIssue: {
       area: 'Deep Agents - App Control - Writing agent state',
@@ -340,7 +340,7 @@ export const PAGES = definePages([
         endLine: 45,
       },
     ],
-    prompt: 'Why is the sky blue?',
+    prompt: 'Quick one: why is the sky blue?',
     waitAfterPromptMs: 4000,
   },
   // -- App Control > State Streaming -------------------------------------------
@@ -354,7 +354,7 @@ export const PAGES = definePages([
     startLine: 32,
     endLine: 81,
     extraTabs: [{ filePath: 'backend/src/predictive_state.py', startLine: 31, endLine: 61 }],
-    prompt: 'Plan a three-step research task about solar panel recycling and report each step.',
+    prompt: 'Plan a three-step research task on solar panel recycling, and report each step as you go.',
     waitAfterPromptMs: 5000,
     knownIssue: {
       area: 'Deep Agents - App Control - State Streaming - Prebuilt agent',
@@ -414,7 +414,7 @@ export const PAGES = definePages([
         endLine: 203,
       },
     ],
-    prompt: 'Plan a three-step research task about solar panel recycling and report each step.',
+    prompt: 'Plan a three-step research task on solar panel recycling, and report each step as you go.',
     waitAfterPromptMs: 5000,
     knownIssue: {
       area:
@@ -474,7 +474,7 @@ export const PAGES = definePages([
     extraTabs: [
       { filePath: 'backend/src/predictive_state_tool.py', startLine: 137, endLine: 180 },
     ],
-    prompt: 'Plan a three-step research task about solar panel recycling and report each step.',
+    prompt: 'Plan a three-step research task on solar panel recycling, and report each step as you go.',
     waitAfterPromptMs: 5000,
     knownIssue: {
       area:

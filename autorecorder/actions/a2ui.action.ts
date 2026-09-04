@@ -72,7 +72,7 @@ export const runA2uiSurfaceAction: PageActionHandler = async (
   // Styling -- same agent, same runtime, same prompt -- did not, and was
   // reported as a dead page. A limit that fails one of three identical calls is
   // measuring the limit, not the app.
-  await waitForAgentResponseCompletion(page, 1500, msgCount, undefined, 75000);
+  await waitForAgentResponseCompletion(page, 1500, msgCount, undefined, { startTimeoutMs: 75000 });
   await restOnSurface(page, config.waitAfterPromptMs ?? 5000);
 };
 

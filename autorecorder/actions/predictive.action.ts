@@ -2,7 +2,7 @@ import { type Page } from 'playwright';
 import { AgentSilentError, sendPrompt, waitForAgentResponseCompletion } from '../core/actions';
 import { writeIssueNote } from '../core/issue-note';
 import { humanClick, humanGlide, sleep } from '../core/overlays/cursor';
-import { type PageActionHandler, type PageRecordConfig } from '../core/types';
+import { type ActionContext, type PageActionHandler, type PageRecordConfig } from '../core/types';
 
 /**
  * Predictive State Updates — three variants, one route.
@@ -31,12 +31,12 @@ const TABS = {
 type VariantKey = keyof typeof TABS;
 
 /** Clicks one of the variant tabs, with the cursor visibly travelling to it. */
-async function selectVariant(page: Page, key: VariantKey): Promise<void> {
+async function selectVariant(ctx: ActionContext, page: Page, key: VariantKey): Promise<void> {
   const label = TABS[key];
   const tab = page.locator(`button:has-text("${label}")`).first();
 
   if (!(await tab.isVisible({ timeout: 8000 }).catch(() => false))) {
-    console.warn(`   ⚠️ Variant tab "${label}" not found -- the demo page may have changed.`);
+    ctx.warn(`Variant tab "${label}" not found -- the demo page may have changed.`);
     return;
   }
 
@@ -68,13 +68,14 @@ async function restOnSteps(page: Page, dwellMs: number): Promise<void> {
 
 /** Drives one variant end to end: pick the tab, ask, watch the steps panel. */
 async function runVariant(
+  ctx: ActionContext,
   page: Page,
   config: PageRecordConfig,
   key: VariantKey,
   startTimeoutMs = 30000,
   waitForStepsMs = 0,
 ): Promise<void> {
-  await selectVariant(page, key);
+  await selectVariant(ctx, page, key);
 
   const msgCount = await sendPrompt(page, config.prompt, { timeoutMs: 12000 });
 
@@ -110,7 +111,7 @@ async function runVariant(
     config.waitAfterPromptMs ?? 4000,
     msgCount,
     undefined,
-    startTimeoutMs,
+    { startTimeoutMs },
   );
 }
 
@@ -118,8 +119,10 @@ async function runVariant(
 export const runPredictivePrebuiltAction: PageActionHandler = async (
   page: Page,
   config: PageRecordConfig,
+  _rootPath,
+  ctx,
 ) => {
-  await runVariant(page, config, 'prebuilt');
+  await runVariant(ctx, page, config, 'prebuilt');
 
   // A long, deliberate look at the panel that should have filled in and did
   // not. With the manual-tab comparison gone this is the whole of the evidence,
@@ -159,7 +162,7 @@ const CUSTOM_GRAPH_START_TIMEOUT_MS = 90000;
  * escaping here would skip the Notepad note, and a defect take that does not
  * write its own report is half a take.
  */
-export const runPredictiveManualAction: PageActionHandler = async (page, config) => {
+export const runPredictiveManualAction: PageActionHandler = async (page, config, _rootPath, ctx) => {
   // Counted before the run ends, while the emitted rows are still on screen.
   let peak = 0;
   const watch = setInterval(() => {
@@ -173,9 +176,8 @@ export const runPredictiveManualAction: PageActionHandler = async (page, config)
   }, 700);
 
   try {
-    await runVariant(page, config, 'manual', CUSTOM_GRAPH_START_TIMEOUT_MS, 45000);
-    console.warn(
-      `   ⚠️ [Predictive manual] The agent DID reply this time -- the documented ` +
+    await runVariant(ctx, page, config, 'manual', CUSTOM_GRAPH_START_TIMEOUT_MS, 45000);
+    ctx.warn(`[Predictive manual] The agent DID reply this time -- the documented ` +
         `defect did not reproduce. Check whether it has been fixed before filing it again.`,
     );
   } catch (e) {
@@ -203,8 +205,7 @@ export const runPredictiveManualAction: PageActionHandler = async (page, config)
   if (peak > 0 && after === 0) {
     console.log(`   🐞 [Predictive manual] The emitted steps did not survive the run.`);
   } else if (peak === 0) {
-    console.warn(
-      `   ⚠️ [Predictive manual] No steps were ever drawn, so the clip shows an empty ` +
+    ctx.warn(`[Predictive manual] No steps were ever drawn, so the clip shows an empty ` +
         `panel throughout and cannot make the "emitted but not persisted" point.`,
     );
   }
@@ -214,6 +215,6 @@ export const runPredictiveManualAction: PageActionHandler = async (page, config)
   }
 };
 
-export const runPredictiveToolAction: PageActionHandler = async (page, config) => {
-  await runVariant(page, config, 'tool', CUSTOM_GRAPH_START_TIMEOUT_MS, 45000);
+export const runPredictiveToolAction: PageActionHandler = async (page, config, _rootPath, ctx) => {
+  await runVariant(ctx, page, config, 'tool', CUSTOM_GRAPH_START_TIMEOUT_MS, 45000);
 };
