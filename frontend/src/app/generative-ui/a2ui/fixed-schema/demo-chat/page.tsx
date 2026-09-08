@@ -3,7 +3,6 @@
 import { CopilotChat, CopilotKit } from "@copilotkit/react-core/v2";
 
 import { DemoFrame } from "@/components/demo-frame";
-import { QaNote } from "@/components/qa-note";
 
 import { catalog } from "../a2ui/catalog";
 
@@ -27,11 +26,6 @@ export default function Page() {
       subtitle={`graph: ${AGENT_ID}`}
     >
       <div className="flex h-full flex-col">
-        <QaNote
-          try="Ask for flights, e.g. &ldquo;Find me flights from New York to London on March 15.&rdquo;"
-          expected="A flight card renders in the chat, drawn from the fixed A2UI schema."
-          actual="Nothing is drawn. The renderer cannot resolve the basic catalog from a2ui.org."
-        />
         <div className="min-h-0 flex-1">
           <CopilotKit runtimeUrl="/api/copilotkit" agent={AGENT_ID} a2ui={{ catalog }}>
             <CopilotChat agentId={AGENT_ID} className="h-full" />

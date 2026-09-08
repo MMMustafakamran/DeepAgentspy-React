@@ -20,8 +20,9 @@ import { type PageActionHandler, type PageRecordConfig } from '../core/types';
  * still captured, still verified, and now reaches the video the way a person
  * would deliver it: typed into the Notepad note at the end.
  *
- * The page itself carries the expectation (`QaNote` on the demo route), which
- * is what makes the empty space legible without narration.
+ * The empty surface is left to speak for itself. This clip is one of the
+ * narrated ones -- `audio/FixedSchemaA2UI.m4a` -- so the absence is
+ * explained by the voice track and the note, not by anything on the page.
  */
 
 /** Rests the cursor where the A2UI surface renders, or should have. */

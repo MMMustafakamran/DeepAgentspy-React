@@ -144,7 +144,6 @@ What is used instead:
 
 | Where | What |
 |---|---|
-| `QaNote` — `frontend/src/components/qa-note.tsx` | "Try / Expected / Actual", three lines on the demo route. Something a tester could plausibly have written on the page, and it makes an empty space legible without narration. |
 | `writeIssueNote()` — `core/issue-note.ts` | Notepad, opened from the taskbar and typed into. The way a tester actually reports. |
 | `showWorkingVariant()` — `core/compare.ts` | The same page against code that works — the only thing that answers "was the demo just wired up wrong?" |
 | `captureConsole()` — `core/console-capture.ts` | Invisible. Console-only failures reach the run log and the note, never the screen. |

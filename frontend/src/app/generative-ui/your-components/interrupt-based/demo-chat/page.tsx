@@ -4,7 +4,6 @@ import { CopilotChat, useInterrupt } from "@copilotkit/react-core/v2";
 import { useState } from "react";
 
 import { DemoFrame } from "@/components/demo-frame";
-import { QaNote } from "@/components/qa-note";
 
 const SINGLE_AGENT_ID = "interrupt_agent";
 const MULTI_AGENT_ID = "interrupt_multi_agent";
@@ -156,11 +155,6 @@ export default function Page() {
       subtitle={`graph: ${variant === "single" ? SINGLE_AGENT_ID : MULTI_AGENT_ID}`}
     >
       <div className="flex h-full flex-col">
-        <QaNote
-          try="On Two, dispatched by type: say anything and wait for the approval step."
-          expected="An Approve/Reject card, then a name form, each picked by the interrupt's type."
-          actual="Neither renders. `enabled` is handed the whole event, so the page's `eventValue` is undefined and no handler claims either interrupt."
-        />
         <div className="flex shrink-0 gap-2 border-b border-slate-200 px-4 py-2 dark:border-slate-800">
           {(
             [

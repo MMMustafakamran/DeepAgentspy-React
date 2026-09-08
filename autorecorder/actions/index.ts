@@ -52,9 +52,11 @@
  *                                      Console errors reach the run log and the
  *                                      note, not the screen
  *
- * Anything a clip needs to *say* rather than show belongs on the demo route
- * itself: `QaNote` in the frontend states what to try and what should happen,
- * which is a thing a tester could plausibly have written on the page.
+ * Anything a clip needs to *say* rather than show is said in the Notepad
+ * note, or in a narration track. The demo routes briefly carried a short
+ * "Try / Expected / Actual" block for this and no longer do, so a page
+ * whose defect is an absence needs its `knownIssue.note` to carry the
+ * whole explanation on its own.
  */
 
 import { type ActionContext, type PageActionHandler, type PageRecordConfig } from '../core/types';

@@ -48,9 +48,9 @@ them framework-specific, all of them **owed to the sibling repos**:
 A caption overlay and a DevTools-console replica were built for that last point
 and then **deleted**. They are worth knowing about as a warning: a take may only
 show things a person testing the app could have done, and an overlay nobody
-could have summoned turns evidence into presentation. What replaced them is a
-note on the demo page itself (`QaNote` in the frontend) and the Notepad report
-that was always the intended channel.
+could have summoned turns evidence into presentation. What replaced them is
+the Notepad report that was always the intended channel, plus a narration
+track on the pages that have one.
 
 `ADAPT.md` Step 5b documents the contract. If you are reading this while porting
 somewhere else, these are already yours to use.

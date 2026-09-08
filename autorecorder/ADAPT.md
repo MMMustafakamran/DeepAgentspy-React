@@ -179,7 +179,7 @@ keeps asserting a bug that is gone, and nothing can detect that for you.
 
 Most defects are an absence — a label that does not update, a list that stays
 empty, a surface that never draws. On video an empty panel beside a working chat
-is indistinguishable from a page nobody has asked anything yet. Four helpers
+is indistinguishable from a page nobody has asked anything yet. Three helpers
 exist for this, all in `core/`:
 
 The rule is that a take may only contain things a person testing the app could
@@ -189,7 +189,6 @@ have summoned turns a recording of evidence into a recording of a presentation.
 
 | Helper | What it is for |
 |---|---|
-| `QaNote` (in the frontend) | "Try / Expected / Actual" on the demo route. A tester could have written that on the page; it makes an empty space legible without narration. |
 | `showWorkingVariant()` | The same page against code that works — the only thing that answers "was the demo just wired up wrong?" |
 | `writeIssueNote()` | Notepad, opened from the taskbar and typed into. Give each issue a `note` written the way a person scribbles, not the way a report is filed. |
 | `captureConsole()` | Invisible. Console-only failures reach the run log and the note, never the screen. |
