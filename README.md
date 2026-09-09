@@ -245,7 +245,7 @@ A hand-built `StateGraph` with `input_schema` / `output_schema`, because the pag
 
 ### Intelligence
 
-**`/intelligence/quickstart`** — 🚧 **Tracked, not implemented.** Connecting an existing app to a hosted CopilotKit Intelligence project so threads persist. Step 1 is `npx copilotkit@latest login` plus `project select`, which writes a `CPK_INTELLIGENCE_API_KEY` — an account-scoped resource this harness does not have, so every later step has nothing to assert against. Tracked because it is a genuinely new page; the rest of `/deepagents/intelligence/*` is the old `/deepagents/premium/*` set renamed, and stays out of scope.
+**`/intelligence/quickstart`** — ⚠️ **Partial.** Steps 3 and 4 are implemented; steps 1, 2 and 5 are not. The 2026-09-09 sync rewrote step 3 from the multi-route handler to `mode: "single-route"` with a single `POST` export, and step 4 from `runtimeUrl` alone to `runtimeUrl` plus `useSingleEndpoint`. Neither needs a hosted project, so both are mounted now: `/api/copilotkit-single` takes the same runtime object as the multi-route mount, and `/intelligence/quickstart/demo-chat` drives it. Steps 1, 2 and 5 still open with `npx copilotkit@latest login` plus `project select`, which writes a `CPK_INTELLIGENCE_API_KEY` — an account-scoped resource this harness does not have, so the confirmation step has nothing to assert against. Three findings came out of the half that is testable, all on the route's page: the single endpoint accepts seven envelope methods and no thread, memory or annotation method is among them; single-route mode reports `threadEndpointsEnabled: false` from `/info`, which locks the Inspector thread list the page's last step tells you to check; and the page's own coding-agent prompt still instructs the reader to do the opposite of its manual steps. Still tracked as new because it is a genuinely new page; the rest of `/deepagents/intelligence/*` is the old `/deepagents/premium/*` set renamed, and stays out of scope.
 
 ---
 
@@ -273,9 +273,9 @@ Verified 2026-08-06 by driving every graph through the real `CopilotRuntime` rou
 | [...&state-emission=tool-emission](https://docs.copilotkit.ai/deepagents/shared-state/predictive-state-updates?agent-type=custom-graph&state-emission=tool-emission) | same route, tab 3 | `predictive_tool_graph` | ✅ Working | Python snippet is near-complete; only the state class and graph were missing |
 | [shared-state/state-inputs-outputs](https://docs.copilotkit.ai/deepagents/shared-state/state-inputs-outputs) | `/shared-state/state-inputs-outputs` | `state_io_graph` | ✅ Working | Custom `StateGraph`, not a Deep Agent — the page calls for exactly that |
 | [shared-state/workflow-execution](https://docs.copilotkit.ai/deepagents/shared-state/workflow-execution) | `/shared-state/workflow-execution` | — | ❌ Broken | Upstream duplicate of the page above |
-| [intelligence/quickstart](https://docs.copilotkit.ai/deepagents/intelligence/quickstart) | `/intelligence/quickstart` | — | 🚧 Not started | Tracked for drift. Needs a hosted Intelligence project and `CPK_INTELLIGENCE_API_KEY` |
+| [intelligence/quickstart](https://docs.copilotkit.ai/deepagents/intelligence/quickstart) | `/intelligence/quickstart` | `sample_agent` | ⚠️ Partial | Single-route transport implemented and exercised; the hosted-project steps still need `CPK_INTELLIGENCE_API_KEY` |
 
-**Totals:** 13 ✅ Working · 2 ⚠️ Partial · 0 📄 Reference · 1 ❌ Broken · 3 🚧 Not started.
+**Totals:** 13 ✅ Working · 3 ⚠️ Partial · 0 📄 Reference · 1 ❌ Broken · 2 🚧 Not started.
 
 **Tracked without a demo.** The three 🚧 rows carry a route, a nav entry and a snapshot so drift is watched, but nothing is implemented behind them and the recorder does not touch them. The reason is on each route’s page and in §7. The rest of `/deepagents/intelligence/` is the old `/deepagents/premium/` set under a new prefix and stays in `doc-snapshot/manifest.json`’s `knownUnmapped` list.
 
@@ -557,7 +557,7 @@ Grouped the way the doc nav groups them.
 - [Governed Actions](https://docs.copilotkit.ai/deepagents/human-in-the-loop/governed-actions) — tracked for drift only
 
 **Intelligence**
-- [Quickstart](https://docs.copilotkit.ai/deepagents/intelligence/quickstart) — tracked for drift only
+- [Quickstart](https://docs.copilotkit.ai/deepagents/intelligence/quickstart) — single-route transport implemented; the hosted-project steps are not
 
 **Shared State**
 - [Reading agent state](https://docs.copilotkit.ai/deepagents/shared-state/in-app-agent-read)
