@@ -213,7 +213,7 @@ A tool whose body runs in the browser. The Python side defines no tool at all.
 
 **`/webmcp`** — 🚧 **Tracked, not implemented.** The doc adds a `webmcp` flag to a frontend tool so browser agents can discover it through `document.modelContext`. Its own test procedure needs Chrome 149+ with the WebMCP origin trial (or `chrome://flags/#enable-webmcp-testing`) and Chrome's Model Context Tool Inspector; CopilotKit no-ops where `document.modelContext` is absent, so a demo here would register nothing and still look green.
 
-**`/human-in-the-loop/governed-actions`** — 🚧 **Tracked, not implemented.** An approval card gating a side-effecting action, via `useInterrupt` or `useHumanInTheLoop`. The page is served byte-identically under all five framework prefixes and its snippets are plain React with no graph involved, so it is implemented once — in Agno-react and Mastra-react — rather than five times.
+**`/human-in-the-loop/governed-actions`** — ✅ **Working.** An approval card gating a side-effecting action. The run stops on the card, which shows the policy verdict, the reference that produced it, and the exact arguments; it proceeds only on approval. The `useHumanInTheLoop` variant is implemented; the `useInterrupt` variant is not, because it needs a backend that pauses a run and attaches `interrupt.metadata.action`, and no graph here does. The published schema goes in unchanged — `z.record(z.unknown())` is valid on this repo's zod 3, though it does not compile on the zod 4 that MsPy-react and AG2-react run. The `useEffect` that auto-resolves `allow` and `deny` omits `onApprove` and `onBlock` from its dependency array; kept as published, warning and all.
 
 ### Shared State
 
@@ -265,7 +265,7 @@ Verified 2026-08-06 by driving every graph through the real `CopilotRuntime` rou
 | [.../a2ui/advanced](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/advanced) | `/generative-ui/a2ui/advanced` | `a2ui_dynamic_agent` | ⚠️ Partial | Progress renderer works; action-handler exports missing |
 | [frontend-tools](https://docs.copilotkit.ai/deepagents/frontend-tools) | `/frontend-tools` | `frontend_tools_agent` | ✅ Working | Page duplicates two of its own sections |
 | [webmcp](https://docs.copilotkit.ai/deepagents/webmcp) | `/webmcp` | — | 🚧 Not started | Tracked for drift. Needs Chrome 149+ and the WebMCP origin trial |
-| [human-in-the-loop/governed-actions](https://docs.copilotkit.ai/deepagents/human-in-the-loop/governed-actions) | `/human-in-the-loop/governed-actions` | — | 🚧 Not started | Tracked for drift. Same bytes under all five prefixes; built in Agno-react and Mastra-react |
+| [human-in-the-loop/governed-actions](https://docs.copilotkit.ai/deepagents/human-in-the-loop/governed-actions) | `/human-in-the-loop/governed-actions` | `sample_agent` | ✅ Working | Tool-call variant. `useInterrupt` half needs a backend that pauses a run; published schema compiles unchanged on zod 3 |
 | [shared-state/in-app-agent-read](https://docs.copilotkit.ai/deepagents/shared-state/in-app-agent-read) | `/shared-state/in-app-agent-read` | `shared_state_agent` | ✅ Working | `Literal[...] = "english"` is not a runtime default |
 | [shared-state/in-app-agent-write](https://docs.copilotkit.ai/deepagents/shared-state/in-app-agent-write) | `/shared-state/in-app-agent-write` | `shared_state_agent` | ✅ Working | Needs `expose_state`, which neither page mentions |
 | [.../predictive-state-updates?agent-type=prebuilt](https://docs.copilotkit.ai/deepagents/shared-state/predictive-state-updates?agent-type=prebuilt) | `/shared-state/predictive-state-updates` | `predictive_state_agent` | ✅ Working | Requires `<CopilotKit>`, not `<CopilotKitProvider>` |
@@ -275,7 +275,7 @@ Verified 2026-08-06 by driving every graph through the real `CopilotRuntime` rou
 | [shared-state/workflow-execution](https://docs.copilotkit.ai/deepagents/shared-state/workflow-execution) | `/shared-state/workflow-execution` | — | ❌ Broken | Upstream duplicate of the page above |
 | [intelligence/quickstart](https://docs.copilotkit.ai/deepagents/intelligence/quickstart) | `/intelligence/quickstart` | `sample_agent` | ⚠️ Partial | Single-route transport implemented and exercised; the hosted-project steps still need `CPK_INTELLIGENCE_API_KEY` |
 
-**Totals:** 13 ✅ Working · 3 ⚠️ Partial · 0 📄 Reference · 1 ❌ Broken · 2 🚧 Not started.
+**Totals:** 14 ✅ Working · 3 ⚠️ Partial · 0 📄 Reference · 1 ❌ Broken · 1 🚧 Not started.
 
 **Tracked without a demo.** The three 🚧 rows carry a route, a nav entry and a snapshot so drift is watched, but nothing is implemented behind them and the recorder does not touch them. The reason is on each route’s page and in §7. The rest of `/deepagents/intelligence/` is the old `/deepagents/premium/` set under a new prefix and stays in `doc-snapshot/manifest.json`’s `knownUnmapped` list.
 
@@ -554,7 +554,7 @@ Grouped the way the doc nav groups them.
 **App Control**
 - [Frontend Tools](https://docs.copilotkit.ai/deepagents/frontend-tools)
 - [WebMCP](https://docs.copilotkit.ai/deepagents/webmcp) — tracked for drift only
-- [Governed Actions](https://docs.copilotkit.ai/deepagents/human-in-the-loop/governed-actions) — tracked for drift only
+- [Governed Actions](https://docs.copilotkit.ai/deepagents/human-in-the-loop/governed-actions) — tool-call variant implemented; the `useInterrupt` variant is not
 
 **Intelligence**
 - [Quickstart](https://docs.copilotkit.ai/deepagents/intelligence/quickstart) — single-route transport implemented; the hosted-project steps are not

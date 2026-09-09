@@ -104,8 +104,11 @@ export const PAGES = definePages([
     extraTabs: [
       {
         filePath: 'frontend/src/app/generative-ui/a2ui/fixed-schema/demo-chat/page.tsx',
-        startLine: 29,
-        endLine: 40,
+        // Was 29-40, which ran two lines past the end of a 37-line file and
+        // failed the doctor. Now the provider block: the a2ui={{ catalog }}
+        // prop and the chat it wraps.
+        startLine: 28,
+        endLine: 36,
       },
       { filePath: 'backend/src/a2ui_fixed.py', startLine: 88, endLine: 104 },
     ],
@@ -527,5 +530,27 @@ export const PAGES = definePages([
     ],
     prompt: 'Tell me a one-line joke.',
     waitAfterPromptMs: 4000,
+  },
+  {
+    id: 'human-in-the-loop-governed-actions',
+    name: 'App Control - Governed Action Approval',
+    videoName: 'GovernedActions',
+    docPath: 'human-in-the-loop/governed-actions',
+    route: 'human-in-the-loop/governed-actions',
+    // The tool registration -- the half that makes the run stop.
+    ideFile: 'frontend/src/app/human-in-the-loop/governed-actions/demo-chat/page.tsx',
+    startLine: 109,
+    endLine: 148,
+    extraTabs: [
+      // The approval card the tool renders.
+      {
+        filePath: 'frontend/src/app/human-in-the-loop/governed-actions/demo-chat/page.tsx',
+        startLine: 42,
+        endLine: 103,
+      },
+    ],
+    prompt:
+      'Please send an invoice reminder to acme@example.com, but check with me before it goes out.',
+    waitAfterPromptMs: 6000,
   },
 ]);
