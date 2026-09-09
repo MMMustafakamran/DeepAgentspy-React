@@ -36,7 +36,7 @@ on:
   workflow_dispatch:
     inputs:
       group_getting_started:
-        description: 'Getting Started — Quickstart'
+        description: 'Getting Started — Quickstart, Intelligence Quickstart'
         type: boolean
         default: false
       group_generative_ui:
@@ -48,7 +48,7 @@ on:
         type: boolean
         default: false
       group_app_control:
-        description: 'App Control — Frontend Tools'
+        description: 'App Control — Frontend Tools, Governed Actions'
         type: boolean
         default: false
       group_shared_state:
