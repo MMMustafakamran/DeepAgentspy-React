@@ -65,6 +65,7 @@ import { type Page } from 'playwright';
 
 import { runA2uiFixedSchemaAction, runA2uiSurfaceAction } from './a2ui.action';
 import { runFrontendToolsAction } from './frontend-tools.action';
+import { runGovernedActionsAction } from './governed-actions.action';
 import { runInterruptAction } from './interrupt.action';
 import {
   runPredictiveManualAction,
@@ -93,6 +94,7 @@ export const ACTION_MAP: Record<string, PageActionHandler> = {
   'a2ui-advanced': runA2uiSurfaceAction,
 
   'frontend-tools': runFrontendToolsAction,
+  'human-in-the-loop-governed-actions': runGovernedActionsAction,
 
   'in-app-agent-read': runSharedStateReadAction,
   'in-app-agent-write': runSharedStateWriteAction,
