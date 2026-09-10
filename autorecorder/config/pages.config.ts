@@ -171,7 +171,7 @@ export const PAGES = definePages([
         'the custom-properties table, the dark-mode block and the `.a2ui-card` width override -- ' +
         'has no effect, and the reader has no way to tell that from the page.',
       likelyCause:
-        '@copilotkit/a2ui-renderer 1.69.0 reads exactly one custom property, ' +
+        '@copilotkit/a2ui-renderer reads exactly one custom property, ' +
         '`--a2ui-primary-color`, which the page never mentions. None of `--primary`, ' +
         '`--primary-foreground`, `--card`, `--border`, `--radius`, `--foreground`, `--input` ' +
         'or `--background` is read anywhere in the shipped package, and `.a2ui-card` is never ' +
