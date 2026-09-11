@@ -1,9 +1,9 @@
 import { type Page } from 'playwright';
 import { promptsFor, sendPrompt, waitForAgentResponseCompletion } from '../core/actions';
-import { writeIssueNote } from '../core/issue-note';
 import { sleep } from '../core/overlays/cursor';
 import { type ActionContext, type PageActionHandler, type PageRecordConfig } from '../core/types';
-import { glideClick, glideTo, waitForText } from './glide-click';
+import { markServerLogs } from './error-evidence';
+import { evidenceThenIssueNote, glideClick, glideTo, visibleWithin, waitForText } from './glide-click';
 
 /**
  * Frontend-Driven Cards -- the published provider first, then the one that runs.
@@ -27,14 +27,21 @@ import { glideClick, glideTo, waitForText } from './glide-click';
  * what this take is about. Clicking early would film that instead, randomly.
  */
 
+/**
+ * Server lines that belong to this take. The crash happens in the browser, so
+ * the overlay is where it shows; the servers only log the runs.
+ */
+const RELEVANT = /activity|app-event-card|frontend-cards|\/agent\/[^/]+\/run/;
+
 const CARD = '.rounded-lg.border.p-4:has-text("Deployment finished")';
 
 export const runFrontendCardsAction: PageActionHandler = async (
   page: Page,
   config: PageRecordConfig,
-  _rootPath: string,
+  rootPath: string,
   ctx: ActionContext,
 ) => {
+  const logs = markServerLogs(rootPath);
   // Pass 1 -- as published.
   console.log('   [Frontend Cards] 1/2: step 2 provider as published...');
   const thrown = page.locator('[data-testid=provider-error]');
@@ -70,7 +77,7 @@ export const runFrontendCardsAction: PageActionHandler = async (
   await glideClick(page, page.locator('[data-testid=add-activity-card]'));
   await sleep(1200);
   const card = page.locator(CARD).first();
-  if (!(await card.isVisible({ timeout: 5000 }).catch(() => false))) {
+  if (!(await visibleWithin(card, 5000))) {
     ctx.fail('The activity card never rendered in the transcript');
   } else {
     await glideTo(page, card, 1500);
@@ -89,9 +96,7 @@ export const runFrontendCardsAction: PageActionHandler = async (
   }
   await glideTo(page, payload, 2500);
 
-  if (config.knownIssue) {
-    await writeIssueNote(page, config.id, config.knownIssue, {
-      extraLines: thrownText ? [`thrown: ${thrownText.split(' Known agents')[0]}`] : [],
-    });
-  }
+  await evidenceThenIssueNote(page, config, logs, RELEVANT, {
+    extraLines: () => (thrownText ? [`thrown: ${thrownText.split(' Known agents')[0]}`] : []),
+  });
 };

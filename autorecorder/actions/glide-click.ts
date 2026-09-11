@@ -1,5 +1,8 @@
 import { type Locator, type Page } from 'playwright';
+import { writeIssueNote } from '../core/issue-note';
 import { humanClick, humanGlide, sleep } from '../core/overlays/cursor';
+import { type PageRecordConfig } from '../core/types';
+import { type LogMark, serverLogSince, showNextIssues, showServerTerminal } from './error-evidence';
 
 /**
  * Glide the on-screen cursor to an element and click it, the way the other
@@ -41,4 +44,49 @@ export async function waitForText(
     await sleep(500);
   }
   return last;
+}
+
+/**
+ * Whether an element becomes visible within `timeoutMs`. Not
+ * `locator.isVisible({ timeout })`: Playwright ignores that timeout and answers
+ * at once, which on a cold `next dev` route reads "not there yet" as "never".
+ */
+export async function visibleWithin(target: Locator, timeoutMs: number): Promise<boolean> {
+  return target
+    .waitFor({ state: 'visible', timeout: timeoutMs })
+    .then(() => true)
+    .catch(() => false);
+}
+
+/**
+ * The end of every defect take here: the real Next.js issues overlay, then the
+ * dev servers' own lines from this take, then the ONE note -- the page's
+ * `knownIssue`, typed by core `writeIssueNote`. Same order as Agno-react's
+ * `showEvidence`; the explanation comes from the config because this repo's
+ * report and Notepad share that object.
+ *
+ * `note` replaces `knownIssue.note` for a take whose outcome depends on the
+ * environment (an Intelligence key or not); `extraLines(serverLines)` adds what
+ * only this take knows (a save result) before the version lines.
+ */
+export async function evidenceThenIssueNote(
+  page: Page,
+  config: PageRecordConfig,
+  logs: LogMark,
+  relevant: RegExp,
+  opts: {
+    note?: (serverLines: string[]) => string;
+    extraLines?: (serverLines: string[]) => string[];
+  } = {},
+): Promise<void> {
+  const overlay = await showNextIssues(page);
+  console.log(`   [evidence] Next overlay: ${overlay ?? '(no issues badge)'}`);
+  const serverLines = serverLogSince(logs, { relevant });
+  console.log(`   [evidence] ${serverLines.length} server line(s) on screen`);
+  for (const l of serverLines) console.log(`      | ${l}`);
+  await showServerTerminal(page, serverLines);
+  if (config.knownIssue) {
+    const issue = opts.note ? { ...config.knownIssue, note: opts.note(serverLines) } : config.knownIssue;
+    await writeIssueNote(page, config.id, issue, { extraLines: opts.extraLines?.(serverLines) ?? [] });
+  }
 }

@@ -37,7 +37,7 @@ type AgentId = (typeof AGENT_IDS)[number];
 
 const EXPECTED: Record<AgentId, string> = {
   "expense-agent": '"expense-review"',
-  sample_agent: "undefined — not assigned",
+  sample_agent: "undefined",
 };
 
 function InfoStatus() {

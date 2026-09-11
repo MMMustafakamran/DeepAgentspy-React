@@ -10,7 +10,6 @@ import { learningRuntime } from "@/lib/learning-runtime";
  * Without `CPK_INTELLIGENCE_API_KEY` the module throws on load (the page's
  * `apiKey: process.env.CPK_INTELLIGENCE_API_KEY!` asserts a key it does not
  * check), so this route answers 500 and nothing else in the app is affected.
- * This harness has no key, locally or in CI, so that is the state it is in.
  */
 
 const handler = createCopilotRuntimeHandler({

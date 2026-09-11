@@ -116,12 +116,6 @@ function CardControls() {
         >
           Simulate: deployment finished
         </button>
-        <p className="text-xs text-slate-500">
-          Adds a <code>role: &quot;activity&quot;</code> message with{" "}
-          <code>activityType: &quot;app-event-card&quot;</code>. Step 3&apos;s socket at{" "}
-          <code>wss://example.com/deployments</code> is mounted too, and never
-          delivers.
-        </p>
       </div>
 
       <table className="mt-3 w-full text-left text-xs">
@@ -155,7 +149,7 @@ function CardControls() {
               }`}
             >
               {payload
-                ? `${payload.roles.join(", ")}  (${payload.at})${leaked ? "  ← activity reached the agent" : ""}`
+                ? `${payload.roles.join(", ")}  (${payload.at})`
                 : "no run sent yet"}
             </td>
           </tr>
@@ -185,7 +179,7 @@ class ProviderErrorBoundary extends Component<
     return (
       <div className="p-4">
         <p className="text-xs font-semibold uppercase tracking-wide text-rose-700 dark:text-rose-400">
-          The published provider threw — the chat never rendered
+          Uncaught error
         </p>
         <pre
           data-testid="provider-error"
@@ -200,12 +194,10 @@ class ProviderErrorBoundary extends Component<
 
 const PROVIDERS = {
   published: {
-    label: "As published · step 2's provider",
-    note: "runtimeUrl + renderActivityMessages, nothing else. useAgent() and <CopilotChat /> fall back to the agent id \"default\".",
+    label: "Page code (step 2)",
   },
   "quickstart-agent": {
-    label: "+ agent=\"sample_agent\" (the Quickstart's prop)",
-    note: "Not from this page: the same provider plus the agent prop the Deep Agents Quickstart puts on its own provider.",
+    label: "Page code (step 2) + agent=\"sample_agent\"",
   },
 } as const;
 type ProviderKey = keyof typeof PROVIDERS;
@@ -235,7 +227,7 @@ export default function Page() {
   return (
     <DemoFrame
       parentPath="/generative-ui/frontend-cards"
-      subtitle="activity messages · never sent to the agent"
+      subtitle="activity messages"
     >
       <div className="flex h-full flex-col">
         <div className="flex shrink-0 flex-wrap items-center gap-2 border-b border-slate-200 p-3 dark:border-slate-800">
@@ -254,9 +246,6 @@ export default function Page() {
               {PROVIDERS[key].label}
             </button>
           ))}
-          <p data-testid="cards-provider-note" className="w-full text-xs text-slate-500">
-            {PROVIDERS[provider].note}
-          </p>
         </div>
         <div className="min-h-0 flex-1">
           {provider === "published" ? (

@@ -5,37 +5,43 @@ import {
   sendPrompt,
   waitForAgentResponseCompletion,
 } from '../core/actions';
-import { writeIssueNote } from '../core/issue-note';
 import { sleep } from '../core/overlays/cursor';
 import { type ActionContext, type PageActionHandler, type PageRecordConfig } from '../core/types';
-import { glideClick, glideTo, waitForText } from './glide-click';
+import { markServerLogs } from './error-evidence';
+import { evidenceThenIssueNote, glideClick, glideTo, waitForText } from './glide-click';
 
 /**
  * Learning -- one turn on the agent the page's selector assigns, one on the
  * agent it does not.
  *
- * This harness has no `CPK_INTELLIGENCE_API_KEY`, and the page's
- * `new CopilotKitIntelligence({ apiKey: process.env.CPK_INTELLIGENCE_API_KEY! })`
- * throws at module load without one. The mount answers 500, the provider
- * lands in `error`, the agents never become ready and the composer's send
- * button stays disabled -- so the prompt is typed and never leaves. Silence on
- * both tabs is the finding; the panel's last row shows the 500 on screen.
+ * With `CPK_INTELLIGENCE_API_KEY` set, the page's runtime connects and the
+ * take follows the path the page describes: `expense-agent` is routed to the
+ * example container `expense-review`; where that container does not exist the
+ * platform answers `LEARNING_CONTAINER_NOT_FOUND`, the run fails with "Failed
+ * to initialize thread" and the chat shows nothing, while `sample_agent` (the
+ * control, which the selector assigns nowhere) answers.
  *
- * If a key is ever supplied, `expense-agent` is routed to `expense-review`,
- * which is expected not to exist in the project either; if the agent DOES
- * answer, the warning says the finding needs revisiting.
+ * Without a key, the page's
+ * `new CopilotKitIntelligence({ apiKey: process.env.CPK_INTELLIGENCE_API_KEY! })`
+ * throws at module load, the mount answers 500, and neither tab can send.
+ *
+ * The note is written from what the take saw, so it holds either way.
  */
 
-const SILENCE_MS = 12_000;
+/** The platform's Learning codes, the run failure, and the module-load throw. */
+const RELEVANT = /LEARNING_|expense-agent|initialize thread|copilotkit-learning\/agent\/|CopilotKitIntelligence|apiKey is required/i;
+
+const SILENCE_MS = 25_000;
+
+type Outcome = 'answered' | 'silent';
 
 async function turn(
   page: Page,
-  ctx: ActionContext,
   agentId: string,
   prompt: string,
   postWaitMs: number,
-): Promise<'answered' | 'silent'> {
-  const ready = await waitForText(page.locator('[data-testid=learning-ready]'), (t) => t === 'true', 8000);
+): Promise<Outcome> {
+  const ready = await waitForText(page.locator('[data-testid=learning-ready]'), (t) => t === 'true', 30_000);
   await glideTo(page, page.locator('[data-testid=learning-assignment]'), 2000);
   console.log(`   [Learning] ${agentId}: ready=${ready}`);
 
@@ -46,36 +52,77 @@ async function turn(
     await waitForAgentResponseCompletion(page, postWaitMs, count, undefined, {
       startTimeoutMs: SILENCE_MS,
     });
-    ctx.warn(`${agentId} answered -- re-check the finding on /learning.`);
+    console.log(`   [Learning] ${agentId} answered.`);
     return 'answered';
   } catch (error) {
     if (!(error instanceof AgentSilentError)) throw error;
-    console.log(`   [Learning] ${agentId} stayed silent -- the finding.`);
+    console.log(`   [Learning] ${agentId} stayed silent.`);
     await glideTo(page, page.locator('[data-testid=learning-info]'), 1800);
     return 'silent';
   }
 }
 
+function noteFor(info: string, expense: Outcome, control: Outcome, serverLines: string[]): string {
+  const tail = [
+    '',
+    'also: agents and identifyUser never defined on the page',
+    'getLearningContainerId needs runtime 1.70+, lockfile here is 1.69.0',
+  ];
+  if (/^5\d\d/.test(info) || serverLines.some((l) => /apiKey is required/.test(l))) {
+    return [
+      'learning - page runtime 500s at load, nothing answers',
+      '',
+      'mounted the snippet verbatim on its own route',
+      'no intelligence key, apiKey: process.env.CPK_INTELLIGENCE_API_KEY! throws at import',
+      '/info 500, runtime stuck in error, send button never enables',
+      ...tail,
+    ].join('\n');
+  }
+  const notFound = serverLines.some((l) => /LEARNING_CONTAINER_NOT_FOUND/.test(l));
+  return [
+    expense === 'silent' ? 'learning - expense-agent never answers' : 'learning - both agents answer',
+    '',
+    'page selector sends expense-agent threads to container "expense-review"',
+    ...(expense === 'silent'
+      ? [
+          notFound
+            ? 'that container does not exist in this project -> LEARNING_CONTAINER_NOT_FOUND'
+            : 'the platform refuses the thread (see terminal)',
+          'thread is never created, run 404s "failed to initialize thread", chat stays blank',
+        ]
+      : ['this project has that container, the run goes through']),
+    control === 'answered'
+      ? 'sample_agent (no container) answers fine, same graph'
+      : 'sample_agent (no container) did not answer either this take',
+    '',
+    'troubleshooting table only says the thread will not show in the container',
+    ...tail,
+  ].join('\n');
+}
+
 export const runLearningAction: PageActionHandler = async (
   page: Page,
   config: PageRecordConfig,
-  _rootPath: string,
+  rootPath: string,
   ctx: ActionContext,
 ) => {
+  const logs = markServerLogs(rootPath);
   const prompts = promptsFor(config);
 
   console.log('   [Learning] 1/2: expense-agent -> "expense-review"...');
-  await turn(page, ctx, 'expense-agent', prompts[0], 2000);
+  const expense = await turn(page, 'expense-agent', prompts[0], 2000);
+  if (expense === 'answered') {
+    ctx.warn('expense-agent answered. The expense-review container may exist in the project now -- re-check the finding on /learning.');
+  }
 
   console.log('   [Learning] 2/2: sample_agent -> no container...');
   await glideClick(page, page.locator('[data-testid=learning-agent-sample_agent]'));
   await sleep(1500);
-  await turn(page, ctx, 'sample_agent', prompts[1] ?? prompts[0], config.waitAfterPromptMs ?? 3000);
+  const control = await turn(page, 'sample_agent', prompts[1] ?? prompts[0], config.waitAfterPromptMs ?? 3000);
 
   const info = ((await page.locator('[data-testid=learning-info]').textContent().catch(() => '')) ?? '').trim();
-  if (config.knownIssue) {
-    await writeIssueNote(page, config.id, config.knownIssue, {
-      extraLines: info ? [`GET /api/copilotkit-learning/info -> ${info}`] : [],
-    });
-  }
+  await evidenceThenIssueNote(page, config, logs, RELEVANT, {
+    note: (lines) => noteFor(info, expense, control, lines),
+    extraLines: () => (info ? [`GET /api/copilotkit-learning/info -> ${info}`] : []),
+  });
 };

@@ -585,8 +585,8 @@ export const PAGES = definePages([
       // it the Quickstart-agent variant the take switches to.
       {
         filePath: 'frontend/src/app/generative-ui/frontend-cards/demo-chat/page.tsx',
-        startLine: 262,
-        endLine: 282,
+        startLine: 251,
+        endLine: 271,
       },
       // Step 3: the bare useAgent() and addMessage with role "activity", verbatim.
       {
@@ -617,11 +617,11 @@ export const PAGES = definePages([
       note: [
         'frontend cards - published code crashes the route',
         '',
-        'step 2 provider exactly as the page has it, no agent prop',
-        'chat shows for a second then goes - useAgent throws once /info answers',
-        "agent 'default' not found. deep agents registers sample_agent, no default",
+        'first tab = step 2 provider exactly as the page has it, no agent prop',
+        "so useAgent() asks for agent 'default'. deep agents registers sample_agent, no default",
+        "-> Agent 'default' not found after runtime sync (the overlay). chat never renders",
         '',
-        'added the quickstart agent="sample_agent" on the second tab',
+        'second tab = same code + the quickstart agent="sample_agent"',
         'card renders, payload row says user only, agent says it saw no card',
         'so the idea works, the page just assumes a default agent',
       ].join('\n'),
@@ -666,8 +666,8 @@ export const PAGES = definePages([
         'so on a non-Intelligence runtime it never fetches and never flips `isAvailable`. Even on an ' +
         'Intelligence runtime every `/memories/*` route 404s unless `CopilotRuntime` is built with ' +
         '`memory: { access }` (or the deprecated `exposeMemoryRoutes`), which the page never mentions ' +
-        '-- present on both 1.69.0 and 1.71.0. This harness has no Intelligence key, so that mount ' +
-        'answers 503 and the platform side was not reached.',
+        '-- present on both 1.69.0 and 1.71.0. With that option and an Intelligence key the platform ' +
+        'answers for itself (see the take\'s note); without a key that mount answers 503.',
       note: [
         'memories - react snippet doesnt compile, and memory never actually runs',
         '',
@@ -713,20 +713,23 @@ export const PAGES = definePages([
     knownIssue: {
       area: 'Deep Agents - Intelligence - Learning',
       problem:
-        "The page's runtime snippet fails at module load without an Intelligence key: " +
-        '`new CopilotKitIntelligence({ apiKey: process.env.CPK_INTELLIGENCE_API_KEY! })` throws ' +
-        '"apiKey is required and cannot be blank", the route answers 500, and neither agent can be ' +
-        'reached -- the chat will not even send.',
+        "With an Intelligence key, the page's example selector routes `expense-agent` to the container " +
+        '`expense-review`; where that container does not exist the platform answers ' +
+        '`LEARNING_CONTAINER_NOT_FOUND`, the run fails with "Failed to initialize thread", and the chat ' +
+        'shows nothing, while `sample_agent` (not assigned) answers. Without a key the snippet fails at ' +
+        "module load: the `apiKey: process.env.CPK_INTELLIGENCE_API_KEY!` constructor throws and the " +
+        'route answers 500.',
       impact:
-        'Nothing on the page can be exercised without a provisioned Intelligence project, and the ' +
-        'non-null assertion hides that requirement from the type checker. The snippet also uses ' +
+        'Copying the example as written silences the agent it is meant to teach, with nothing in the chat ' +
+        'to say why -- the troubleshooting table only says the Thread will not appear in the container. ' +
+        'The non-null assertion hides the key requirement from the type checker. The snippet also uses ' +
         '`agents` and `identifyUser` without defining them, and `getLearningContainerId` does not exist ' +
         "before runtime 1.70 (this repo's lockfile pins 1.69.0), a floor the page never states.",
       likelyCause:
-        'The page assumes the Intelligence Quickstart has already provisioned `CPK_INTELLIGENCE_API_KEY` ' +
-        'and does not say so; the `!` turns a missing key into a constructor throw at import time. ' +
-        'This harness has no key, so the container-assignment half (and the dashboard/CLI steps) was ' +
-        'not reached.',
+        'The example container has to be created in the dashboard first, and a missing one fails the ' +
+        'Thread rather than skipping assignment. The page also assumes the Intelligence Quickstart has ' +
+        'provisioned `CPK_INTELLIGENCE_API_KEY`; the `!` turns a missing key into a constructor throw at ' +
+        'import time. The dashboard/CLI steps (Run Learning, Skills) are behind a login and not on camera.',
       expectsNoResponse: true,
       note: [
         'learning - page runtime 500s at load, nothing answers',

@@ -6,7 +6,8 @@
     "dev": "next dev",
     "build": "next build",
     "start": "next start",
-    "lint": "eslint"
+    "lint": "eslint",
+    "test": "npx --yes tsx --conditions=react-server --test src/lib/*.test.ts"
   },
   "dependencies": {
     "@copilotkit/a2ui-renderer": "^1.69.0",
