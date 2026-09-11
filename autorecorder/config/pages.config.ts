@@ -19,7 +19,7 @@
  * working.
  *
  * ── `knownIssue` ───────────────────────────────────────────────────────────
- * This repo is not only documenting an integration that works. Seven of the
+ * This repo is not only documenting an integration that works. Ten of the
  * pages below are on the QA report as broken, and their clips exist to show
  * that. `knownIssue` is what makes the run say `[ISSUE]` rather than `[PASS]`,
  * and it is the same object `ci/build-report.mjs` renders into the daily
@@ -567,5 +567,178 @@ export const PAGES = definePages([
       'Now permanently delete the acme@example.com customer record, but check with me before it goes through.',
     ],
     waitAfterPromptMs: 6000,
+  },
+  // -- Added 2026-09-11: three pages new upstream, identical under every
+  // framework prefix. After every existing doc page so no clip is renumbered.
+  {
+    id: 'frontend-cards',
+    name: 'Generative UI - Frontend-Driven Cards',
+    videoName: 'FrontendCards',
+    docPath: 'generative-ui/frontend-cards',
+    route: 'generative-ui/frontend-cards',
+    // Step 1: the renderer, verbatim.
+    ideFile: 'frontend/src/app/generative-ui/frontend-cards/event-card.tsx',
+    startLine: 8,
+    endLine: 28,
+    extraTabs: [
+      // Step 2: registered on the provider, props as published -- and beside
+      // it the Quickstart-agent variant the take switches to.
+      {
+        filePath: 'frontend/src/app/generative-ui/frontend-cards/demo-chat/page.tsx',
+        startLine: 262,
+        endLine: 282,
+      },
+      // Step 3: the bare useAgent() and addMessage with role "activity", verbatim.
+      {
+        filePath: 'frontend/src/app/generative-ui/frontend-cards/deployment-watcher.tsx',
+        startLine: 16,
+        endLine: 38,
+      },
+    ],
+    prompt:
+      'Have you been shown any deployment card in this conversation? List the roles of every message you received.',
+    waitAfterPromptMs: 4000,
+    knownIssue: {
+      area: 'Deep Agents - Generative UI - Frontend-Driven Cards',
+      problem:
+        'Built as published, the page renders no chat. Its `useAgent()` and `<CopilotChat />` pass no ' +
+        'agent id, so they ask for "default"; the Deep Agents runtime registers its graphs by id ' +
+        '(`sample_agent`) and has no "default", and `useAgent()` throws "Agent \'default\' not found after ' +
+        'runtime sync" as soon as `/info` answers (3 of 3 loads).',
+      impact:
+        'A Deep Agents reader who copies the three snippets gets a crashed route, not a card. With the ' +
+        'Quickstart\'s `agent="sample_agent"` added to the provider the rest of the page holds -- the card ' +
+        'renders and the run payload carries only `user` -- but the page never says that prop is needed. ' +
+        'Separately, a card added before the runtime connects is silently dropped (3 of 3).',
+      likelyCause:
+        'The page is byte-identical under every framework prefix and assumes an agent registered as ' +
+        '"default". The Deep Agents Quickstart names its agent `sample_agent` and puts ' +
+        '`agent="sample_agent"` on its own provider; step 2\'s provider has neither.',
+      note: [
+        'frontend cards - published code crashes the route',
+        '',
+        'step 2 provider exactly as the page has it, no agent prop',
+        'chat shows for a second then goes - useAgent throws once /info answers',
+        "agent 'default' not found. deep agents registers sample_agent, no default",
+        '',
+        'added the quickstart agent="sample_agent" on the second tab',
+        'card renders, payload row says user only, agent says it saw no card',
+        'so the idea works, the page just assumes a default agent',
+      ].join('\n'),
+    },
+  },
+  {
+    id: 'intelligence-memories',
+    name: 'Intelligence - Memories & Recall',
+    videoName: 'Memories',
+    docPath: 'intelligence/memories',
+    route: 'intelligence/memories',
+    // The page's React component, verbatim -- with the two compiler errors its
+    // import produces acknowledged in place.
+    ideFile: 'frontend/src/app/intelligence/memories/memory-list.tsx',
+    startLine: 22,
+    endLine: 45,
+    extraTabs: [
+      // The option the page never mentions, and without which every memory
+      // route 404s at the runtime.
+      {
+        filePath: 'frontend/src/app/api/copilotkit-memory/[[...slug]]/route.ts',
+        startLine: 44,
+        endLine: 60,
+      },
+    ],
+    prompt: 'Please remember that I prefer concise status updates.',
+    waitAfterPromptMs: 3000,
+    knownIssue: {
+      area: 'Deep Agents - Intelligence - Memories & Recall',
+      problem:
+        'The React snippet does not compile: it imports `useMemories` from `@copilotkit/react-core`, ' +
+        'which has no such export (TS2305, plus a knock-on TS7006). With the import moved to `/v2`, on ' +
+        'the Deep Agents Quickstart runtime the hook reports `isAvailable: true` over an empty list, no ' +
+        'memory request ever leaves the browser, and saving fails with "Runtime URL is not configured". ' +
+        'The agent, asked to remember something, says it will.',
+      impact:
+        'Memory cannot be used from React as documented, and the failure does not look like one: the ' +
+        "page's component shows an empty list rather than \"Memory is not available\", and the save " +
+        "error names a runtime URL that is in fact configured.",
+      likelyCause:
+        'The client memory store only gets a context when `/info` advertises an Intelligence socket, ' +
+        'so on a non-Intelligence runtime it never fetches and never flips `isAvailable`. Even on an ' +
+        'Intelligence runtime every `/memories/*` route 404s unless `CopilotRuntime` is built with ' +
+        '`memory: { access }` (or the deprecated `exposeMemoryRoutes`), which the page never mentions ' +
+        '-- present on both 1.69.0 and 1.71.0. This harness has no Intelligence key, so that mount ' +
+        'answers 503 and the platform side was not reached.',
+      note: [
+        'memories - react snippet doesnt compile, and memory never actually runs',
+        '',
+        'useMemories isnt exported from @copilotkit/react-core, only /v2',
+        'moved the import to /v2 so the demo loads at all',
+        '',
+        'on the quickstart runtime the list is just empty, isAvailable says true',
+        'save fails with "runtime url is not configured" - it is configured',
+        'no /memories request ever leaves the browser. agent says it will remember anyway',
+        '',
+        'the memory.access option the page never mentions needs an intelligence key',
+        'dont have one here so that mount is 503',
+      ].join('\n'),
+    },
+  },
+  {
+    id: 'learning',
+    name: 'Intelligence - Learning',
+    videoName: 'Learning',
+    docPath: 'learning',
+    route: 'learning',
+    // The page's runtime snippet, verbatim, and the two identifiers it leaves
+    // undefined supplied above it.
+    ideFile: 'frontend/src/lib/learning-runtime.ts',
+    startLine: 36,
+    endLine: 68,
+    extraTabs: [
+      // Where it is mounted: its own route, so the page's code cannot take
+      // down the app's main runtime.
+      {
+        filePath: 'frontend/src/app/api/copilotkit-learning/[[...slug]]/route.ts',
+        startLine: 1,
+        endLine: 24,
+      },
+    ],
+    prompt: 'Review this expense: $42 team lunch at Cafe Rio, receipt attached. Approve or flag it?',
+    // Turn 2 is the control on `sample_agent`, which the selector assigns nowhere.
+    prompts: [
+      'Review this expense: $42 team lunch at Cafe Rio, receipt attached. Approve or flag it?',
+      'Say hello in five words.',
+    ],
+    waitAfterPromptMs: 3000,
+    knownIssue: {
+      area: 'Deep Agents - Intelligence - Learning',
+      problem:
+        "The page's runtime snippet fails at module load without an Intelligence key: " +
+        '`new CopilotKitIntelligence({ apiKey: process.env.CPK_INTELLIGENCE_API_KEY! })` throws ' +
+        '"apiKey is required and cannot be blank", the route answers 500, and neither agent can be ' +
+        'reached -- the chat will not even send.',
+      impact:
+        'Nothing on the page can be exercised without a provisioned Intelligence project, and the ' +
+        'non-null assertion hides that requirement from the type checker. The snippet also uses ' +
+        '`agents` and `identifyUser` without defining them, and `getLearningContainerId` does not exist ' +
+        "before runtime 1.70 (this repo's lockfile pins 1.69.0), a floor the page never states.",
+      likelyCause:
+        'The page assumes the Intelligence Quickstart has already provisioned `CPK_INTELLIGENCE_API_KEY` ' +
+        'and does not say so; the `!` turns a missing key into a constructor throw at import time. ' +
+        'This harness has no key, so the container-assignment half (and the dashboard/CLI steps) was ' +
+        'not reached.',
+      expectsNoResponse: true,
+      note: [
+        'learning - page runtime 500s at load, nothing answers',
+        '',
+        'mounted the snippet verbatim on its own route',
+        'no intelligence key here, apiKey: process.env.CPK_INTELLIGENCE_API_KEY! throws at import',
+        '/info 500, runtime stuck in error, send button never enables',
+        'tried expense-agent and sample_agent, both silent',
+        '',
+        'also: agents and identifyUser never defined on the page',
+        'getLearningContainerId needs runtime 1.70+, lockfile here is 1.69.0',
+      ].join('\n'),
+    },
   },
 ]);

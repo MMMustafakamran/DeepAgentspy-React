@@ -28,8 +28,13 @@ const PAGES_CONFIG = path.join(RECORDER_DIR, 'config', 'pages.config.ts');
  * the dispatch form.
  */
 export const PAGE_GROUPS = {
-  getting_started: ['quickstart', 'intelligence-quickstart'],
-  generative_ui: ['tool-rendering', 'state-rendering', 'interrupt-based'],
+  getting_started: [
+    'quickstart',
+    'intelligence-quickstart',
+    'intelligence-memories',
+    'learning',
+  ],
+  generative_ui: ['tool-rendering', 'state-rendering', 'interrupt-based', 'frontend-cards'],
   a2ui: [
     'a2ui-fixed-schema',
     'a2ui-dynamic-schema',

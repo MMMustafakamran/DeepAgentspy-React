@@ -64,9 +64,12 @@ import { runStandardAction } from '../core/actions';
 import { type Page } from 'playwright';
 
 import { runA2uiFixedSchemaAction, runA2uiSurfaceAction } from './a2ui.action';
+import { runFrontendCardsAction } from './frontend-cards.action';
 import { runFrontendToolsAction } from './frontend-tools.action';
 import { runGovernedActionsAction } from './governed-actions.action';
 import { runInterruptAction } from './interrupt.action';
+import { runLearningAction } from './learning.action';
+import { runMemoriesAction } from './memories.action';
 import {
   runPredictiveManualAction,
   runPredictivePrebuiltAction,
@@ -102,6 +105,10 @@ export const ACTION_MAP: Record<string, PageActionHandler> = {
   'predictive-manual': runPredictiveManualAction,
   'predictive-tool': runPredictiveToolAction,
   'state-inputs-outputs': runStateIoAction,
+
+  'frontend-cards': runFrontendCardsAction,
+  'intelligence-memories': runMemoriesAction,
+  learning: runLearningAction,
 };
 
 export async function executePageAction(

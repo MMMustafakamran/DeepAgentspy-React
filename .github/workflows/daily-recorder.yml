@@ -36,11 +36,11 @@ on:
   workflow_dispatch:
     inputs:
       group_getting_started:
-        description: 'Getting Started — Quickstart, Intelligence Quickstart'
+        description: 'Getting Started & Intelligence — Quickstart, Intelligence Quickstart, Memories, Learning'
         type: boolean
         default: false
       group_generative_ui:
-        description: 'Generative UI — Tool Rendering, State Rendering, Interrupt-based'
+        description: 'Generative UI — Tool Rendering, State Rendering, Interrupt-based, Frontend-Driven Cards'
         type: boolean
         default: false
       group_a2ui:

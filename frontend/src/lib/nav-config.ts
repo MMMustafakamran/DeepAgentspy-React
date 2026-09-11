@@ -150,6 +150,17 @@ export const NAV: NavGroup[] = [
         statusNote:
           "The progress renderer works. The action-handler half of the page calls exports that react-core 1.66.2 does not have.",
       },
+      {
+        path: "/generative-ui/frontend-cards",
+        hasDemo: true,
+        title: "Frontend-Driven Cards",
+        docPath: "/deepagents/generative-ui/frontend-cards",
+        summary:
+          "A card pushed into the transcript from frontend code as a `role: \"activity\"` message, which the agent never receives.",
+        status: "broken",
+        statusNote:
+          "As published, the bare `useAgent()` and `<CopilotChat />` target the agent id `default`, which a Deep Agents runtime does not register — `useAgent()` throws once `/info` answers and the route renders no chat. With the Quickstart's `agent=\"sample_agent\"` added to the provider, the page's central claim holds (the run payload carries no `activity`) — see the route page.",
+      },
     ],
   },
   {
@@ -262,6 +273,28 @@ export const NAV: NavGroup[] = [
         statusNote:
           "Steps 3 and 4 are implemented against a third runtime mount at `/api/copilotkit-single`. Steps 1, 2 and 5 need a `CPK_INTELLIGENCE_API_KEY` from a hosted Intelligence project, which is an account-scoped resource this harness does not have.",
         hasDemo: true,
+      },
+      {
+        path: "/intelligence/memories",
+        hasDemo: true,
+        title: "Memories & Recall",
+        docPath: "/deepagents/intelligence/memories",
+        summary:
+          "Long-term memories per user or project, read and written from React with `useMemories`.",
+        status: "broken",
+        statusNote:
+          "The React snippet imports `useMemories` from the package root, which has no such export (TS2305). With the import fixed, every memory route on the Quickstart's runtime 404s: the runtime hides them unless built with `memory: { access }`, which the page never mentions. That option needs an Intelligence key this harness does not have, so the second runtime answers 503.",
+      },
+      {
+        path: "/learning",
+        hasDemo: true,
+        title: "Learning",
+        docPath: "/deepagents/learning",
+        summary:
+          "Routing selected Threads into a Learning container from the runtime, for Insights and reviewed Skills.",
+        status: "broken",
+        statusNote:
+          "The page's runtime snippet is mounted verbatim at `/api/copilotkit-learning`. Its `apiKey: process.env.CPK_INTELLIGENCE_API_KEY!` throws at module load without a key, so the route 500s and neither agent answers. `agents` and `identifyUser` are undefined on the page; `getLearningContainerId` needs runtime 1.70+; dashboard and CLI steps are not exercised.",
       },
     ],
   },
