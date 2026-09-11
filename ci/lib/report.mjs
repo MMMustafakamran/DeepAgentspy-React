@@ -126,55 +126,88 @@ export function getPackageVersions() {
 }
 
 /**
- * Per-page outcomes, written by the recorder (`autorecorder/cli.ts`).
+ * What this run recorded, from the recorder's own results file(s).
  *
- * Without this the videos table said "Recorded" beside every file, which is
- * true and useless: several pages here are recorded precisely because they are
- * broken, and a green tick next to one of those is how a defect quietly stops
- * being news.
- *
- * Sharded runs leave one file per shard; all of them are read and merged.
+ * This used to list every `.webm` in the folder and look each one up by
+ * filename, so a run of one page reported every clip on disk, most of them
+ * days old. The recorder writes `RECORD_RESULTS.json` per run (one per shard
+ * when sharded: `RECORD_RESULTS.shard-N-3.json`); every one of them is read
+ * and merged, and that is the source. The directory listing remains only as
+ * a fallback for a run that died before the recorder could write it, and is
+ * labelled as such.
  */
-function readRecordResults() {
-  const byFilename = new Map();
+function listVideos() {
+  const results = [];
+  let timestamp;
   try {
-    for (const f of fs.readdirSync(VIDEOS_DIR)) {
+    for (const f of fs.readdirSync(VIDEOS_DIR).sort()) {
       if (!f.startsWith('RECORD_RESULTS') || !f.endsWith('.json')) continue;
-      const parsed = JSON.parse(fs.readFileSync(path.join(VIDEOS_DIR, f), 'utf8'));
-      for (const r of parsed.results ?? []) {
-        if (r.filename) byFilename.set(r.filename, r);
-      }
+      const run = JSON.parse(fs.readFileSync(path.join(VIDEOS_DIR, f), 'utf8'));
+      timestamp ??= run.timestamp;
+      results.push(...(run.results ?? []));
     }
   } catch {
     // No results file: a run that failed before recording, or a bare checkout.
   }
-  return byFilename;
-}
+  if (results.length) {
+    return {
+      fromRun: true,
+      timestamp,
+      videos: results.map((r) => ({
+        id: r.id,
+        name: r.name,
+        filename: r.filename || '',
+        status: !r.success ? 'failed' : r.warnings?.length ? 'pass-with-notes' : 'pass',
+        // The recorder's own verdict: several pages here are recorded precisely
+        // because they are broken, and "issue" keeps that from reading as green.
+        outcome: r.outcome ?? null,
+        knownIssue: r.knownIssue ?? null,
+        notes: [...(r.warnings ?? []), ...(r.error ? [r.error] : [])],
+        // Kept verbatim so a downloaded package can be re-compared without the raw file.
+        error: r.error ?? null,
+        consoleErrors: r.consoleErrors ?? [],
+        sizeMB: r.filename ? sizeOf(path.join(VIDEOS_DIR, r.filename)) : 'n/a',
+        durationSec: r.durationSec,
+      })),
+    };
+  }
 
-const OUTCOME_LABEL = {
-  pass: '✅ Recorded',
-  issue: '🐞 Documents a known issue',
-  fail: '❌ Failed',
-};
-
-function listVideos() {
+  // No results file: fall back to what is on disk, and say so.
   const videos = [];
   try {
     for (const f of fs.readdirSync(VIDEOS_DIR)) {
       if (!f.endsWith('.webm') || f.startsWith('temp_')) continue;
-      const stats = fs.statSync(path.join(VIDEOS_DIR, f));
-      videos.push({ filename: f, sizeMB: `${(stats.size / (1024 * 1024)).toFixed(2)} MB` });
+      videos.push({ filename: f, status: 'on-disk', notes: [], sizeMB: sizeOf(path.join(VIDEOS_DIR, f)) });
     }
   } catch {
     // ignore
   }
-  return videos;
+  return { fromRun: false, videos };
 }
+
+function sizeOf(file) {
+  try {
+    return `${(fs.statSync(file).size / (1024 * 1024)).toFixed(2)} MB`;
+  } catch {
+    return 'n/a';
+  }
+}
+
+const STATUS_LABEL = {
+  pass: '✅ Recorded',
+  'pass-with-notes': '⚠️ Recorded with notes',
+  failed: '❌ Failed',
+  'on-disk': '📁 On disk (no results file for this run)',
+};
+
+const OUTCOME_LABEL = {
+  issue: '🐞 Documents a known issue',
+};
 
 export function generateReport(data) {
   fs.mkdirSync(VIDEOS_DIR, { recursive: true });
 
-  const videos = listVideos();
+  const { videos, fromRun } = listVideos();
   const report = {
     timestamp: new Date().toISOString(),
     status: data.success ? 'SUCCESS' : 'FAILED',
@@ -242,13 +275,13 @@ export function generateReport(data) {
 
   lines.push('## 4. 🎬 Generated Demo Videos');
   if (videos.length > 0) {
-    const outcomes = readRecordResults();
-    lines.push('| Video File | Status | Area | File Size |');
-    lines.push('|---|---|---|---|');
+    if (!fromRun) lines.push('_No `RECORD_RESULTS*.json` for this run; listing what is on disk._\n');
+    lines.push('| Video File | Status | Area | File Size | Notes |');
+    lines.push('|---|---|---|---|---|');
     for (const v of videos) {
-      const r = outcomes.get(v.filename);
-      const status = r ? (OUTCOME_LABEL[r.outcome] ?? r.outcome) : '✅ Recorded';
-      lines.push(`| \`${v.filename}\` | ${status} | ${r?.knownIssue?.area ?? ''} | ${v.sizeMB} |`);
+      const status = v.outcome === 'issue' ? OUTCOME_LABEL.issue : (STATUS_LABEL[v.status] ?? v.status);
+      const notes = (v.notes ?? []).map((n) => String(n).split('\n')[0].replace(/\|/g, '\\|')).join('<br>');
+      lines.push(`| \`${v.filename || '(no video)'}\` | ${status} | ${v.knownIssue?.area ?? ''} | ${v.sizeMB} | ${notes} |`);
     }
   } else {
     lines.push('*No videos recorded in this run.*');

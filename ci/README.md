@@ -11,6 +11,7 @@ ci/
 ├── automate.mjs          entry point — one process, start to finish
 ├── build-report.mjs      DOCUMENTED_REPORT.md — the QA report that gets sent on
 ├── check-doc-drift.mjs   compares doc-snapshot/ against the live docs
+├── compare-results.mjs   diffs a run against autorecorder/expected-results.json
 ├── list-pages.mjs        prints the recorder's page ids
 ├── mux-audio.mjs         mux voiceovers onto videos a past run already made
 ├── validate-pages.mjs    rejects unknown ids before a run starts
@@ -23,8 +24,30 @@ ci/
     ├── pages.mjs         page ids and dispatch groups, read from the recorder
     ├── preflight.mjs     port, credential and warmup checks
     ├── mux.mjs           voiceover muxing (the only implementation)
-    └── report.mjs        RUN_REPORT.md / .json
+    ├── report.mjs        RUN_REPORT.md / .json
+    └── signature.mjs     reduces a page result to a comparable signature
 ```
+
+## Result baseline
+
+`autorecorder/expected-results.json` holds the verdict a person signed off on
+for every page: `pass`, or `fail` with an `errorClass` and a normalised
+`message`, plus a `reason`. After every CI run the consolidate job runs
+`compare-results.mjs` over all shards and classifies each page as
+`unchanged`, `new-error`, `resolved`, `error-changed`, `notes-changed`,
+`untracked` or `not-run`. All unchanged → the package is safe to publish
+unseen. Anything else → a `results-changed` issue names the pages.
+
+| Command | What it does |
+|---|---|
+| `npm run results:compare` | Compare `autorecorder/videos/` against the baseline (exit 3 on change) |
+| `npm run results:compare -- --dir <folder>` | Same, over a downloaded package |
+| `npm run results:accept -- --dir <folder>` | Fold the run's changes into the baseline; then edit the `reason` fields |
+| `npm run results:seed` | Write a baseline from scratch (first run only) |
+
+`ignoreNotes` in the baseline is a list of regexes for warnings that carry no
+information (a console line every page logs). The signature drops ports,
+URLs, timings and hex ids before comparing, so only the kind of failure counts.
 
 ## Commands
 
@@ -220,6 +243,13 @@ What no run does is rewrite the ranges. Raising a range is a reviewed edit to
 prepare ──→ versions ──→  ┼─ Worker 2/3 ─┼ ──→ consolidate + QA report
                           └─ Worker 3/3 ─┘
 ```
+
+`versions` resolves the dependency trees once (lockfile-free npm installs and
+`uv lock --upgrade`) and shares them through a run-scoped cache. Each worker
+restores that cache and runs `automate.mjs --use-lockfile` against the fresh
+lockfiles, so all three shards record against one resolution and skip the
+minutes of re-resolving. A cache miss (`versions` red or skipped) falls back to
+resolving in the worker.
 
 ## Artifact names
 
