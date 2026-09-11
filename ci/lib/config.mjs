@@ -43,17 +43,6 @@ export const FRONTEND_PORT = Number(process.env.FRONTEND_PORT || 3000);
 /** `langgraph dev` answers `/ok` with `{"ok":true}`. It has no `/health`. */
 export const BACKEND_HEALTH_URL = `http://127.0.0.1:${BACKEND_PORT}/ok`;
 export const FRONTEND_URL = `http://127.0.0.1:${FRONTEND_PORT}`;
-
-/**
- * Routes compiled before recording starts. Next.js builds routes on demand, so
- * the first hit of each is slow enough to blow the recorder's preflight
- * timeout. Warming them keeps that cost out of the recording itself.
- *
- * The A2UI routes are on the list because they pull in the renderer and a
- * catalog module the other routes never touch, which makes their first compile
- * the slowest in the app.
- */
-export const WARMUP_ROUTES = [
   '/',
   '/quickstart/demo-chat',
   '/generative-ui/a2ui/fixed-schema/demo-chat',
