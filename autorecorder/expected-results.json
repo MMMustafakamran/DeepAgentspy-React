@@ -8,49 +8,29 @@
   ],
   "pages": {
     "a2ui-advanced": {
-      "status": "fail",
-      "reason": "DISAGREES with Tested-Report (✅ (fix: add `a2ui: { injectA2UITool: true }` in route.ts)) — review — machine says fail [Agent Silent]: Failed to construct 'URL' in the agent run, plus a 404 on /info",
-      "errorClass": "Agent Silent",
-      "message": "Agent never produced a response within <n> -- no assistant message ever received content. Check the backend and the browser console output above.",
-      "notes": [
-        "console 404 Not Found",
-        "console Agent error: Failed to construct 'URL': Invalid URL Code: agent_run_failed Conte",
-        "console Agent error: Failed to construct 'URL': Invalid URL Code: agent_run_failed_event",
-        "console Agent execution failed: TypeError: Failed to construct 'URL': Invalid URL at cre",
-        "console Error (agent_run_failed): TypeError: Failed to construct 'URL': Invalid URL at c",
-        "console Error (agent_run_failed_event): TypeError: Failed to construct 'URL': Invalid UR"
-      ]
+      "status": "pass",
+      "reason": "DISAGREES with Tested-Report (✅ (fix: add `a2ui: { injectA2UITool: true }` in route.ts)) — review — machine says fail [Agent Silent]: Failed to construct 'URL' in the agent run, plus a 404 on /info | accepted from run on 2026-09-11 (resolved)"
     },
     "a2ui-dynamic-schema": {
-      "status": "fail",
-      "reason": "DISAGREES with Tested-Report (✅) — review — machine says fail [Agent Silent]: Failed to construct 'URL' in the agent run, plus a 404 on /info",
-      "errorClass": "Agent Silent",
-      "message": "Agent never produced a response within <n> -- no assistant message ever received content. Check the backend and the browser console output above.",
-      "notes": [
-        "console 404 Not Found",
-        "console Agent error: Failed to construct 'URL': Invalid URL Code: agent_run_failed Conte",
-        "console Agent error: Failed to construct 'URL': Invalid URL Code: agent_run_failed_event",
-        "console Agent execution failed: TypeError: Failed to construct 'URL': Invalid URL at cre",
-        "console Error (agent_run_failed): TypeError: Failed to construct 'URL': Invalid URL at c",
-        "console Error (agent_run_failed_event): TypeError: Failed to construct 'URL': Invalid UR"
-      ]
+      "status": "pass",
+      "reason": "DISAGREES with Tested-Report (✅) — review — machine says fail [Agent Silent]: Failed to construct 'URL' in the agent run, plus a 404 on /info | accepted from run on 2026-09-11 (resolved)"
     },
     "a2ui-fixed-schema": {
       "status": "pass",
       "reason": "DISAGREES with Tested-Report (❌ Catalog not found: `a2ui.org/specification/v0_9/basic_catalog.json`) — review — recorder outcome=issue: the clip documents the defect, so a machine pass means it reproduced"
     },
     "a2ui-styling": {
-      "status": "fail",
-      "reason": "DISAGREES with Tested-Report (✅) — review — machine says fail [Agent Silent]: Failed to construct 'URL' in the agent run; recorder also flags a knownIssue (CSS custom properties not applied)",
-      "errorClass": "Agent Silent",
-      "message": "Agent never produced a response within <n> -- no assistant message ever received content. Check the backend and the browser console output above.",
+      "status": "pass",
+      "reason": "DISAGREES with Tested-Report (✅) — review — machine says fail [Agent Silent]: Failed to construct 'URL' in the agent run; recorder also flags a knownIssue (CSS custom properties not applied) | accepted from run on 2026-09-11 (resolved)"
+    },
+    "frontend-cards": {
+      "status": "pass",
+      "reason": "accepted from run on 2026-09-11 (untracked)",
       "notes": [
-        "console 404 Not Found",
-        "console Agent error: Failed to construct 'URL': Invalid URL Code: agent_run_failed Conte",
-        "console Agent error: Failed to construct 'URL': Invalid URL Code: agent_run_failed_event",
-        "console Agent execution failed: TypeError: Failed to construct 'URL': Invalid URL at cre",
-        "console Error (agent_run_failed): TypeError: Failed to construct 'URL': Invalid URL at c",
-        "console Error (agent_run_failed_event): TypeError: Failed to construct 'URL': Invalid UR"
+        "console %o %s Error: useAgent: Agent 'default' not found after runtime sync (runtimeUrl=",
+        "console Agent error: An internal error occurred Code: agent_run_error_event Context: {so",
+        "console Error (agent_run_error_event): Error: An internal error occurred at Object.onRun",
+        "console WebSocket connection to 'wss://example.com/deployments' failed: Error during Web"
       ]
     },
     "frontend-tools": {
@@ -59,7 +39,14 @@
     },
     "human-in-the-loop-governed-actions": {
       "status": "pass",
-      "reason": "Tested-Report 2026-09-11: ✅ (Governed Actions)"
+      "reason": "Tested-Report 2026-09-11: ✅ (Governed Actions) | accepted from run on 2026-09-11 (notes-changed)",
+      "notes": [
+        "No approval card on the \"Approve and run\" turn -- the model did not call the tool.",
+        "No approval card on the \"Reject\" turn -- the model did not call the tool.",
+        "The agent never answered after the \"Approve and run\" turn.",
+        "console Agent error: An internal error occurred Code: agent_run_error_event Context: {so",
+        "console Error (agent_run_error_event): Error: An internal error occurred at Object.onRun"
+      ]
     },
     "in-app-agent-read": {
       "status": "pass",
@@ -68,6 +55,16 @@
     "in-app-agent-write": {
       "status": "pass",
       "reason": "DISAGREES with Tested-Report (❌ Language toggle doesn't update chat (stays English)) — review — recorder outcome=issue: the clip documents the defect, so a machine pass means it reproduced"
+    },
+    "intelligence-memories": {
+      "status": "fail",
+      "reason": "PROVISIONAL: recorded 2026-09-11 while the OpenAI account had no credits (agent silent everywhere); re-verify after topping up | accepted from run on 2026-09-11 (untracked)",
+      "errorClass": "Agent Silent",
+      "message": "Agent never produced a response within <n> -- no assistant message ever received content. Check the backend and the browser console output above.",
+      "notes": [
+        "console Agent error: An internal error occurred Code: agent_run_error_event Context: {so",
+        "console Error (agent_run_error_event): Error: An internal error occurred at Object.onRun"
+      ]
     },
     "intelligence-quickstart": {
       "status": "fail",
@@ -83,17 +80,21 @@
       "status": "pass",
       "reason": "Tested-Report 2026-09-11: ✅"
     },
+    "learning": {
+      "status": "pass",
+      "reason": "accepted from run on 2026-09-11 (untracked)",
+      "notes": [
+        "console 500 Internal Server Error",
+        "console Error (runtime_info_fetch_failed): Error: Runtime info request failed with statu"
+      ]
+    },
     "predictive-manual": {
       "status": "pass",
       "reason": "Tested-Report 2026-09-11: ✅ (Custom Graph – Manually Predictive; recorder outcome=issue, check the knownIssue text)"
     },
     "predictive-prebuilt": {
       "status": "pass",
-      "reason": "DISAGREES with Tested-Report (❌ Agent progress steps not rendering in UI) — review — recorder outcome=issue: the clip documents the defect, so a machine pass means it reproduced; console shows a recursion-limit error",
-      "notes": [
-        "console Agent error: Recursion limit of <n> reached without hitting a stop condition. Yo",
-        "console Error (agent_run_error_event): Error: Recursion limit of <n> reached without hit"
-      ]
+      "reason": "DISAGREES with Tested-Report (❌ Agent progress steps not rendering in UI) — review — recorder outcome=issue: the clip documents the defect, so a machine pass means it reproduced; console shows a recursion-limit error | accepted from run on 2026-09-11 (notes-changed)"
     },
     "predictive-tool": {
       "status": "pass",
