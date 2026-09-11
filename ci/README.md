@@ -23,8 +23,9 @@ ci/
     ├── pages.mjs         page ids and dispatch groups, read from the recorder
     ├── preflight.mjs     port, credential and warmup checks
     ├── mux.mjs           voiceover muxing (the only implementation)
-    └── report.mjs        RUN_REPORT.md / .json
+    ├── report.mjs        RUN_REPORT.md / .json
 ```
+
 
 ## Commands
 
@@ -220,6 +221,13 @@ What no run does is rewrite the ranges. Raising a range is a reviewed edit to
 prepare ──→ versions ──→  ┼─ Worker 2/3 ─┼ ──→ consolidate + QA report
                           └─ Worker 3/3 ─┘
 ```
+
+`versions` resolves the dependency trees once (lockfile-free npm installs and
+`uv lock --upgrade`) and shares them through a run-scoped cache. Each worker
+restores that cache and runs `automate.mjs --use-lockfile` against the fresh
+lockfiles, so all three shards record against one resolution and skip the
+minutes of re-resolving. A cache miss (`versions` red or skipped) falls back to
+resolving in the worker.
 
 ## Artifact names
 

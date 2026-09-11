@@ -25,13 +25,12 @@ name: Daily Doc Check, Version Watch and Demo Recording
 
 on:
   schedule:
-    # 05:27 UTC = 10:27 AM PKT (Asia/Karachi, UTC+5, no DST).
-    #
-    # Not 05:30, and emphatically not 06:00. GitHub's scheduler is best-effort
-    # and shared: on-the-hour and on-the-half-hour are the most contended slots
-    # on the platform, and runs queued there are routinely delayed by hours or
-    # dropped outright. An odd minute is materially more likely to fire near
-    # time. It still cannot GUARANTEE a time -- no `schedule:` can.
+    # 4 AM PKT, in four waves twenty minutes apart across the twelve repos
+    # (23:04, 23:24, 23:44, 00:04 UTC) so they do not all land on the account's
+    # runner limit at the same minute -- when they did, the last workers queued
+    # for 38 minutes. GitHub's scheduler is best-effort: every cron here has
+    # fired three to six hours late. If exact timing ever matters, drive it
+    # externally via `gh workflow run`.
     - cron: '4 0 * * *'
   workflow_dispatch:
     inputs:
@@ -194,6 +193,7 @@ jobs:
           exit 0
 
       - name: Open or update the drift issue
+        continue-on-error: true
         if: steps.check.outputs.state == 'drift' && github.event_name == 'schedule'
         uses: actions/github-script@v7
         with:
@@ -322,6 +322,35 @@ jobs:
           npm --prefix frontend install --no-audit --no-fund
           npm --prefix autorecorder install --no-audit --no-fund
 
+      # The Python side, resolved the same way the recorder would
+      # (`uv sync --upgrade`) but only the lockfile is kept: the shards install
+      # from it, so all three record against one resolution.
+      - uses: astral-sh/setup-uv@v5
+        with:
+          enable-cache: true
+      - name: Re-resolve the backend lockfile
+        run: |
+          set -euo pipefail
+          cd backend
+          uv python install 3.12
+          uv lock --upgrade
+
+      # One resolution, three shards. Before this, each worker re-resolved
+      # on its own -- three installs, and three chances to land on different
+      # versions when a release dropped mid-run. The workers restore this
+      # cache and install from the lockfiles it carries; a miss falls back
+      # to resolving locally exactly as before.
+      - name: Share the resolved trees with the workers
+        uses: actions/cache/save@v4
+        with:
+          key: resolved-deps-${{ github.run_id }}
+          path: |
+            frontend/node_modules
+            frontend/package-lock.json
+            autorecorder/node_modules
+            autorecorder/package-lock.json
+            backend/uv.lock
+
       - name: Report the versions this run resolved
         run: |
           set -euo pipefail
@@ -357,6 +386,9 @@ jobs:
         shard: [1, 2, 3]
 
     env:
+      # Reading and thinking pauses at 85% -- typing, mouse and scrolling are
+      # not scaled. See autorecorder/core/overlays/human.ts (PACE).
+      AUTORECORD_PACE: '0.85'
       # Every graph in this backend runs on an OpenAI model through
       # langchain-openai, so this is the only credential the run needs. There
       # are no Rich Threads pages here and so no license or Intelligence keys.
@@ -387,10 +419,38 @@ jobs:
             frontend/package-lock.json
             autorecorder/package-lock.json
 
+      # The trees stage 2 resolved this run. On a hit the shard installs from
+      # those lockfiles (--use-lockfile) instead of re-resolving: seconds, not
+      # minutes, and identical versions on all three workers. On a miss (stage
+      # 2 red or skipped) the shard resolves for itself as it always did.
+      - name: Restore the resolved trees from stage 2
+        id: resolved
+        uses: actions/cache/restore@v4
+        with:
+          key: resolved-deps-${{ github.run_id }}
+          path: |
+            frontend/node_modules
+            frontend/package-lock.json
+            autorecorder/node_modules
+            autorecorder/package-lock.json
+            backend/uv.lock
+
+      # The Chromium build is keyed on the installed playwright-core version,
+      # so it downloads once per Playwright release rather than once per shard
+      # per day. The runner image already ships the system libraries, so on a
+      # hit nothing is installed at all.
+      - name: Cache the Playwright browser
+        id: pw-cache
+        uses: actions/cache@v4
+        with:
+          path: ~/.cache/ms-playwright
+          key: playwright-chromium-${{ runner.os }}-${{ hashFiles('autorecorder/node_modules/playwright-core/package.json') }}
+
       - name: Install Playwright & System Chromium Dependencies
+        if: steps.pw-cache.outputs.cache-hit != 'true'
         run: |
           cd autorecorder
-          npm install
+          [ -d node_modules/playwright ] || npm install
           npx playwright install --with-deps chromium
 
       # ffmpeg lives here, not in a later job, because muxing happens once -- in
@@ -434,6 +494,7 @@ jobs:
           SELECTED_PAGES: ${{ needs.prepare.outputs.pages }}
           INPUT_CUSTOM_ARGS: ${{ inputs.custom_args }}
           INPUT_USE_LOCKFILE: ${{ inputs.use_lockfile }}
+          RESOLVED_HIT: ${{ steps.resolved.outputs.cache-hit }}
           SHARD: ${{ matrix.shard }}
         run: |
           set -euo pipefail
@@ -449,6 +510,13 @@ jobs:
           EXTRA_FLAGS=""
           if [ "${INPUT_USE_LOCKFILE:-false}" = "true" ]; then
             EXTRA_FLAGS="$EXTRA_FLAGS --use-lockfile"
+          elif [ "${RESOLVED_HIT:-false}" = "true" ]; then
+            # Fresh lockfiles from stage 2, not the committed ones.
+            EXTRA_FLAGS="$EXTRA_FLAGS --use-lockfile"
+            echo "Using the trees stage 2 resolved this run (cache hit)."
+            echo "- Dependencies: installed from the lockfiles stage 2 resolved this run" >> "$GITHUB_STEP_SUMMARY"
+          else
+            echo "No shared trees from stage 2; resolving locally."
           fi
           # Always. The drift gate in stage 1 already decided -- it either found
           # the docs clean or was explicitly overridden -- so re-checking here
@@ -534,9 +602,8 @@ jobs:
             cat all-recordings/DOCUMENTED_REPORT.md
           } >> "$GITHUB_STEP_SUMMARY"
 
-      # One folder holding every clip from the run plus the report they are
-      # evidence for, named for the project and the time it ran.
       - name: Upload Consolidated Demo Recordings Package
+        if: always()
         uses: actions/upload-artifact@v4
         with:
           name: ${{ needs.prepare.outputs.run_name }}
