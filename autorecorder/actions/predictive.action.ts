@@ -1,7 +1,7 @@
 import { type Page } from 'playwright';
 import { AgentSilentError, sendPrompt, waitForAgentResponseCompletion } from '../core/actions';
 import { writeIssueNote } from '../core/issue-note';
-import { humanClick, humanGlide, sleep } from '../core/overlays/cursor';
+import { beat, humanClick, humanGlide, sleep } from '../core/overlays/cursor';
 import { type ActionContext, type PageActionHandler, type PageRecordConfig } from '../core/types';
 
 /**
@@ -50,7 +50,7 @@ async function selectVariant(ctx: ActionContext, page: Page, key: VariantKey): P
 
   // The panel is keyed on the variant, so the click remounts both halves. Give
   // React the frame it needs before anything is typed into the new chat.
-  await sleep(1400);
+  await beat(1400);
 }
 
 /** Rests the cursor on the steps panel, whether it has rows in it or not. */
@@ -195,7 +195,7 @@ export const runPredictiveManualAction: PageActionHandler = async (page, config,
   // not persist" a thing on tape rather than a claim in the note. A tester
   // watching this would do exactly this: look back at the panel once the
   // spinner stops.
-  await sleep(1500);
+  await beat(1500);
   const after = await page.locator('ul li').count();
   await restOnSteps(page, 4000);
 

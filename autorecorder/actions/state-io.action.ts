@@ -1,5 +1,5 @@
 import { type Page } from 'playwright';
-import { humanClick, humanGlide, sleep } from '../core/overlays/cursor';
+import { beat, humanClick, humanGlide, sleep } from '../core/overlays/cursor';
 import { type PageActionHandler, type PageRecordConfig } from '../core/types';
 
 /**
@@ -69,7 +69,7 @@ export const runStateIoAction: PageActionHandler = async (
     const box = await row.boundingBox();
     if (!box) continue;
     await humanGlide(page, box.x + Math.min(box.width / 2, 200), box.y + 24, 22);
-    await sleep(1400);
+    await beat(1400);
   }
 
   const raw = page.locator('pre').first();
