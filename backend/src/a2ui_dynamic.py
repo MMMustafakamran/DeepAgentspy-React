@@ -2,7 +2,7 @@
 
 https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/dynamic-schema
 
-The page's Python verbatim, except that `ChatOpenAI(model="gpt-5.6-luna")` reads the
+The page's Python verbatim, except that `ChatOpenAI(model="gpt-5.4")` reads the
 model id from `.env` like every other agent here.
 
 There is deliberately nothing else in this file. The page's point is that the

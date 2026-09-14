@@ -17,7 +17,7 @@ prints that call end to end — including the `CopilotKitMiddleware(expose_state
 graph" instruction. `multi_agent` is still not a call the page shows, so it
 stays written to the shape the page describes.
 
-`model=` is the one deliberate departure: the page hardcodes `openai:gpt-5.6-luna`
+`model=` is the one deliberate departure: the page hardcodes `openai:gpt-4o`
 and every agent in this backend reads `src.shared.MODEL` instead, so a tester
 needs access to one model rather than four. See `src/shared.py`.
 """

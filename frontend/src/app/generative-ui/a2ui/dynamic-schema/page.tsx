@@ -107,9 +107,9 @@ export default function Page() {
 
       <Callout tone="info" title="The model id">
         <p>
-          The page passes <code>ChatOpenAI(model=&quot;gpt-5.6-luna&quot;)</code>.
+          The page passes <code>ChatOpenAI(model=&quot;gpt-5.4&quot;)</code>.
           Every agent here reads <code>OPENAI_MODEL</code> instead, defaulting to
-          the Quickstart&apos;s <code>gpt-5.6-luna</code>. Dynamic A2UI leans on the
+          the Quickstart&apos;s <code>gpt-5.4-mini</code>. Dynamic A2UI leans on the
           model harder than any other route — a weaker one produces schemas that
           fail the &ldquo;exactly one component with id root&rdquo; rule and
           render blank.

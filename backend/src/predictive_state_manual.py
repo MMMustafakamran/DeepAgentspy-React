@@ -24,7 +24,7 @@ Two deliberate departures:
   exactly as the TypeScript tab's does, so naming unreachable nodes would be
   a lie the type checker would not catch.
 * The model id reads `OPENAI_MODEL` like every other agent here. The
-  TypeScript tab pins `gpt-5.6-luna`.
+  TypeScript tab pins `gpt-5.4-mini`.
 """
 
 #region agent-state
