@@ -43,15 +43,3 @@ export const FRONTEND_PORT = Number(process.env.FRONTEND_PORT || 3000);
 /** `langgraph dev` answers `/ok` with `{"ok":true}`. It has no `/health`. */
 export const BACKEND_HEALTH_URL = `http://127.0.0.1:${BACKEND_PORT}/ok`;
 export const FRONTEND_URL = `http://127.0.0.1:${FRONTEND_PORT}`;
-  '/',
-  '/quickstart/demo-chat',
-  '/generative-ui/a2ui/fixed-schema/demo-chat',
-  '/shared-state/predictive-state-updates/demo-chat',
-  // Both halves of the writing-agent-state pair. A rebuild arriving after the
-  // language toggle is clicked remounts the component and drops the write, so
-  // the take prompts in English and proves nothing. The `fixed` route is on the
-  // list for the same reason: the take navigates to it mid-clip, and a cold
-  // compile there stalls the comparison half.
-  '/shared-state/in-app-agent-write/demo-chat',
-  '/shared-state/in-app-agent-write/fixed/demo-chat',
-];
