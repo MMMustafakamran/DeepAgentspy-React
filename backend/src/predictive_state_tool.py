@@ -27,7 +27,7 @@ What changed, and why the shape of this file changed with it:
 
 Two departures, both pre-existing:
 
-* The page pins `ChatOpenAI(model="gpt-5.4")`; every agent here reads
+* The page pins `ChatOpenAI(model="gpt-5.6-luna")`; every agent here reads
   `OPENAI_MODEL` so a tester needs access to one model rather than four.
 * `compile(checkpointer=MemorySaver())` is the page's and is *not* kept. It
   is the one line of the revision that cannot go in verbatim: `langgraph dev`

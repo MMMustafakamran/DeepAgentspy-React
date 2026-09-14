@@ -46,7 +46,7 @@ def step_progress_tool(steps: list[str], runtime: ToolRuntime) -> Command:
     )
 
 tools = [step_progress_tool]
-model = ChatOpenAI(model="gpt-5.4")
+model = ChatOpenAI(model="gpt-5.6-luna")
 
 async def chat_node(state: AgentState, config: RunnableConfig):
     streaming_config = copilotkit_customize_config(
