@@ -684,6 +684,62 @@ export const PAGES = definePages([
     },
   },
   {
+    id: 'intelligence-learned-skills',
+    name: 'Intelligence - Automatic learned skill delivery',
+    videoName: 'LearnedSkills',
+    docPath: 'intelligence/learned-skills',
+    route: 'intelligence/learned-skills',
+    // There is no adapter to show, so the IDE tab is the demo itself: the two
+    // tool names the page reserves, listed as absent rather than registered.
+    ideFile: 'frontend/src/app/intelligence/learned-skills/demo-chat/page.tsx',
+    startLine: 7,
+    endLine: 29,
+    prompt: 'List the skills you can load, then load the refund-policy skill and follow it.',
+    waitAfterPromptMs: 3000,
+    knownIssue: {
+      area: 'Deep Agents - Intelligence - Automatic learned skill delivery',
+      problem:
+        'The adapter the page names for this flavour, `copilotkit-intelligence-langgraph`, is not on ' +
+        'PyPI (404 as of 2026-09-16), and neither is the base client the page says Python uses, ' +
+        '`copilotkit-intelligence-runtime`, nor the ADK adapter `copilotkit-intelligence-adk`. ' +
+        '`uv pip install` resolves to "not found in the package registry". The TypeScript siblings ' +
+        '@copilotkit/intelligence-langgraph and -mastra are published at 1.71.2 (2026-09-14), so the ' +
+        'gap is Python-side rather than the whole feature being unreleased.',
+      impact:
+        'Nothing on the page can be followed from a Python backend. The two tools it reserves, ' +
+        '`copilotkit_load_skill` and `copilotkit_read_skill_file`, are never registered, so the agent ' +
+        'answers from its own instructions and the failure looks like an ordinary reply rather than a ' +
+        'missing integration. The page states LangChain >=1.2.16,<2 and LangGraph >=1.1.10,<2 floors ' +
+        'for a package that cannot be obtained.',
+      likelyCause:
+        "The page's own closing section says \"The server migration and v1 delivery endpoint must " +
+        'deploy before adapters rely on them\", i.e. the feature may not be live yet -- but that is a ' +
+        'deployment note at the bottom, not a prerequisite at the top, and nothing earlier is marked ' +
+        'unavailable. The same page is also published under /agno (no Agno adapter exists at all) and ' +
+        '/ms-agent-python (whose only Microsoft Agent Framework adapter is .NET 9, under a Python ' +
+        'section).',
+      expectsNoResponse: false,
+      note: [
+        'learned-skills - the python adapter doesnt exist on pypi',
+        '',
+        'copilotkit-intelligence-langgraph -> 404',
+        'copilotkit-intelligence-runtime -> 404 (page says "Python uses" this one)',
+        'copilotkit-intelligence-adk -> 404',
+        'uv says "not found in the package registry"',
+        '',
+        'the TS ones are real: @copilotkit/intelligence-langgraph 1.71.2, published 14 Sep',
+        'so its the python side thats missing, not the whole feature',
+        '',
+        'so the two tools never get registered. agent just answers normally,',
+        'looks like a normal reply not a missing integration',
+        '',
+        'same page is also under /agno and /ms-agent-python',
+        'agno isnt in the adapter table at all',
+        'ms-agent-python only gets a .NET adapter, and that repo is python',
+      ].join('\n'),
+    },
+  },
+  {
     id: 'learning',
     name: 'Intelligence - Learning',
     videoName: 'Learning',

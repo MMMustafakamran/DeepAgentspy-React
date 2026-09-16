@@ -255,6 +255,18 @@
       "status": "ok",
       "age": 0,
       "date": "Tue, 15 Sep 2026 09:10:10 GMT"
+    },
+    "/deepagents/intelligence/learned-skills": {
+      "file": "deepagents__intelligence__learned-skills.md",
+      "sha256": "3027495564afee7ccc56e60ec4b38d7d380d107ec39221031cb088e5ef26ca48",
+      "bytes": 13613,
+      "lines": 223,
+      "routes": [
+        "/intelligence/learned-skills"
+      ],
+      "status": "ok",
+      "age": 0,
+      "date": "Wed, 16 Sep 2026 07:20:06 GMT"
     }
   },
   "sitemap": {

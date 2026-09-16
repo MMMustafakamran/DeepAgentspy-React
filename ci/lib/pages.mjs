@@ -33,6 +33,7 @@ export const PAGE_GROUPS = {
     'intelligence-quickstart',
     'intelligence-memories',
     'learning',
+    'intelligence-learned-skills',
   ],
   generative_ui: ['tool-rendering', 'state-rendering', 'interrupt-based', 'frontend-cards'],
   a2ui: [

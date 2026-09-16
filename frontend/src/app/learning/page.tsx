@@ -80,9 +80,11 @@ export default function Page() {
         <code>/deepagents/intelligence/learned-skills</code> for &ldquo;automatic
         learned skill delivery&rdquo; through a framework-native adapter, and
         reframes the CLI workflow below as the manual/offline path. That page is
-        new, is not in this repo&apos;s snapshot, and has no route here — the
-        adapter it describes is untested, so nothing on this route exercises the
-        automatic path.
+        now tracked and has its own route at{" "}
+        <code>/intelligence/learned-skills</code> — where the adapter it names
+        for this flavour turns out not to be published, so the automatic path
+        still cannot be exercised. The CLI workflow below remains the only one
+        this repo can run.
       </Callout>
 
       <Callout tone="premium" title="Not exercised here">
