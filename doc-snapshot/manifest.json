@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "docsRoot": "https://docs.copilotkit.ai/deepagents",
-  "syncedAt": "2026-09-16T06:11:23.346Z",
+  "syncedAt": "2026-09-17T07:24:54.626Z",
   "pages": {
     "/deepagents": {
       "file": "deepagents.md",
@@ -126,27 +126,27 @@
     },
     "/deepagents/intelligence/quickstart": {
       "file": "deepagents__intelligence__quickstart.md",
-      "sha256": "2bbddfac46eaab09c3344f55ede81ca165e8dd47d4eff6cbc6e5639440ca4e10",
-      "bytes": 6010,
+      "sha256": "57eee0122f528deb90526a79045200db415e5c20134c7ff8dae7784d65044a9a",
+      "bytes": 5965,
       "lines": 157,
       "routes": [
         "/intelligence/quickstart"
       ],
       "status": "ok",
       "age": 0,
-      "date": "Mon, 14 Sep 2026 07:09:51 GMT"
+      "date": "Thu, 17 Sep 2026 07:24:54 GMT"
     },
     "/deepagents/quickstart": {
       "file": "deepagents__quickstart.md",
-      "sha256": "6964567ec11c3906f9be86dfced440ec5492d933f1a9a8f5f81c166785bc9e59",
-      "bytes": 17977,
-      "lines": 504,
+      "sha256": "dd2bd1114d238bc4130279dfc305c47e160b87d1591191bcaea178ca25f741f5",
+      "bytes": 18226,
+      "lines": 505,
       "routes": [
         "/quickstart"
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 16 Sep 2026 06:11:23 GMT"
+      "date": "Thu, 17 Sep 2026 07:24:54 GMT"
     },
     "/deepagents/shared-state/in-app-agent-read": {
       "file": "deepagents__shared-state__in-app-agent-read.md",
@@ -210,15 +210,15 @@
     },
     "/deepagents/webmcp": {
       "file": "deepagents__webmcp.md",
-      "sha256": "1c5ea6a18fa0b6913897d316c4a68ddf40e2c6cf2c65da2c1abf3bfafc1a27d4",
-      "bytes": 7486,
+      "sha256": "7c0c06d96d3f0512fa576de85ba07926a0b4337f463f8beb4c3793728293c811",
+      "bytes": 7489,
       "lines": 165,
       "routes": [
         "/webmcp"
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 09 Sep 2026 07:59:07 GMT"
+      "date": "Thu, 17 Sep 2026 07:24:54 GMT"
     },
     "/deepagents/generative-ui/frontend-cards": {
       "file": "deepagents__generative-ui__frontend-cards.md",
@@ -234,27 +234,27 @@
     },
     "/deepagents/intelligence/memories": {
       "file": "deepagents__intelligence__memories.md",
-      "sha256": "00ec0970edbed30527ea99def53ebae16b8c129dde445d98f087f66cb9a989e0",
-      "bytes": 11061,
-      "lines": 284,
+      "sha256": "49fff6f382c3b823fcd2c5f02809e5c589ea1f6d151c603b448e850e687283d6",
+      "bytes": 12490,
+      "lines": 314,
       "routes": [
         "/intelligence/memories"
       ],
       "status": "ok",
       "age": 0,
-      "date": "Fri, 11 Sep 2026 10:21:49 GMT"
+      "date": "Thu, 17 Sep 2026 07:24:54 GMT"
     },
     "/deepagents/learning": {
       "file": "deepagents__learning.md",
-      "sha256": "3c3abcbf834317cf29002d695f3e61028edb8cd71dcadad6cf3ed3b1e5016990",
-      "bytes": 7271,
-      "lines": 154,
+      "sha256": "8eac3883f8ff2e72127466869c331f077e38288ca60fc19613e0e21294747fb5",
+      "bytes": 7184,
+      "lines": 151,
       "routes": [
         "/learning"
       ],
       "status": "ok",
       "age": 0,
-      "date": "Tue, 15 Sep 2026 09:10:10 GMT"
+      "date": "Thu, 17 Sep 2026 07:24:54 GMT"
     },
     "/deepagents/intelligence/learned-skills": {
       "file": "deepagents__intelligence__learned-skills.md",
