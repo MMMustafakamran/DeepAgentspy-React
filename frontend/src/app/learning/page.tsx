@@ -70,9 +70,8 @@ export default function Page() {
         <code>CopilotKitIntelligence</code> from runtime 1.70; on the 1.69.0
         this repo&apos;s lockfile pins, the option is a type error (1.69.0 has
         only the <code>ɵlearning</code> runtime option). The page names no
-        version, and its coding-agent prompt tells you not to use the
-        deprecated <code>ɵlearning</code> option without saying that is what
-        older runtimes have instead.
+        version and never mentions <code>ɵlearning</code>, so a reader on an
+        older runtime is not told what to use instead.
       </Callout>
 
       <Callout tone="info" title="Automatic skill delivery is documented elsewhere">

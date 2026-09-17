@@ -86,16 +86,24 @@ export default function Page() {
         here.
       </Callout>
 
+      <Callout tone="warn" title="The page's own success check does not pass here">
+        The 2026-09-17 sync added &quot;Set up Memory manually&quot;, which ends
+        with <em>Save and recall a memory</em>: save one for the signed-in user,
+        recall it with a related query in a new conversation, and confirm it
+        comes back. This demo cannot complete that step. The agent in the take
+        answers &quot;Got it! I&apos;ll keep updates brief.&quot; — it has no
+        memory tools here, and nothing tells the user nothing was saved. The
+        page still shows reading and forgetting from React but never saving,
+        though the hook has <code>addMemory</code>; saving is shown only over
+        REST and MCP.
+      </Callout>
+
       <Callout tone="warn" title="Smaller gaps">
         <code>realtimeStatus</code> stayed <code>connecting</code> on both
         runtimes and never reached the <code>unavailable</code> the page
-        describes. The page shows reading and forgetting from React but never
-        saving, though the hook has <code>addMemory</code>; saving is shown only
-        over REST and MCP. The REST examples post to{" "}
+        describes. The REST examples post to{" "}
         <code>https://your-deployment</code> without saying that managed users
-        call <code>api.intelligence.copilotkit.ai</code>. And the agent in the
-        take answers &quot;Got it! I&apos;ll keep updates brief.&quot; — it has
-        no memory tools here, and nothing tells the user nothing was saved.
+        call <code>api.intelligence.copilotkit.ai</code>.
       </Callout>
 
       <Panel title="What the demo observed (1.71.0)">
