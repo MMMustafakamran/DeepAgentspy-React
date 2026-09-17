@@ -6,7 +6,7 @@ import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
-import { PAGES } from './config/pages.config';
+import { PAGES, SKIP_RECORDING } from './config/pages.config';
 import { PROJECT } from './config/project.config';
 import { checkServicesHealth } from './core/diagnostics';
 import { RecordingEngine, type RecordOutcome } from './core/engine';
@@ -271,7 +271,15 @@ async function main(): Promise<void> {
     console.log(`\n🐞 [--pages=issues] ${issueIds.length} page(s) with a known issue.`);
   }
 
-  const { pages: targetPages, shard: applied } = selectPages(PAGES, {
+  // Pages listed in SKIP_RECORDING stay registered (doctor, CI groups, the
+  // note) but are never recorded, by any selection, locally or in CI.
+  const notRecorded = PAGES.filter((p) => p.id in SKIP_RECORDING);
+  const recordable = PAGES.filter((p) => !(p.id in SKIP_RECORDING));
+  for (const p of notRecorded) {
+    console.log(`\n⏸️ Not recording ${p.id}: ${SKIP_RECORDING[p.id]}`);
+  }
+
+  const { pages: targetPages, shard: applied } = selectPages(recordable, {
     ids,
     page: values.page ? String(values.page) : pageWord,
     filter: values.filter ? String(values.filter) : undefined,
@@ -298,6 +306,15 @@ async function main(): Promise<void> {
     console.log(`Tip: run \`npm run record -- --list\` to view all routes.`);
     process.exit(1);
   }
+    if (notRecorded.length > 0 && selectPages(PAGES, {
+      ids,
+      page: values.page ? String(values.page) : pageWord,
+      filter: values.filter ? String(values.filter) : undefined,
+      queries,
+    }).pages.length > 0) {
+      console.log(`\nℹ️ Everything selected is excluded from recording. Nothing to do.`);
+      process.exit(0);
+    }
 
   await assertServicesUp(Boolean(values.force));
 

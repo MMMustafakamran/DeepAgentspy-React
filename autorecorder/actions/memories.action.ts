@@ -30,13 +30,11 @@ import { evidenceThenIssueNote, glideClick, glideTo, visibleWithin, waitForText 
 const RELEVANT = /memor|MEMORY_/i;
 
 const NOTE_HEAD = [
-  'memories - react snippet doesnt compile, and memory never actually works',
+  'memories - blocked on entitlement',
   '',
-  'useMemories isnt exported from @copilotkit/react-core, only /v2',
-  'moved the import to /v2 so the demo loads at all',
-  '',
-  'quickstart runtime (page adds nothing to it): list empty, isAvailable says true',
-  'no /memories request ever leaves the browser. agent says it will remember anyway',
+  'useMemories only exported from /v2, not the root',
+  'runtime needs memory: { access }, page never says',
+  'org has no memory (403 MEMORY_NOT_ENTITLED), managed so no embedder needed',
 ];
 
 /** What the memory.access mount did, in the tester's words. */

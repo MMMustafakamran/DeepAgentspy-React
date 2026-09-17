@@ -33,6 +33,14 @@
 
 import { definePages } from '../core/types';
 
+/**
+ * Page ids that stay registered but are never recorded -- not by `npm run
+ * record`, not by a named id, not in CI. The route and its demo remain.
+ */
+export const SKIP_RECORDING: Record<string, string> = {
+  'intelligence-memories': 'memory is not entitled on this CopilotKit org (403 MEMORY_NOT_ENTITLED)',
+};
+
 export const PAGES = definePages([
   // -- Getting Started ---------------------------------------------------------
   {
@@ -637,20 +645,15 @@ export const PAGES = definePages([
         'so on a non-Intelligence runtime it never fetches and never flips `isAvailable`. Even on an ' +
         'Intelligence runtime every `/memories/*` route 404s unless `CopilotRuntime` is built with ' +
         '`memory: { access }` (or the deprecated `exposeMemoryRoutes`), which the page never mentions ' +
-        '-- present on both 1.69.0 and 1.71.0. With that option and an Intelligence key the platform ' +
-        'answers for itself (see the take\'s note); without a key that mount answers 503.',
+        '-- present on both 1.69.0 and 1.71.0. With that option the platform answers 403 ' +
+        'MEMORY_NOT_ENTITLED: the CopilotKit org has no memory entitlement.',
       note: [
-        'memories - react snippet doesnt compile, and memory never actually runs',
+        'memories - blocked on entitlement',
         '',
-        'useMemories isnt exported from @copilotkit/react-core, only /v2',
-        'moved the import to /v2 so the demo loads at all',
-        '',
-        'on the quickstart runtime the list is just empty, isAvailable says true',
-        'save fails with "runtime url is not configured" - it is configured',
-        'no /memories request ever leaves the browser. agent says it will remember anyway',
-        '',
-        'the memory.access option the page never mentions needs an intelligence key',
-        'dont have one here so that mount is 503',
+        'useMemories only exported from /v2, not the root',
+        'runtime needs memory: { access }, page never says',
+        'with it: 403 MEMORY_NOT_ENTITLED, org has no memory',
+        'managed platform, so no embedder config needed',
       ].join('\n'),
     },
   },
