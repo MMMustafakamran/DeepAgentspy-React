@@ -124,18 +124,6 @@
       "age": 0,
       "date": "Fri, 04 Sep 2026 13:40:36 GMT"
     },
-    "/deepagents/intelligence/quickstart": {
-      "file": "deepagents__intelligence__quickstart.md",
-      "sha256": "57eee0122f528deb90526a79045200db415e5c20134c7ff8dae7784d65044a9a",
-      "bytes": 5965,
-      "lines": 157,
-      "routes": [
-        "/intelligence/quickstart"
-      ],
-      "status": "ok",
-      "age": 0,
-      "date": "Thu, 17 Sep 2026 07:24:54 GMT"
-    },
     "/deepagents/quickstart": {
       "file": "deepagents__quickstart.md",
       "sha256": "dd2bd1114d238bc4130279dfc305c47e160b87d1591191bcaea178ca25f741f5",
@@ -342,6 +330,7 @@
       "https://docs.copilotkit.ai/deepagents/intelligence/intelligence-platform",
       "https://docs.copilotkit.ai/deepagents/intelligence/managed-intelligence-platform",
       "https://docs.copilotkit.ai/deepagents/intelligence/overview",
+      "https://docs.copilotkit.ai/deepagents/intelligence/quickstart",
       "https://docs.copilotkit.ai/deepagents/intelligence/self-hosting",
       "https://docs.copilotkit.ai/deepagents/intelligence/threads-explained",
       "https://docs.copilotkit.ai/deepagents/migrate/1.10.X",

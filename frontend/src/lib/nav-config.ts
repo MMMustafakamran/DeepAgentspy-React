@@ -264,17 +264,6 @@ export const NAV: NavGroup[] = [
     title: "Intelligence",
     routes: [
       {
-        path: "/intelligence/quickstart",
-        title: "Intelligence · Quickstart",
-        docPath: "/deepagents/intelligence/quickstart",
-        summary:
-          "The single-route runtime transport this page switched to: one POST mount plus `useSingleEndpoint` on the provider.",
-        status: "partial",
-        statusNote:
-          "Steps 3 and 4 are implemented against a third runtime mount at `/api/copilotkit-single`. Steps 1, 2 and 5 need a `CPK_INTELLIGENCE_API_KEY` from a hosted Intelligence project, which is an account-scoped resource this harness does not have.",
-        hasDemo: true,
-      },
-      {
         path: "/intelligence/memories",
         hasDemo: true,
         title: "Memories & Recall",

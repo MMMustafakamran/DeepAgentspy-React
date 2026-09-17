@@ -35,7 +35,7 @@ on:
   workflow_dispatch:
     inputs:
       group_getting_started:
-        description: 'Getting Started & Intelligence — Quickstart, Intelligence Quickstart, Memories, Learning'
+        description: 'Getting Started & Intelligence — Quickstart, Memories, Learning, Learned Skills'
         type: boolean
         default: false
       group_generative_ui:

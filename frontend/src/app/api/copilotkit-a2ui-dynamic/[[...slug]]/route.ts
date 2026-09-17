@@ -29,10 +29,6 @@ import {
 // argument, which is a TypeError for a relative `runtimeUrl` like the one these
 // pages pass. Serving `/info` keeps them on the REST transport they were always
 // meant to use.
-//
-// The Intelligence Quickstart's /api/copilotkit-single stays single-route on
-// purpose -- that page *is* about the single-route transport -- so it still
-// meets the bug, and that is where the finding is filed.
 
 const runtime = new CopilotRuntime({
   agents: {

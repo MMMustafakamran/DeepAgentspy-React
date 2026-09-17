@@ -30,7 +30,6 @@ const PAGES_CONFIG = path.join(RECORDER_DIR, 'config', 'pages.config.ts');
 export const PAGE_GROUPS = {
   getting_started: [
     'quickstart',
-    'intelligence-quickstart',
     'intelligence-memories',
     'learning',
     'intelligence-learned-skills',
