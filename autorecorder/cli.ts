@@ -301,11 +301,6 @@ async function main(): Promise<void> {
       console.log(`\nℹ️ [Matrix Sharding]: No pages assigned to this worker shard. Exiting cleanly.`);
       process.exit(0);
     }
-    console.error(`❌ No matching page found for: ${rawArgs.join(' ') || '(nothing)'}`);
-    console.log(`Available page IDs: ${PAGES.map((p) => p.id).join(', ')}`);
-    console.log(`Tip: run \`npm run record -- --list\` to view all routes.`);
-    process.exit(1);
-  }
     if (notRecorded.length > 0 && selectPages(PAGES, {
       ids,
       page: values.page ? String(values.page) : pageWord,
@@ -315,6 +310,11 @@ async function main(): Promise<void> {
       console.log(`\nℹ️ Everything selected is excluded from recording. Nothing to do.`);
       process.exit(0);
     }
+    console.error(`❌ No matching page found for: ${rawArgs.join(' ') || '(nothing)'}`);
+    console.log(`Available page IDs: ${PAGES.map((p) => p.id).join(', ')}`);
+    console.log(`Tip: run \`npm run record -- --list\` to view all routes.`);
+    process.exit(1);
+  }
 
   await assertServicesUp(Boolean(values.force));
 
