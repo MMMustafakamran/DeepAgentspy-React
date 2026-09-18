@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "docsRoot": "https://docs.copilotkit.ai/deepagents",
-  "syncedAt": "2026-09-17T07:24:54.626Z",
+  "syncedAt": "2026-09-18T07:46:18.381Z",
   "pages": {
     "/deepagents": {
       "file": "deepagents.md",
@@ -138,15 +138,15 @@
     },
     "/deepagents/quickstart": {
       "file": "deepagents__quickstart.md",
-      "sha256": "dd2bd1114d238bc4130279dfc305c47e160b87d1591191bcaea178ca25f741f5",
-      "bytes": 18226,
+      "sha256": "71a72a31899e446dff2750a1e6cfef723d1fbe2e64809d8df8b664e2aabaa60a",
+      "bytes": 18192,
       "lines": 505,
       "routes": [
         "/quickstart"
       ],
       "status": "ok",
       "age": 0,
-      "date": "Thu, 17 Sep 2026 07:24:54 GMT"
+      "date": "Fri, 18 Sep 2026 07:46:18 GMT"
     },
     "/deepagents/shared-state/in-app-agent-read": {
       "file": "deepagents__shared-state__in-app-agent-read.md",
