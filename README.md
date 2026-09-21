@@ -209,6 +209,10 @@ A custom `render_a2ui` progress renderer replacing the built-in skeleton.
 
 **`/custom-look-and-feel/markdown`** → `sample_agent` — ⚠️ **Partial.** New upstream 2026-09-21. The `markdownRenderer` slot on `CopilotChatAssistantMessage`, reached from `<CopilotChat messageView={{ assistantMessage: { markdownRenderer } }} />`, in all three of the page's forms. The demo has five tabs and a probe that reads the rendered HTML rather than the library's own bookkeeping: the opening tag of the first `<a>`, the number of `[data-streamdown]` elements, the number of elements carrying a literal `node` attribute, and the number carrying the page's `.my-link` / `.my-heading`. **Page code, verbatim** is the published block with nothing added. *Try:* just open it. *Expect:* the chat paints, then throws `Agent 'default' not found after runtime sync` — the block carries no agent id, and Deep Agents registers no `default`, the same defect already reproduced on Frontend-Driven Cards. The other four tabs add `agentId="sample_agent"` and nothing else. **Not yet driven:** this route was built on 2026-09-21 and has no clip; the lines below are what the take should show. *Try:* `Reply in markdown. Include an "## Example" heading, a link to https://docs.copilotkit.ai/deepagents, and the literal text <reference-chip id="42">Doc 42</reference-chip>.` *Pass:* on **components map** the anchor row reads `<a href="…" target="_blank" rel="noopener noreferrer" class="my-link">` with no `data-streamdown`, and the `node` count is 0; on **no override** the same anchor carries `data-streamdown="link"` and Streamdown's classes; the reference-chip is plain text on every tab. *Fail:* a `node` count above 0, or a missing `rel`/`target` on the components tab. See §9 #32.
 
+### Rich Threads
+
+**`/threads/lifecycle`** → `sample_agent` — ⚠️ **Partial.** Tracked 2026-09-21; the only Rich Threads page this repo implements. One button per lifecycle claim on the page, with the chat's resolved state read back from its `CopilotChatConfigurationProvider`, including the id of the parent provider the root `<CopilotKit>` supplies. **Try:** send a message, press "Remount chat", then "Open conversation", "New chat", "Pin a threadId prop" and "New chat" again. **Pass:** the remount keeps the id, because it is inherited from the parent, and the chat empties; "Open conversation" flips `hasExplicitThreadId` to true and replays the messages from the runtime's `InMemoryAgentRunner`; with the id pinned, "New chat" changes nothing and the amber line shows the `Ignoring startNewThread()` warning; the pinned id survives a remount. **Fail:** the re-opened thread shows 0 messages (nothing replayed). See §9 #35.
+
 ### App Control
 
 **`/frontend-tools`** → `frontend_tools_agent`
@@ -293,10 +297,11 @@ Verified 2026-08-06 by driving every graph through the real `CopilotRuntime` rou
 | [learning](https://docs.copilotkit.ai/deepagents/learning) | `/learning` | `sample_agent` | ❌ Broken | New 2026-09-11. Page's runtime throws at load without `CPK_INTELLIGENCE_API_KEY` (route 500); `agents`/`identifyUser` undefined; needs runtime 1.70+ — §9 #24, #25, #27 |
 | [custom-look-and-feel/markdown](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/markdown) | `/custom-look-and-feel/markdown` | `sample_agent` | ⚠️ Partial | New 2026-09-21. All three blocks ask for the agent id `default` and throw; none carries `use client`; the headline example styles with classes the page never defines. With `agentId` added every claim about the props holds, read off the rendered HTML — §9 #32 |
 | [cookbook/jev-generative-ui](https://docs.copilotkit.ai/deepagents/cookbook/jev-generative-ui) | `/cookbook/jev-generative-ui` | — | ❌ Broken | New 2026-09-21. Needs `@typesafe-ai/sdk` + a TypeSafe vendor key and `@langchain/openai`, none of which exist here; pins ten exact versions, six unmet. Every block typechecks on the installed 1.71.0 anyway. No demo, no recorder entry — §9 #33 |
+| [threads-lifecycle](https://docs.copilotkit.ai/deepagents/threads-lifecycle) | `/threads/lifecycle` | `sample_agent` | ⚠️ Partial | Tracked 2026-09-21. Mint, replay, switch and the prop-controlled no-op observed; the remount keeps the id under `<CopilotKit>`, contrary to the page's warning; `existingId` undefined — §9 #35 |
 
-**Totals:** 14 ✅ Working · 3 ⚠️ Partial · 0 📄 Reference · 6 ❌ Broken · 1 🚧 Not started.
+**Totals:** 14 ✅ Working · 4 ⚠️ Partial · 0 📄 Reference · 6 ❌ Broken · 1 🚧 Not started.
 
-**Tracked without a demo.** The 🚧 row and the Jev cookbook row carry a route, a nav entry and a snapshot so drift is watched, but there is no `/demo-chat` behind them and the recorder does not touch them. `npm run drift` therefore lists three `[no-recorder]` coverage gaps: `/webmcp`, `/shared-state/workflow-execution` and `/cookbook/jev-generative-ui`. All three are deliberate, and each one's reason is on its own route page and in §7. The rest of `/deepagents/intelligence/` is the old `/deepagents/premium/` set under a new prefix and stays in `doc-snapshot/manifest.json`’s `knownUnmapped` list.
+**Tracked without a demo.** The 🚧 row and the Jev cookbook row carry a route, a nav entry and a snapshot so drift is watched, but there is no `/demo-chat` behind them and the recorder does not touch them. `npm run drift` therefore lists three `[no-recorder]` coverage gaps: `/webmcp`, `/shared-state/workflow-execution` and `/cookbook/jev-generative-ui`. All three are deliberate, and each one's reason is on its own route page and in §7. The rest of `/deepagents/intelligence/` is the old `/deepagents/premium/` set under a new prefix and stays in `doc-snapshot/manifest.json`’s `knownUnmapped` list. So do the Rich Threads pages other than `/deepagents/threads-lifecycle`.
 
 The same table is rendered in-app at `/status`, generated from `frontend/src/lib/nav-config.ts` — that file is the single source of truth for routes, statuses and doc links, so this table and the app cannot drift apart.
 
@@ -477,6 +482,14 @@ Two smaller ones. The page's custom-tag example raises a second error it does no
 Not a doc bug. `markdown-rendering` is a Custom Look and Feel page and belongs in a group of its own in `ci/lib/pages.mjs`. It cannot have one: six groups plus `pages`, `use_lockfile`, `run_mode` and `custom_args` is already exactly GitHub's ten-input `workflow_dispatch` cap, so a seventh checkbox means dropping an existing input. Recorded here because a page filed under the wrong checkbox is the kind of thing that looks like a mistake later. Also on the same route: the `?tab=` effect in its demo carries an `eslint-disable-next-line react-hooks/set-state-in-effect`, where the identical effect in `frontend-cards/demo-chat` leaves the rule firing — silenced rather than adding a third copy of an error this repo already has two of.
 
 ---
+
+**35. Thread & History Lifecycle: the switch snippet's `existingId` is never defined, and the remount warning does not hold under `<CopilotKit>`**
+
+[Thread & History Lifecycle](https://docs.copilotkit.ai/deepagents/threads-lifecycle) publishes `ThreadControls` calling `config?.setActiveThreadId(existingId, { explicit: true })`. `existingId` appears nowhere else on the page, and nothing says where an app gets the id of a conversation worth re-opening. The demo supplies the first thread that held a conversation, as a prop, with `!` because the button stays disabled until one exists; both handler calls are otherwise the page's text, and the published lines are quoted above them in `frontend/src/app/threads/lifecycle/demo-chat/page.tsx`.
+
+The page's warning "Auto-minted ids are stable across re-renders, but re-mint on remount" is stated unconditionally. Under the v2 `<CopilotKit>` wrapper, which this repo's providers use, there is always a parent id, so a remount does not re-mint and the warning describes something that does not happen. The page lists the precedence rule that explains it but never connects the two, so a reader who remounts to "start a new conversation" gets the same `threadId` back with an empty view.
+
+The rest of the client lifecycle was observed by the recorder on CI-resolved `@copilotkit/react-core` 1.73.0 (declared `^1.69.0`), with the runtime on `InMemoryAgentRunner`: an auto id with `hasExplicitThreadId` false; a remount *keeping* the id, because this app's root `<CopilotKit>` supplies a parent `CopilotChatConfigurationProvider` and the chat inherits its `threadId` (the page's precedence rule 3), while the conversation still leaves the screen, since an inherited id is not explicit and nothing replays it; `setActiveThreadId(id, { explicit: true })` returning to the first thread and replaying both of its messages from the runner's `connect()`; `startNewThread()` minting a fresh non-explicit id; and, with a `threadId` prop pinned, `startNewThread()` changing nothing and logging `[CopilotKit] Ignoring startNewThread(): threadId is controlled via the threadId prop on CopilotChatConfigurationProvider.`, with the pinned id surviving a remount. Not exercised: `identifyUser` and Intelligence scoping, the headless first-message path, and the framework checkpointer layer.
 
 ## 10. Troubleshooting
 
@@ -662,6 +675,9 @@ Grouped the way the doc nav groups them.
 
 **Custom Look and Feel**
 - [Markdown Rendering](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/markdown)
+
+**Rich Threads**
+- [Thread & History Lifecycle](https://docs.copilotkit.ai/deepagents/threads-lifecycle)
 
 **Cookbook**
 - [Jev: fast generative UI](https://docs.copilotkit.ai/deepagents/cookbook/jev-generative-ui) — tracked and compiled; not runnable without a TypeSafe vendor key
