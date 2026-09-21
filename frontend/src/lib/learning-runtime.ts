@@ -12,8 +12,23 @@ import { LANGGRAPH_DEPLOYMENT_URL, LANGSMITH_API_KEY } from "@/lib/agents";
  * Learning, step "Assign Threads from your Runtime" — the page's runtime,
  * mounted on its own route at `/api/copilotkit-learning`.
  *
- * The snippet below the rule is verbatim. It uses two identifiers it never
- * defines, `agents` and `identifyUser`, and says nothing about them; the page
+ * ONE LINE BELOW THE RULE IS NOT THE PAGE'S. The published selector is:
+ *
+ *     getLearningContainerId: ({ agentId }) =>
+ *       agentId === "expense-agent" ? "expense-review" : undefined,
+ *
+ * What ships here returns the constant `"firstlearningtest"` for every agent
+ * instead. That deviation arrived in 1e4a837 with no note in the commit, no
+ * comment here and no entry in the README, which is what a silent fix looks
+ * like; it is written down now rather than reverted, because the container name
+ * is an account-scoped choice and this harness cannot tell which container a
+ * recording is meant to land in. Two things follow from it: the agent-conditional
+ * branch the page is actually teaching (assigned agent versus unassigned) is not
+ * exercised, and a run on `sample_agent` is assigned where the page would leave
+ * it unassigned. See README §9 item 25.
+ *
+ * The rest of the snippet below the rule is verbatim. It uses two identifiers it
+ * never defines, `agents` and `identifyUser`, and says nothing about them; the page
  * is identical under every framework prefix, so it cannot. They are supplied
  * here, above the rule, and they are this harness's, not the page's:
  *
@@ -55,6 +70,9 @@ const identifyUser = (request: Request) => ({
 // [1] learning: assign Threads from your Runtime
 const intelligence = new CopilotKitIntelligence({
   apiKey: process.env.CPK_INTELLIGENCE_API_KEY!,
+  // Published:  getLearningContainerId: ({ agentId }) =>
+  //               agentId === "expense-agent" ? "expense-review" : undefined,
+  // Shipped: one container for every agent. See the header, and README §9 #25.
   getLearningContainerId: () => "firstlearningtest",
 });
 

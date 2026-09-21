@@ -272,7 +272,18 @@ export const NAV: NavGroup[] = [
           "Long-term memories per user or project, read and written from React with `useMemories`.",
         status: "broken",
         statusNote:
-          "The React snippet imports `useMemories` from the package root, which has no such export (TS2305). With the import fixed, every memory route on the Quickstart's runtime 404s: the runtime hides them unless built with `memory: { access }`, which the page never mentions. That option needs an Intelligence key this harness does not have, so the second runtime answers 503.",
+          "The React snippet's import was wrong until the 2026-09-21 sync and now reads `@copilotkit/react-core/v2`, so the page's file compiles and runs here. What remains: on the Quickstart's runtime no memory request is ever sent, the hook reports `isAvailable: true` over an empty list, and every memory route 404s unless the runtime is built with `memory: { access }`, which the page never mentions. That option needs an Intelligence key this harness does not have, so the second runtime answers 503.",
+      },
+      {
+        path: "/intelligence/learned-skills",
+        hasDemo: true,
+        title: "Learned Skills",
+        docPath: "/deepagents/intelligence/learned-skills",
+        summary:
+          "Putting one Learning container's published Skills in front of an agent through a framework-native adapter, with no CLI download and no restart.",
+        status: "broken",
+        statusNote:
+          "No row of the page's adapter table can be followed here. Every Python package it names is 404 on PyPI, including the base client it says Python uses. The BuiltInAgent row added on 2026-09-21 is the one whose package this repo installs, and its `learnedSkills` option is on no config in the installed runtime 1.71.0: TS2353, plus TS2339 on the factory argument and TS2724 on the `BuiltInAgentFactoryContext` the page tells you to import. All three land in 1.73.0, which the page does not name.",
       },
       {
         path: "/learning",

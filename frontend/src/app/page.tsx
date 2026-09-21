@@ -1,7 +1,8 @@
 import Link from "next/link";
 
 import { RouteHeader, StatusBadge } from "@/components/route-header";
-import { Callout, KeyValue, Panel } from "@/components/ui";
+import { Callout, CodeBlock, KeyValue, Panel } from "@/components/ui";
+import { SourceCode } from "@/components/source-code";
 import { ALL_ROUTES, DOCS_ROOT } from "@/lib/nav-config";
 import { GRAPH_IDS, LANGGRAPH_DEPLOYMENT_URL } from "@/lib/agents";
 import { DocDriftPanel } from "@/components/doc-drift-panel";
@@ -10,6 +11,59 @@ import { DocDriftPanel } from "@/components/doc-drift-panel";
 export const dynamic = "force-dynamic";
 
 const ROUTES_WITH_AGENTS = ALL_ROUTES.filter((r) => r.agentId);
+
+/**
+ * The Introduction page's own code block, as published on 2026-09-21. Before
+ * that sync the page carried no code at all: it was a `FrameworkOverview` of
+ * demo links, videos and an architecture image, closed with a self-closing
+ * tag. It now wraps this snippet, and its `connect.filename` names the same
+ * path the block is titled with.
+ */
+const LANDING_ROUTE = `import { CopilotRuntime, createCopilotRuntimeHandler } from "@copilotkit/runtime/v2";
+import { LangGraphAgent } from "@copilotkit/runtime/langgraph";
+
+const runtime = new CopilotRuntime({
+  agents: {
+    sample_agent: new LangGraphAgent({
+      deploymentUrl: process.env.LANGGRAPH_DEPLOYMENT_URL!,
+      graphId: "sample_agent",
+      langsmithApiKey: process.env.LANGSMITH_API_KEY!,
+    }),
+  },
+});
+
+const handler = createCopilotRuntimeHandler({
+  runtime,
+  basePath: "/api/copilotkit",
+});
+
+export const GET = handler;
+export const POST = handler;
+export const PATCH = handler;
+export const DELETE = handler;`;
+
+/** The same file as the Quickstart's Deep Agent tab publishes it. */
+const QUICKSTART_ROUTE = `const runtime = new CopilotRuntime({
+    agents: {
+        sample_agent: new LangGraphAgent({
+            deploymentUrl: process.env.LANGGRAPH_DEPLOYMENT_URL || "http://localhost:8123",
+            graphId: "sample_agent",
+            langsmithApiKey: process.env.LANGSMITH_API_KEY || "",
+        }),
+    },
+    // [!code highlight:8]
+    intelligence: new CopilotKitIntelligence({
+      apiKey: process.env.CPK_INTELLIGENCE_API_KEY!,
+    }),
+    // Threads are per-user. Without this, every visitor shares one history.
+    identifyUser: (request) => ({
+      id: request.headers.get("x-user-id") ?? "anonymous",
+      name: request.headers.get("x-user-name") ?? "Anonymous",
+    }),
+});
+
+export const GET = handler;
+export const POST = handler;`;
 
 export default function Page() {
   return (
@@ -94,6 +148,88 @@ export default function Page() {
           Agents, and print them only in part — so they are notes, not demos.
         </p>
       </Panel>
+
+      <Panel
+        title="The Introduction page now publishes a runtime route"
+        description="Added 2026-09-21, and it is the same file the Quickstart publishes, with different contents."
+      >
+        <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+          The restructured landing page ends with a code block titled{" "}
+          <code>app/api/copilotkit/[[...slug]]/route.ts</code>. So does the
+          Quickstart&apos;s Deep Agent tab. The two blocks are not the same
+          file, and nothing on either page says which one wins.
+        </p>
+        <div className="mt-4 grid gap-4 lg:grid-cols-2">
+          <CodeBlock
+            code={LANDING_ROUTE}
+            language="ts"
+            filename="/deepagents · app/api/copilotkit/[[...slug]]/route.ts"
+          />
+          <CodeBlock
+            code={QUICKSTART_ROUTE}
+            language="ts"
+            filename="/deepagents/quickstart · same path, abridged"
+          />
+        </div>
+        <ul className="mt-4 list-disc space-y-2 pl-5 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+          <li>
+            The landing block has no <code>intelligence</code> and no{" "}
+            <code>identifyUser</code>. Those are the two options the
+            Quickstart <em>highlights</em>, and its own callout says dropping
+            them falls back to SSE with an in-memory runner, which is the path
+            this harness takes. The Introduction teaches the fallback as the
+            default without saying that is what it is.
+          </li>
+          <li>
+            <code>process.env.LANGGRAPH_DEPLOYMENT_URL!</code> and{" "}
+            <code>process.env.LANGSMITH_API_KEY!</code> have no fallbacks here
+            and both do on the Quickstart (<code>|| &quot;http://localhost:8123&quot;</code>{" "}
+            and <code>|| &quot;&quot;</code>). A local <code>langgraph dev</code>{" "}
+            needs no LangSmith key, so following the Introduction alone passes{" "}
+            <code>undefined</code> under a type that promises a string, and
+            nothing tells you the deployment URL had a default on the other
+            page.
+          </li>
+          <li>
+            The landing block exports <code>PATCH</code> and{" "}
+            <code>DELETE</code>; the Quickstart&apos;s exports only{" "}
+            <code>GET</code> and <code>POST</code>. Thread edit and delete
+            reach the runtime on the first and 405 on the second.
+          </li>
+        </ul>
+        <p className="mt-4 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+          This repo keeps the Quickstart&apos;s version, widened to every graph
+          in <code>langgraph.json</code>. That deviation is stated at the top
+          of the file itself. Implementing both is not possible: one path, two
+          published bodies.
+        </p>
+        <div className="mt-4">
+          <SourceCode file="frontend/src/app/api/copilotkit/[[...slug]]/route.ts" />
+        </div>
+      </Panel>
+
+      <Callout tone="warn" title="The Quickstart still tells you to create the wrong file">
+        <p>
+          Its runtime step opens with{" "}
+          <code>mkdir -p app/api/copilotkit &amp;&amp; touch
+          app/api/copilotkit/route.ts</code>, then prints both of its code
+          blocks under the title{" "}
+          <code>app/api/copilotkit/[[...slug]]/route.ts</code>. The Introduction
+          page&apos;s new block and its <code>connect.filename</code> agree with
+          the titles, not with the shell line, so the shell line is now the only
+          place in the section that names a plain <code>route.ts</code>.
+        </p>
+        <p className="mt-2">
+          The two cannot both be followed. A plain <code>route.ts</code> serves
+          no <code>/info</code>, so the client falls back to the single-route
+          POST transport, and from <code>@copilotkit/core</code> 1.70.2 that
+          path throws on a relative <code>runtimeUrl</code> before the agent
+          runs; it is the mechanism this repo already documents on{" "}
+          <code>/api/copilotkit-a2ui-dynamic</code>. Creating both files instead
+          puts a plain route beside an optional catch-all in one segment, which
+          Next.js rejects.
+        </p>
+      </Callout>
 
       <Panel title="Nothing here is invented">
         <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">

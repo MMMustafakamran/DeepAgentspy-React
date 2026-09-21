@@ -1,27 +1,20 @@
 // Memories & Recall, "React" — the page's `components/memory-list.tsx`,
-// verbatim. NOTHING IMPORTS THIS FILE, on purpose.
+// verbatim.
 //
-// The page imports `useMemories` from `@copilotkit/react-core`. That entry
-// point is the v1 surface and has no such export — checked on 1.69.0 (this
-// repo's lockfile) and 1.71.0 (what CI resolves): the hook ships only from
-// `@copilotkit/react-core/v2`. So the snippet fails before it renders:
+// Until the 2026-09-21 sync this file imported `useMemories` from
+// `@copilotkit/react-core`, which has no such export on 1.69.0 or 1.71.0: the
+// hook ships only from `/v2`. That was TS2305 plus a knock-on TS7006, and a
+// Turbopack compile error for any route importing it, so the file was kept
+// broken and imported by nothing while the demo ran a copy with the path
+// corrected.
 //
-//   tsc        TS2305: Module '"@copilotkit/react-core"' has no exported
-//              member 'useMemories'.
-//   next dev   Turbopack refuses the module — a missing named export from an
-//              ESM package is a compile error, not an `undefined` at runtime —
-//              so any route importing this file does not build.
-//
-// The failed import leaves `useMemories` untyped, which knocks on into a second
-// error on the `.map` callback (TS7006) — two errors from one wrong path.
-//
-// Kept verbatim with both errors acknowledged, so the file typechecks and stays
-// the evidence. The demo runs the same component with the import moved to
-// `/v2` (see `demo-chat/page.tsx`), which is the only change it needs.
+// Upstream has now fixed the import to `@copilotkit/react-core/v2`. The file is
+// the page again, it compiles, and the demo imports it directly rather than
+// keeping a second copy. The two `@ts-expect-error` lines are gone with the
+// errors they acknowledged.
 
 // [1] memories: the page's React component
-// @ts-expect-error — the page's import; `useMemories` is not exported from the package root.
-import { useMemories } from "@copilotkit/react-core";
+import { useMemories } from "@copilotkit/react-core/v2";
 
 export function MemoryList() {
   const { memories, isLoading, isAvailable, removeMemory } = useMemories();
@@ -31,7 +24,6 @@ export function MemoryList() {
 
   return (
     <ul>
-      {/* @ts-expect-error — knock-on of the import: `memories` is untyped, so this is TS7006. */}
       {memories.map((memory) => (
         <li key={memory.id}>
           {memory.content}

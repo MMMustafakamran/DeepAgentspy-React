@@ -2,12 +2,6 @@ import { RouteHeader } from "@/components/route-header";
 import { SourceCode } from "@/components/source-code";
 import { Callout, Panel, TryIt } from "@/components/ui";
 
-const TSC_OUTPUT = `$ tsc --noEmit        # memory-list.tsx with the @ts-expect-error lines removed
-src/app/intelligence/memories/memory-list.tsx: error TS2305:
-  Module '"@copilotkit/react-core"' has no exported member 'useMemories'.
-src/app/intelligence/memories/memory-list.tsx: error TS7006:
-  Parameter 'memory' implicitly has an 'any' type.`;
-
 const PROBE = `As documented   /api/copilotkit — the Quickstart runtime, SSE mode, no intelligence in /info
                 (no memory request is sent by the browser at all)
                 useMemories(): isAvailable TRUE · isLoading false · memories 0 · realtimeStatus "connecting"
@@ -45,18 +39,16 @@ export default function Page() {
         </div>
       </Panel>
 
-      <Callout tone="warn" title="The React snippet imports a hook that is not there">
-        <code>import {"{ useMemories }"} from &quot;@copilotkit/react-core&quot;</code>{" "}
-        — the package root is the v1 surface and has no such export, on the
-        lockfile&apos;s 1.69.0 or CI&apos;s 1.71.0. It ships only from{" "}
-        <code>@copilotkit/react-core/v2</code>. Under Next 16 a missing named
-        export is a Turbopack compile error, so a route that imports the file
-        does not build at all. The verbatim file is kept, errors acknowledged,
-        and imported by nothing; the demo runs the same component with the
-        import moved to <code>/v2</code>.
-        <pre className="mt-3 overflow-x-auto rounded bg-slate-900 p-3 text-xs text-slate-100">
-          {TSC_OUTPUT}
-        </pre>
+      <Callout tone="success" title="Fixed upstream: the React snippet now imports from /v2">
+        Until the 2026-09-21 sync the snippet read{" "}
+        <code>import {"{ useMemories }"} from &quot;@copilotkit/react-core&quot;</code>
+        . The package root is the v1 surface and has no such export on 1.69.0 or
+        1.71.0, which was TS2305 plus a knock-on TS7006, and under Next 16 a
+        missing named export is a Turbopack compile error, so any route
+        importing the file failed to build. The published line is now{" "}
+        <code>@copilotkit/react-core/v2</code>, which is where the hook ships.
+        The verbatim file compiles again, the demo imports it directly, and the
+        corrected copy the demo used to carry is deleted.
       </Callout>
 
       <Callout tone="warn" title="On the Quickstart runtime, memory fails without looking like a failure">

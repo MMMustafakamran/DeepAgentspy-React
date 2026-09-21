@@ -19,6 +19,11 @@ import { DemoFrame } from "@/components/demo-frame";
  * to the `expense-review` container; a run on `sample_agent` (the Deep Agents
  * Quickstart's id — this repo has no `default`) should bind nothing.
  *
+ * The selector that actually ships in `lib/learning-runtime.ts` is not that
+ * one: it returns a single container for every agent, so the conditional half
+ * of the experiment is not live. The panel prints both values rather than
+ * showing the page's over code that does something else. README §9 item 25.
+ *
  * What this route can and cannot show. Assignment happens server-side, inside
  * the runtime, and the page gives the client no way to read it back — the
  * check it prescribes is the dashboard. So the panel prints the Thread id each
@@ -35,9 +40,21 @@ import { DemoFrame } from "@/components/demo-frame";
 const AGENT_IDS = ["expense-agent", "sample_agent"] as const;
 type AgentId = (typeof AGENT_IDS)[number];
 
-const EXPECTED: Record<AgentId, string> = {
+/** What the page's published selector would return for each agent. */
+const PUBLISHED: Record<AgentId, string> = {
   "expense-agent": '"expense-review"',
   sample_agent: "undefined",
+};
+
+/**
+ * What the selector in `lib/learning-runtime.ts` actually returns. It is a
+ * constant rather than the page's agent-conditional expression, so the panel
+ * prints both instead of showing the published values over shipped code that
+ * does something else. See README §9 item 25.
+ */
+const SHIPPED: Record<AgentId, string> = {
+  "expense-agent": '"firstlearningtest"',
+  sample_agent: '"firstlearningtest"',
 };
 
 function InfoStatus() {
@@ -77,9 +94,19 @@ function AssignmentPanel({ agentId }: { agentId: AgentId }) {
           <td className="py-1">{agentId}</td>
         </tr>
         <tr className="border-t border-slate-200 dark:border-slate-800">
-          <th className="py-1 pr-3 font-medium text-slate-500">getLearningContainerId returns</th>
+          <th className="py-1 pr-3 font-medium text-slate-500">
+            page&apos;s selector returns
+          </th>
           <td data-testid="learning-expected" className="py-1">
-            {EXPECTED[agentId]}
+            {PUBLISHED[agentId]}
+          </td>
+        </tr>
+        <tr className="border-t border-slate-200 dark:border-slate-800">
+          <th className="py-1 pr-3 font-medium text-slate-500">
+            this runtime&apos;s selector returns
+          </th>
+          <td data-testid="learning-shipped" className="py-1">
+            {SHIPPED[agentId]}
           </td>
         </tr>
         <tr className="border-t border-slate-200 dark:border-slate-800">

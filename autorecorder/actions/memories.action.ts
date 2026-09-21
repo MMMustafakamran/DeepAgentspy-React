@@ -32,7 +32,7 @@ const RELEVANT = /memor|MEMORY_/i;
 const NOTE_HEAD = [
   'memories - blocked on entitlement',
   '',
-  'useMemories only exported from /v2, not the root',
+  'the /v2 import bug is fixed upstream as of 21 sep, snippet compiles now',
   'runtime needs memory: { access }, page never says',
   'org has no memory (403 MEMORY_NOT_ENTITLED), managed so no embedder needed',
 ];

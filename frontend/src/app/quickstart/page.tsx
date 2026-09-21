@@ -41,15 +41,17 @@ export default function Page() {
         </div>
       </Panel>
 
-      <Callout tone="info" title="The Intelligence step renamed its key; this repo takes the fallback">
+      <Callout tone="info" title="The Intelligence key moved again; this repo still takes the fallback">
         <p>
-          Step 4&apos;s runtime snippet now reads{" "}
-          <code>CPK_INTELLIGENCE_API_KEY</code> where it read{" "}
-          <code>INTELLIGENCE_API_KEY</code>, its <code>.env.local</code>{" "}
-          placeholder went from <code>your_license_key</code> to{" "}
-          <code>cpk-...</code>, and the prose stopped calling it a license key
-          and started calling it the project API key. Both TypeScript and
-          FastAPI tabs of that step changed the same way.
+          The runtime step&apos;s key went from{" "}
+          <code>INTELLIGENCE_API_KEY</code> to{" "}
+          <code>CPK_INTELLIGENCE_API_KEY</code>, and the prose stopped calling
+          it a license key and started calling it the project API key. The
+          2026-09-21 sync moved the file it goes in as well: the placeholder
+          block was <code>.env.local</code> and is now <code>.env</code>, and
+          the step no longer tells you to write it at all: it tells you to run{" "}
+          <code>npx copilotkit@latest project select</code> from the frontend
+          app directory and says the command writes the key there.
         </p>
         <p className="mt-2">
           Nothing here reads it. The same step&apos;s callout documents dropping{" "}
@@ -59,6 +61,31 @@ export default function Page() {
           implemented. The link under the callout also moved from{" "}
           <code>/deepagents/premium/connect-your-runtime</code> to{" "}
           <code>/deepagents/intelligence/connect-your-runtime</code>.
+        </p>
+      </Callout>
+
+      <Callout tone="warn" title="Two different .env files, both titled “.env”">
+        <p>
+          Step 6 (&ldquo;Configure your environment&rdquo;) says to create a{" "}
+          <code>.env</code> <em>in your agent directory</em> holding{" "}
+          <code>OPENAI_API_KEY</code>. The runtime step now prints a second
+          block, also captioned <code>.env</code>, holding{" "}
+          <code>CPK_INTELLIGENCE_API_KEY</code>, but that one belongs to the
+          frontend app, three steps and one <code>cd</code> later. Nothing in
+          either caption distinguishes them, and the agent directory is where a
+          reader who follows the page in order last created a file of that name.
+          Put the project key in the agent&apos;s <code>.env</code> and the Next
+          runtime never sees it, with no error to say so. This repo keeps the
+          two apart the way its own README does: <code>backend/.env</code> for
+          the model key, <code>frontend/.env.local</code> for the frontend.
+        </p>
+        <p className="mt-2">
+          Step 1 also changed from &ldquo;Create a free account&rdquo; to
+          &ldquo;Set up CopilotKit Intelligence&rdquo;, and now states that
+          managed setup &ldquo;does not issue{" "}
+          <code>COPILOTKIT_LICENSE_TOKEN</code>&rdquo;, naming a variable that
+          appears nowhere else on the page, so the only thing a first-time
+          reader learns about it is that they will not get one.
         </p>
       </Callout>
 

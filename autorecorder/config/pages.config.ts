@@ -612,11 +612,12 @@ export const PAGES = definePages([
     videoName: 'Memories',
     docPath: 'intelligence/memories',
     route: 'intelligence/memories',
-    // The page's React component, verbatim -- with the two compiler errors its
-    // import produces acknowledged in place.
+    // The page's React component, verbatim. Its import was wrong until the
+    // 2026-09-21 sync and now points at /v2, so the file compiles and the demo
+    // imports it rather than keeping a corrected copy.
     ideFile: 'frontend/src/app/intelligence/memories/memory-list.tsx',
-    startLine: 22,
-    endLine: 45,
+    startLine: 16,
+    endLine: 37,
     extraTabs: [
       // The option the page never mentions, and without which every memory
       // route 404s at the runtime.
@@ -631,11 +632,11 @@ export const PAGES = definePages([
     knownIssue: {
       area: 'Deep Agents - Intelligence - Memories & Recall',
       problem:
-        'The React snippet does not compile: it imports `useMemories` from `@copilotkit/react-core`, ' +
-        'which has no such export (TS2305, plus a knock-on TS7006). With the import moved to `/v2`, on ' +
-        'the Deep Agents Quickstart runtime the hook reports `isAvailable: true` over an empty list, no ' +
-        'memory request ever leaves the browser, and saving fails with "Runtime URL is not configured". ' +
-        'The agent, asked to remember something, says it will.',
+        'On the Deep Agents Quickstart runtime the hook reports `isAvailable: true` over an empty list, ' +
+        'no memory request ever leaves the browser, and saving fails with "Runtime URL is not ' +
+        'configured". The agent, asked to remember something, says it will. (The React snippet also ' +
+        'imported `useMemories` from `@copilotkit/react-core`, which has no such export -- TS2305 plus a ' +
+        'knock-on TS7006. Fixed upstream on 2026-09-21: it now reads `@copilotkit/react-core/v2`.)',
       impact:
         'Memory cannot be used from React as documented, and the failure does not look like one: the ' +
         "page's component shows an empty list rather than \"Memory is not available\", and the save " +
@@ -650,7 +651,7 @@ export const PAGES = definePages([
       note: [
         'memories - blocked on entitlement',
         '',
-        'useMemories only exported from /v2, not the root',
+        'the /v2 import bug is fixed upstream as of 21 sep, snippet compiles now',
         'runtime needs memory: { access }, page never says',
         'with it: 403 MEMORY_NOT_ENTITLED, org has no memory',
         'managed platform, so no embedder config needed',
@@ -663,11 +664,28 @@ export const PAGES = definePages([
     videoName: 'LearnedSkills',
     docPath: 'intelligence/learned-skills',
     route: 'intelligence/learned-skills',
-    // There is no adapter to show, so the IDE tab is the demo itself: the two
-    // tool names the page reserves, listed as absent rather than registered.
-    ideFile: 'frontend/src/app/intelligence/learned-skills/demo-chat/page.tsx',
-    startLine: 7,
-    endLine: 29,
+    // The one adapter row whose package this repo has: BuiltInAgent, added to
+    // the table on 2026-09-21. Verbatim, and uncompilable on the installed
+    // runtime.
+    ideFile: 'frontend/src/app/intelligence/learned-skills/built-in-agent-classic.ts',
+    startLine: 23,
+    endLine: 34,
+    extraTabs: [
+      // Factory mode, where the page's "every factory receives a learnedSkills
+      // object" meets an AgentFactoryContext that has no such property.
+      {
+        filePath: 'frontend/src/app/intelligence/learned-skills/built-in-agent-factory.ts',
+        startLine: 27,
+        endLine: 52,
+      },
+      // The Python side: no adapter to mount, so the demo lists the two tool
+      // names the page reserves as absent rather than registered.
+      {
+        filePath: 'frontend/src/app/intelligence/learned-skills/demo-chat/page.tsx',
+        startLine: 7,
+        endLine: 36,
+      },
+    ],
     prompt: 'List the skills you can load, then load the refund-policy skill and follow it.',
     waitAfterPromptMs: 3000,
     knownIssue: {
@@ -678,8 +696,14 @@ export const PAGES = definePages([
         '`copilotkit-intelligence-runtime`, nor the ADK adapter `copilotkit-intelligence-adk`. ' +
         '`uv pip install` resolves to "not found in the package registry". The TypeScript siblings ' +
         '@copilotkit/intelligence-langgraph and -mastra are published at 1.71.2 (2026-09-14), so the ' +
-        'gap is Python-side rather than the whole feature being unreleased.',
+        'gap is Python-side rather than the whole feature being unreleased. The BuiltInAgent row added ' +
+        'on 2026-09-21 is the one whose package this repo installs, and it does not compile: ' +
+        '`learnedSkills` is on no BuiltInAgent config in the installed 1.71.0 (TS2353), no factory ' +
+        'context carries it (TS2339), and `BuiltInAgentFactoryContext`, which the page tells you to ' +
+        'import, is not an export (TS2724). All three land in 1.73.0, published 2026-09-19.',
       impact:
+        'No row of the adapter table can be followed here: the Python ones cannot be installed and the ' +
+        'TypeScript BuiltInAgent one does not typecheck against the shipped runtime. ' +
         'Nothing on the page can be followed from a Python backend. The two tools it reserves, ' +
         '`copilotkit_load_skill` and `copilotkit_read_skill_file`, are never registered, so the agent ' +
         'answers from its own instructions and the failure looks like an ordinary reply rather than a ' +
@@ -694,7 +718,12 @@ export const PAGES = definePages([
         'section).',
       expectsNoResponse: false,
       note: [
-        'learned-skills - the python adapter doesnt exist on pypi',
+        'learned-skills - no row of the adapter table works here',
+        '',
+        'new BuiltInAgent row (21 sep): learnedSkills isnt on any config in 1.71.0',
+        'TS2353 on the option, TS2339 on the factory arg,',
+        'TS2724 on BuiltInAgentFactoryContext which the prose says to import',
+        'all three ship in 1.73.0 (19 sep), page names no version',
         '',
         'copilotkit-intelligence-langgraph -> 404',
         'copilotkit-intelligence-runtime -> 404 (page says "Python uses" this one)',
@@ -744,7 +773,8 @@ export const PAGES = definePages([
       area: 'Deep Agents - Intelligence - Learning',
       problem:
         "With an Intelligence key, the page's example selector routes `expense-agent` to the container " +
-        '`expense-review`; where that container does not exist the platform answers ' +
+        '`expense-review` (this runtime ships a constant selector instead -- see README section 9 item ' +
+        '25); where that container does not exist the platform answers ' +
         '`LEARNING_CONTAINER_NOT_FOUND`, the run fails with "Failed to initialize thread", and the chat ' +
         'shows nothing, while `sample_agent` (not assigned) answers. Without a key the snippet fails at ' +
         "module load: the `apiKey: process.env.CPK_INTELLIGENCE_API_KEY!` constructor throws and the " +

@@ -13,6 +13,13 @@ import { DemoFrame } from "@/components/demo-frame";
  * `create_skill_registry_middleware` cannot be imported and the two tools it
  * would register never exist.
  *
+ * The BuiltInAgent row added on 2026-09-21 is not a way round that. It is a
+ * different agent, not an adapter for this one -- taking it would mean dropping
+ * the Deep Agent this section is about -- and its `learnedSkills` option does
+ * not exist on the installed runtime anyway. Both of its snippets are in
+ * `../built-in-agent-classic.ts` and `../built-in-agent-factory.ts`, verbatim
+ * and uncompilable.
+ *
  * So the demo shows the absence rather than faking the presence: the agent is
  * this repo's normal `sample_agent`, and the prompt asks for the exact tool
  * names the page reserves. The agent answers from its own instructions with no

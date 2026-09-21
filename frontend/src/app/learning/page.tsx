@@ -1,6 +1,12 @@
+import Link from "next/link";
+
 import { RouteHeader } from "@/components/route-header";
 import { SourceCode } from "@/components/source-code";
 import { Callout, Panel, TryIt } from "@/components/ui";
+
+// The page's "Agent server environment" block, quoted as published.
+const AGENT_ENV = `CPK_INTELLIGENCE_API_KEY=your-project-key
+CPK_INTELLIGENCE_LEARNING_CONTAINER_ID=expense-review`;
 
 const SERVER_LOG = `GET  /api/copilotkit-learning/info   → 500
 POST /api/copilotkit-learning        → 500   (single-route fallback)
@@ -74,16 +80,55 @@ export default function Page() {
         older runtime is not told what to use instead.
       </Callout>
 
-      <Callout tone="info" title="Automatic skill delivery is documented elsewhere">
-        The 2026-09-15 sync added a line pointing at{" "}
-        <code>/deepagents/intelligence/learned-skills</code> for &ldquo;automatic
-        learned skill delivery&rdquo; through a framework-native adapter, and
-        reframes the CLI workflow below as the manual/offline path. That page is
-        now tracked and has its own route at{" "}
-        <code>/intelligence/learned-skills</code> — where the adapter it names
-        for this flavour turns out not to be published, so the automatic path
-        still cannot be exercised. The CLI workflow below remains the only one
-        this repo can run.
+      <Callout tone="warn" title="The new skill-delivery steps cannot be followed from this backend">
+        <p>
+          The 2026-09-21 sync replaced the one-line pointer to{" "}
+          <code>/deepagents/intelligence/learned-skills</code> with a three-step{" "}
+          <strong>Set up automatic skill delivery</strong> section. Step 2 tells
+          you to configure &ldquo;the supported native adapter&rdquo; in the
+          agent server environment with this block:
+        </p>
+        <pre className="mt-3 overflow-x-auto rounded bg-slate-900 p-3 text-xs text-slate-100">
+          {AGENT_ENV}
+        </pre>
+        <p className="mt-2">
+          The agent server here is Python, and the LangGraph Python adapter that
+          would read those variables,{" "}
+          <code>copilotkit-intelligence-langgraph</code>, is not on PyPI. See{" "}
+          <Link
+            href="/intelligence/learned-skills"
+            className="underline underline-offset-4"
+          >
+            Automatic learned skill delivery
+          </Link>
+          . So the environment block configures nothing, and step 3 (&ldquo;
+          Verify delivery in a new invocation&rdquo;) has nothing to verify. The
+          page&apos;s own list of manual-setup frameworks (LangGraph Python,
+          LangGraph TypeScript, Mastra, Google ADK, Microsoft Agent Framework)
+          omits the one row of the adapter table that is a CopilotKit package,
+          BuiltInAgent, whose option does not exist on the installed runtime
+          either.
+        </p>
+        <p className="mt-2">
+          The container id in the block is <code>expense-review</code>, the same
+          one this page&apos;s runtime selector returns, so the two halves agree
+          about the name. Nothing here can check that they agree about anything
+          else.
+        </p>
+      </Callout>
+
+      <Callout tone="premium" title="The daily schedule is dashboard-only">
+        The same sync added a <strong>Choose the daily schedule</strong> step
+        and a threshold to <strong>Collect examples</strong>: automatic Learning
+        wants <strong>15 eligible Threads</strong> and runs on a daily schedule
+        defaulting to <strong>02:00 UTC</strong>, editable per project or per
+        organization. Every part of that is a dashboard control: <strong>Edit
+        schedule</strong>, <strong>Next scheduled run</strong>,{" "}
+        <strong>Start manual run now</strong>, <strong>Analysis results</strong>
+        . All of it sits behind a provisioned project and a login this harness
+        does not have. Two of the new troubleshooting rows are about that surface
+        (&ldquo;An automatic run has not started&rdquo;, &ldquo;Learning is
+        waiting after a failed run&rdquo;). None of it is on the clip.
       </Callout>
 
       <Callout tone="premium" title="Not exercised here">

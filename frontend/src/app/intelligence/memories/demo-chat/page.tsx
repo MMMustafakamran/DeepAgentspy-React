@@ -9,12 +9,16 @@ import { useState } from "react";
 
 import { DemoFrame } from "@/components/demo-frame";
 
+import { MemoryList } from "../memory-list";
+
 /**
  * Memories & Recall, against this repo's two relevant runtimes.
  *
- * Left panel: the page's `MemoryList`, with the one change it needs to load —
- * the import moved from `@copilotkit/react-core` to `/v2`. The verbatim file is
- * `../memory-list.tsx`, which does not compile; see there.
+ * Left panel: the page's `MemoryList`, imported from `../memory-list.tsx`,
+ * which is the page's file verbatim. It used to be a second copy here with the
+ * import path corrected, because the published one did not compile; the
+ * 2026-09-21 sync fixed the import upstream, so the copy is gone and the demo
+ * runs the published component itself.
  *
  * Right panel: the hook's other fields, which the page names but its component
  * does not show (`realtimeStatus`, `error`), plus a save. The page teaches saving
@@ -35,27 +39,6 @@ import { DemoFrame } from "@/components/demo-frame";
  * graph (`sample_agent`): the app-wide provider has no `default` agent to fall
  * back to.
  */
-
-// [2] memories: the page's component, import moved to /v2
-function MemoryList() {
-  const { memories, isLoading, isAvailable, removeMemory } = useMemories();
-
-  if (!isAvailable) return <p>Memory is not available for this runtime.</p>;
-  if (isLoading) return <p>Loading memories…</p>;
-
-  return (
-    <ul>
-      {memories.map((memory) => (
-        <li key={memory.id}>
-          {memory.content}
-          <button type="button" onClick={() => void removeMemory(memory.id)}>
-            Forget
-          </button>
-        </li>
-      ))}
-    </ul>
-  );
-}
 
 function MemoryProbe() {
   const { memories, isLoading, isAvailable, realtimeStatus, error, addMemory, refresh } =
@@ -146,7 +129,7 @@ function Panels({ runtime }: { runtime: RuntimeKey }) {
         <div className="grid gap-4 py-3 text-sm md:grid-cols-2">
           <section>
             <h2 className="mb-2 text-xs font-semibold uppercase tracking-wide text-slate-500">
-              MemoryList (import → /v2)
+              MemoryList (the page&apos;s file)
             </h2>
             <div data-testid="memory-list">
               <MemoryList />
