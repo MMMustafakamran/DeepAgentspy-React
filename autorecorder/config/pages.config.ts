@@ -913,13 +913,13 @@ export const PAGES = definePages([
     // Appended last so no existing clip is renumbered. The page's own
     // ThreadControls first, then the readout that proves each step.
     ideFile: 'frontend/src/app/threads/lifecycle/demo-chat/page.tsx',
-    startLine: 71,
-    endLine: 113,
+    startLine: 79,
+    endLine: 121,
     extraTabs: [
       {
         filePath: 'frontend/src/app/threads/lifecycle/demo-chat/page.tsx',
-        startLine: 115,
-        endLine: 142,
+        startLine: 123,
+        endLine: 152,
       },
     ],
     // Deliberately about nothing: the take is about the threadId, not the
