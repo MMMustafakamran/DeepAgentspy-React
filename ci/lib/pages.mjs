@@ -34,7 +34,18 @@ export const PAGE_GROUPS = {
     'learning',
     'intelligence-learned-skills',
   ],
-  generative_ui: ['tool-rendering', 'state-rendering', 'interrupt-based', 'frontend-cards'],
+  // `markdown-rendering` is a Custom Look and Feel page and belongs in a group
+  // of its own. It cannot have one: six groups plus `pages`, `use_lockfile`,
+  // `run_mode` and `custom_args` is already exactly GitHub's ten-input cap, so
+  // a seventh checkbox would mean dropping an existing input. Filed here rather
+  // than left ungrouped, which `assertGroupsCoverAllPages` would reject.
+  generative_ui: [
+    'tool-rendering',
+    'state-rendering',
+    'interrupt-based',
+    'frontend-cards',
+    'markdown-rendering',
+  ],
   a2ui: [
     'a2ui-fixed-schema',
     'a2ui-dynamic-schema',

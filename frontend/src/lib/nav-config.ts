@@ -164,6 +164,23 @@ export const NAV: NavGroup[] = [
     ],
   },
   {
+    title: "Custom Look and Feel",
+    routes: [
+      {
+        path: "/custom-look-and-feel/markdown",
+        hasDemo: true,
+        agentId: "sample_agent",
+        title: "Markdown Rendering",
+        docPath: "/deepagents/custom-look-and-feel/markdown",
+        summary:
+          "The markdownRenderer slot on CopilotChatAssistantMessage: a Streamdown components map, a class string, or a component replacing the renderer outright.",
+        status: "partial",
+        statusNote:
+          "The slot mechanics are exactly as documented, read out of the shipped 1.71.0 bundle, and the custom-tag claim produces the page's exact TS2353. What fails: all three published blocks are a bare `<CopilotChat>` with no agent id, so they ask for `default` and throw on a Deep Agents runtime (the Frontend-Driven Cards defect again); none carries `use client`; and the headline `components` example styles with `.my-link` / `.my-heading`, which the page never defines. Built 2026-09-21 and not yet driven — the demo's probe is what checks the prop claims against the rendered HTML.",
+      },
+    ],
+  },
+  {
     title: "App Control",
     routes: [
       {
@@ -295,6 +312,21 @@ export const NAV: NavGroup[] = [
         status: "broken",
         statusNote:
           "The page's runtime snippet is mounted verbatim at `/api/copilotkit-learning`. Its `apiKey: process.env.CPK_INTELLIGENCE_API_KEY!` throws at module load without a key, so the route 500s and neither agent answers. `agents` and `identifyUser` are undefined on the page; `getLearningContainerId` needs runtime 1.70+; dashboard and CLI steps are not exercised.",
+      },
+    ],
+  },
+  {
+    title: "Cookbook",
+    routes: [
+      {
+        path: "/cookbook/jev-generative-ui",
+        title: "Jev: fast generative UI",
+        docPath: "/deepagents/cookbook/jev-generative-ui",
+        summary:
+          "A workspace picker whose next control and candidate ranking come from Jev, TypeSafe's decision service, rendered through AG-UI as shared agent state.",
+        status: "broken",
+        statusNote:
+          "Not runnable here and not faked. The decision layer needs `@typesafe-ai/sdk` (absent) and a TYPESAFE_API_KEY from a third-party vendor; the fallback needs `@langchain/openai` (absent). Every published TypeScript block is in the repo verbatim and typechecks on the installed 1.71.0, three minors below the page's 1.73.0 pin, and on zod 3 rather than the pinned zod 4. The prepared controls, their schemas and `readAction` are wired up for real on the route; the Jev decision is absent and labelled as absent. No demo and no recorder entry, because there is nothing to film that would not be a stand-in. Built 2026-09-21 and not yet opened in a browser.",
       },
     ],
   },

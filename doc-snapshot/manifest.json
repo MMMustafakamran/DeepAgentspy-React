@@ -255,6 +255,30 @@
       "status": "ok",
       "age": 0,
       "date": "Mon, 21 Sep 2026 07:26:47 GMT"
+    },
+    "/deepagents/custom-look-and-feel/markdown": {
+      "file": "deepagents__custom-look-and-feel__markdown.md",
+      "sha256": "594924228c26e5e6f29ec8c052c03d685362e3a5e784142e096e5c939dcca3d8",
+      "bytes": 5836,
+      "lines": 159,
+      "routes": [
+        "/custom-look-and-feel/markdown"
+      ],
+      "status": "ok",
+      "age": 0,
+      "date": "Mon, 21 Sep 2026 08:16:36 GMT"
+    },
+    "/deepagents/cookbook/jev-generative-ui": {
+      "file": "deepagents__cookbook__jev-generative-ui.md",
+      "sha256": "cda06a5d323bfbbc8580a022f38ba6559efe6ca5edcf7ac3df26fcd0ae89f1de",
+      "bytes": 21934,
+      "lines": 428,
+      "routes": [
+        "/cookbook/jev-generative-ui"
+      ],
+      "status": "ok",
+      "age": 0,
+      "date": "Mon, 21 Sep 2026 08:16:36 GMT"
     }
   },
   "sitemap": {

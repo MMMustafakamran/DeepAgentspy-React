@@ -804,4 +804,91 @@ export const PAGES = definePages([
       ].join('\n'),
     },
   },
+  // -- Added 2026-09-21: two pages new upstream and tracked nowhere until now.
+  // Only one of them is filmable; /cookbook/jev-generative-ui deliberately has
+  // no entry here, because its decision layer needs a third-party vendor key
+  // and every take of it would be a stand-in. See README section 9.
+  {
+    id: 'markdown-rendering',
+    name: 'Custom Look and Feel - Markdown Rendering',
+    videoName: 'MarkdownRendering',
+    docPath: 'custom-look-and-feel/markdown',
+    route: 'custom-look-and-feel/markdown',
+    // The published `components` override, with the `a` override highlighted:
+    // that one line carries both of the page's prop warnings -- `node`
+    // destructured out, and the rest spread to keep the link hardening.
+    ideFile: 'frontend/src/app/custom-look-and-feel/markdown/chat-variants.tsx',
+    startLine: 78,
+    endLine: 101,
+    extraTabs: [
+      // The other two techniques, so all three of the page's routes into the
+      // slot are in frame: the class string and the replacing component.
+      {
+        filePath: 'frontend/src/app/custom-look-and-feel/markdown/chat-variants.tsx',
+        startLine: 130,
+        endLine: 155,
+      },
+      // The claim the page makes that no reply can show: a custom tag is a
+      // compile error, with the page's exact TS2353 quoted above it.
+      {
+        filePath: 'frontend/src/app/custom-look-and-feel/markdown/custom-tag.tsx',
+        startLine: 1,
+        endLine: 27,
+      },
+      // What the probe reads off the rendered HTML, which is the take's evidence.
+      {
+        filePath: 'frontend/src/app/custom-look-and-feel/markdown/demo-chat/page.tsx',
+        startLine: 85,
+        endLine: 94,
+      },
+    ],
+    prompt:
+      'Reply in markdown. Include an "## Example" heading, a link to https://docs.copilotkit.ai/deepagents, and the literal text <reference-chip id="42">Doc 42</reference-chip>.',
+    // Two turns because tab three is a different chat instance: the baseline
+    // needs its own reply to have an anchor of its own to compare against.
+    prompts: [
+      'Reply in markdown. Include an "## Example" heading, a link to https://docs.copilotkit.ai/deepagents, and the literal text <reference-chip id="42">Doc 42</reference-chip>.',
+      'Same again please: an "## Example" heading and a link to https://docs.copilotkit.ai/deepagents.',
+    ],
+    waitAfterPromptMs: 4000,
+    knownIssue: {
+      area: 'Deep Agents - Custom Look and Feel - Markdown Rendering',
+      problem:
+        'All three published blocks are a bare `<CopilotChat>` carrying only `messageView`, so they ask ' +
+        'for the agent id "default", which a Deep Agents runtime does not register, and the route throws ' +
+        '"Agent \'default\' not found after runtime sync" as soon as `/info` answers. None of the three ' +
+        'carries `"use client"` either, although each is titled `page.tsx` and passes inline functions ' +
+        'to a client component.',
+      impact:
+        'A Deep Agents reader who copies any block on this page gets a crashed route rather than a ' +
+        'restyled message, and the page never names the prop that fixes it. With `agentId` added the ' +
+        'rest of the page holds exactly as written -- the override runs, the link hardening survives the ' +
+        'spread, `data-streamdown` disappears -- but the headline `components` example styles with ' +
+        '`.my-link` and `.my-heading`, which the page never defines, so following it end to end changes ' +
+        'nothing a reader can see.',
+      likelyCause:
+        'The page is written framework-agnostically and assumes an agent registered as "default". The ' +
+        'Deep Agents Quickstart names its agent `sample_agent` and puts the id on the provider; none of ' +
+        'these blocks has a provider at all. The same assumption already broke Frontend-Driven Cards ' +
+        '(README section 9 #22), so this is the second page with it.',
+      note: [
+        'markdown rendering - published blocks crash the route',
+        '',
+        'tab 1 = the page block exactly, no agent id',
+        "so CopilotChat asks for 'default'. deep agents registers sample_agent, no default",
+        '-> Agent \'default\' not found after runtime sync. no chat at all',
+        '',
+        'tab 2 = same + agentId="sample_agent". everything else on the page is true:',
+        'anchor comes out class="my-link" rel="noopener noreferrer" target="_blank", no data-streamdown',
+        'node attribute count 0, so "drop node" works',
+        'tab 3 (no override) has data-streamdown="link" on the same anchor',
+        '',
+        'but .my-link / .my-heading are never defined anywhere on the page',
+        'so the headline example is a no-op visually, tailwind has no such utility',
+        'and no block has "use client", which app router needs for these',
+        '',
+        'installed react-core 1.71.0, streamdown 1.6.11 (undeclared, transitive)',
+      ].join('\n'),
+    },
+  },
 ]);

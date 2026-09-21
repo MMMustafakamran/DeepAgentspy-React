@@ -69,6 +69,7 @@ import { runFrontendToolsAction } from './frontend-tools.action';
 import { runGovernedActionsAction } from './governed-actions.action';
 import { runInterruptAction } from './interrupt.action';
 import { runLearningAction } from './learning.action';
+import { runMarkdownRenderingAction } from './markdown-rendering.action';
 import { runMemoriesAction } from './memories.action';
 import {
   runPredictiveManualAction,
@@ -109,6 +110,8 @@ export const ACTION_MAP: Record<string, PageActionHandler> = {
   'frontend-cards': runFrontendCardsAction,
   'intelligence-memories': runMemoriesAction,
   learning: runLearningAction,
+
+  'markdown-rendering': runMarkdownRenderingAction,
 };
 
 export async function executePageAction(
