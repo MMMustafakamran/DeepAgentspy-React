@@ -34,10 +34,6 @@
 import { definePages } from '../core/types';
 
 /**
- * Page ids that stay registered but are never recorded -- not by `npm run
- * record`, not by a named id, not in CI. The route and its demo remain.
- */
-/**
  * Pages that stay registered but are never filmed.
  *
  * They keep their route, their doctor entry and their CI group, so drift and
@@ -907,5 +903,28 @@ export const PAGES = definePages([
         'installed react-core 1.71.0, streamdown 1.6.11 (undeclared, transitive)',
       ].join('\n'),
     },
+  },
+  {
+    id: 'threads-lifecycle',
+    name: 'Rich Threads - Thread & History Lifecycle',
+    videoName: 'ThreadsLifecycle',
+    docPath: 'threads-lifecycle',
+    route: 'threads/lifecycle',
+    // Appended last so no existing clip is renumbered. The page's own
+    // ThreadControls first, then the readout that proves each step.
+    ideFile: 'frontend/src/app/threads/lifecycle/demo-chat/page.tsx',
+    startLine: 71,
+    endLine: 113,
+    extraTabs: [
+      {
+        filePath: 'frontend/src/app/threads/lifecycle/demo-chat/page.tsx',
+        startLine: 115,
+        endLine: 142,
+      },
+    ],
+    // Deliberately about nothing: the take is about the threadId, not the
+    // model's reply.
+    prompt: 'Say hello in one short sentence.',
+    waitAfterPromptMs: 3000,
   },
 ]);

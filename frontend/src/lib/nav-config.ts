@@ -316,6 +316,23 @@ export const NAV: NavGroup[] = [
     ],
   },
   {
+    title: "Rich Threads",
+    routes: [
+      {
+        path: "/threads/lifecycle",
+        hasDemo: true,
+        agentId: "sample_agent",
+        title: "Thread & History Lifecycle",
+        docPath: "/deepagents/threads-lifecycle",
+        summary:
+          "How a threadId is minted, lost on remount, restored with setActiveThreadId, and made authoritative with a threadId prop.",
+        status: "partial",
+        statusNote:
+          "The only Rich Threads page tracked here; the rest of the section stays in knownUnmapped. Runs on the runtime's InMemoryAgentRunner, whose connect() replays a thread's history for the life of the process. That is the page's \"persisting AgentRunner\" case; CopilotKit Intelligence and LangGraph's own checkpointer are not exercised. The page's `existingId` is never defined, so the demo supplies the first thread that held a conversation.",
+      },
+    ],
+  },
+  {
     title: "Cookbook",
     routes: [
       {

@@ -279,6 +279,18 @@
       "status": "ok",
       "age": 0,
       "date": "Mon, 21 Sep 2026 08:16:36 GMT"
+    },
+    "/deepagents/threads-lifecycle": {
+      "file": "deepagents__threads-lifecycle.md",
+      "sha256": "94c44877788449416cf983a173b6d27ec1a025edeb8c16afc348204887c2c7a3",
+      "bytes": 15769,
+      "lines": 257,
+      "routes": [
+        "/threads/lifecycle"
+      ],
+      "status": "ok",
+      "age": 0,
+      "date": "Mon, 21 Sep 2026 10:40:15 GMT"
     }
   },
   "sitemap": {
@@ -378,7 +390,6 @@
       "https://docs.copilotkit.ai/deepagents/telemetry",
       "https://docs.copilotkit.ai/deepagents/threads",
       "https://docs.copilotkit.ai/deepagents/threads-import",
-      "https://docs.copilotkit.ai/deepagents/threads-lifecycle",
       "https://docs.copilotkit.ai/deepagents/threads-self-managed",
       "https://docs.copilotkit.ai/deepagents/troubleshooting/common-issues",
       "https://docs.copilotkit.ai/deepagents/troubleshooting/debug-mode",

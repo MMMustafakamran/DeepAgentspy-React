@@ -71,6 +71,7 @@ import { runInterruptAction } from './interrupt.action';
 import { runLearningAction } from './learning.action';
 import { runMarkdownRenderingAction } from './markdown-rendering.action';
 import { runMemoriesAction } from './memories.action';
+import { runThreadsLifecycleAction } from './threads-lifecycle.action';
 import {
   runPredictiveManualAction,
   runPredictivePrebuiltAction,
@@ -112,6 +113,7 @@ export const ACTION_MAP: Record<string, PageActionHandler> = {
   learning: runLearningAction,
 
   'markdown-rendering': runMarkdownRenderingAction,
+  'threads-lifecycle': runThreadsLifecycleAction,
 };
 
 export async function executePageAction(
