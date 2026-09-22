@@ -283,7 +283,7 @@ export const NAV: NavGroup[] = [
       {
         path: "/intelligence/memories",
         hasDemo: true,
-        title: "Memories & Recall",
+        title: "User Memories",
         docPath: "/deepagents/intelligence/memories",
         summary:
           "Long-term memories per user or project, read and written from React with `useMemories`.",
@@ -305,7 +305,7 @@ export const NAV: NavGroup[] = [
       {
         path: "/learning",
         hasDemo: true,
-        title: "Learning",
+        title: "Automatic Learning",
         docPath: "/deepagents/learning",
         summary:
           "Routing selected Threads into a Learning container from the runtime, for Insights and reviewed Skills.",
@@ -329,6 +329,23 @@ export const NAV: NavGroup[] = [
         status: "partial",
         statusNote:
           "The only Rich Threads page tracked here; the rest of the section stays in knownUnmapped. Runs on the runtime's InMemoryAgentRunner, whose connect() replays a thread's history for the life of the process. That is the page's \"persisting AgentRunner\" case; CopilotKit Intelligence and LangGraph's own checkpointer are not exercised. The page's `existingId` is never defined, so the demo supplies the first thread that held a conversation.",
+      },
+    ],
+  },
+  {
+    title: "Backend",
+    routes: [
+      {
+        path: "/backend/message-history",
+        hasDemo: true,
+        agentId: "sample_agent",
+        title: "Message history",
+        docPath: "/deepagents/backend/message-history",
+        summary:
+          "Trimming the transcript forwarded to the agent: the page's middleware inside a second runtime, and its messageFilter prop.",
+        status: "partial",
+        statusNote:
+          "The middleware and its check work as published, and on a LangGraph thread trimming loses nothing (the checkpointer holds the history). `messageFilter`, the page's recommended recipe, is not a prop on any published @copilotkit/react-core (1.71.0 installed, 1.73.0 latest), so it is a type error and does nothing. The runtime snippet's `HttpAgent({ url: process.env.AGENT_URL! })` needs an AG-UI endpoint this backend does not serve; the demo runs the same middleware on the Quickstart's LangGraphAgent instead.",
       },
     ],
   },

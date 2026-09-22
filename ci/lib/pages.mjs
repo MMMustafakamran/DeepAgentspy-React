@@ -28,15 +28,17 @@ const PAGES_CONFIG = path.join(RECORDER_DIR, 'config', 'pages.config.ts');
  * the dispatch form.
  */
 export const PAGE_GROUPS = {
-  // `threads-lifecycle` is a Rich Threads page. It shares this group for the
-  // same reason `markdown-rendering` shares generative_ui below: a group of its
-  // own would be an eleventh workflow input, and GitHub caps the form at ten.
+  // `threads-lifecycle` is a Rich Threads page and `message-history` a Backend
+  // page. They share this group for the same reason `markdown-rendering` shares
+  // generative_ui below: a group of their own would be an eleventh workflow
+  // input, and GitHub caps the form at ten.
   getting_started: [
     'quickstart',
     'intelligence-memories',
     'learning',
     'intelligence-learned-skills',
     'threads-lifecycle',
+    'message-history',
   ],
   // `markdown-rendering` is a Custom Look and Feel page and belongs in a group
   // of its own. It cannot have one: six groups plus `pages`, `use_lockfile`,

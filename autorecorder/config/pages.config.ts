@@ -52,6 +52,7 @@ export const SKIP_RECORDING: Record<string, string> = {
   'intelligence-learned-skills': 'owner instruction: Intelligence Learned Skills is not recorded',
   'markdown-rendering':
     'owner instruction: not reachable from the docs sidebar, so not under test yet',
+  'message-history': 'owner instruction: tracked and built 2026-09-22, not recorded yet',
 };
 
 export const PAGES = definePages([
@@ -621,7 +622,7 @@ export const PAGES = definePages([
   },
   {
     id: 'intelligence-memories',
-    name: 'Intelligence - Memories & Recall',
+    name: 'Intelligence - User Memories',
     videoName: 'Memories',
     docPath: 'intelligence/memories',
     route: 'intelligence/memories',
@@ -643,7 +644,7 @@ export const PAGES = definePages([
     prompt: 'Please remember that I prefer concise status updates.',
     waitAfterPromptMs: 3000,
     knownIssue: {
-      area: 'Deep Agents - Intelligence - Memories & Recall',
+      area: 'Deep Agents - Intelligence - User Memories',
       problem:
         'On the Deep Agents Quickstart runtime the hook reports `isAvailable: true` over an empty list, ' +
         'no memory request ever leaves the browser, and saving fails with "Runtime URL is not ' +
@@ -757,7 +758,7 @@ export const PAGES = definePages([
   },
   {
     id: 'learning',
-    name: 'Intelligence - Learning',
+    name: 'Intelligence - Automatic Learning',
     videoName: 'Learning',
     docPath: 'learning',
     route: 'learning',
@@ -926,5 +927,31 @@ export const PAGES = definePages([
     // model's reply.
     prompt: 'Say hello in one short sentence.',
     waitAfterPromptMs: 3000,
+  },
+  {
+    // Tracked 2026-09-22 and appended last so no existing clip is renumbered.
+    // Registered so coverage and the doctor see it, but in SKIP_RECORDING
+    // until the owner turns it on.
+    id: 'message-history',
+    name: 'Backend - Message History',
+    videoName: 'MessageHistory',
+    docPath: 'backend/message-history',
+    route: 'backend/message-history',
+    // The page's HttpAgent block, then the same middleware on the
+    // Quickstart's LangGraphAgent (NOT FROM THE PAGE), then the runtime.
+    ideFile: 'frontend/src/app/api/copilotkit-trimmed/[[...slug]]/route.ts',
+    startLine: 23,
+    endLine: 47,
+    extraTabs: [
+      {
+        // The browser recipe, verbatim, over a prop no release declares.
+        filePath: 'frontend/src/app/backend/message-history/demo-chat/page.tsx',
+        startLine: 86,
+        endLine: 96,
+      },
+    ],
+    prompts: ['My name is Sam.', 'What is my name?'],
+    prompt: 'My name is Sam.',
+    waitAfterPromptMs: 4000,
   },
 ]);

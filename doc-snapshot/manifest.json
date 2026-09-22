@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "docsRoot": "https://docs.copilotkit.ai/deepagents",
-  "syncedAt": "2026-09-21T07:26:47.496Z",
+  "syncedAt": "2026-09-22T09:33:57.154Z",
   "pages": {
     "/deepagents": {
       "file": "deepagents.md",
@@ -126,15 +126,15 @@
     },
     "/deepagents/quickstart": {
       "file": "deepagents__quickstart.md",
-      "sha256": "615688b8c45bf78b199466eb2f3b09cc52362d6d4f4596eb941c1d865d8c0b86",
-      "bytes": 18391,
+      "sha256": "39ca33ef0a64ab3c3a991779b48a9f404d37257d2d779f95d0b2af64ad2e96b8",
+      "bytes": 18396,
       "lines": 510,
       "routes": [
         "/quickstart"
       ],
       "status": "ok",
       "age": 0,
-      "date": "Mon, 21 Sep 2026 07:26:47 GMT"
+      "date": "Tue, 22 Sep 2026 08:52:43 GMT"
     },
     "/deepagents/shared-state/in-app-agent-read": {
       "file": "deepagents__shared-state__in-app-agent-read.md",
@@ -222,39 +222,39 @@
     },
     "/deepagents/intelligence/memories": {
       "file": "deepagents__intelligence__memories.md",
-      "sha256": "5fdd2ea30d11f371d488bb7ead045f4d09c5a3a59f118a904384d377cd764030",
-      "bytes": 12493,
+      "sha256": "2dc8fc5526698f0739670727b1b0427963aa4aee4ab60220d773e59199c80049",
+      "bytes": 12502,
       "lines": 314,
       "routes": [
         "/intelligence/memories"
       ],
       "status": "ok",
       "age": 0,
-      "date": "Mon, 21 Sep 2026 07:26:47 GMT"
+      "date": "Tue, 22 Sep 2026 08:52:43 GMT"
     },
     "/deepagents/learning": {
       "file": "deepagents__learning.md",
-      "sha256": "19331937ec1ad98bf295c8c23730ff5adcaecabea756790635da48ec77a15548",
-      "bytes": 12536,
+      "sha256": "75436379d09ac5e0c909c7daacc77ec0b56d4366d7d53e373381edc47f278939",
+      "bytes": 12610,
       "lines": 212,
       "routes": [
         "/learning"
       ],
       "status": "ok",
       "age": 0,
-      "date": "Mon, 21 Sep 2026 07:26:47 GMT"
+      "date": "Tue, 22 Sep 2026 08:52:43 GMT"
     },
     "/deepagents/intelligence/learned-skills": {
       "file": "deepagents__intelligence__learned-skills.md",
-      "sha256": "2edc4cdd5d0a62cd61e788576cb8b0eff52f46e9dac2354fbcd00c68f7941cad",
-      "bytes": 17729,
+      "sha256": "f5724a702a39a72aae41cf84a30ce93dfcab613ca99e26cabb1d9c1e12b988b6",
+      "bytes": 17749,
       "lines": 287,
       "routes": [
         "/intelligence/learned-skills"
       ],
       "status": "ok",
       "age": 0,
-      "date": "Mon, 21 Sep 2026 07:26:47 GMT"
+      "date": "Tue, 22 Sep 2026 08:52:43 GMT"
     },
     "/deepagents/custom-look-and-feel/markdown": {
       "file": "deepagents__custom-look-and-feel__markdown.md",
@@ -291,6 +291,16 @@
       "status": "ok",
       "age": 0,
       "date": "Mon, 21 Sep 2026 10:40:15 GMT"
+    },
+    "/deepagents/backend/message-history": {
+      "file": "deepagents__backend__message-history.md",
+      "sha256": "19d87af930e852ceaeca7ffe004215716c41510d7b35e0aa571d7cb651503b95",
+      "routes": [
+        "/backend/message-history"
+      ],
+      "bytes": 15238,
+      "lines": 368,
+      "date": "Tue, 22 Sep 2026 09:33:57 GMT"
     }
   },
   "sitemap": {
@@ -368,6 +378,7 @@
       "https://docs.copilotkit.ai/deepagents/intelligence/overview",
       "https://docs.copilotkit.ai/deepagents/intelligence/quickstart",
       "https://docs.copilotkit.ai/deepagents/intelligence/self-hosting",
+      "https://docs.copilotkit.ai/deepagents/intelligence/self-hosting-ecs",
       "https://docs.copilotkit.ai/deepagents/intelligence/threads-explained",
       "https://docs.copilotkit.ai/deepagents/migrate/1.10.X",
       "https://docs.copilotkit.ai/deepagents/migrate/1.8.2",
