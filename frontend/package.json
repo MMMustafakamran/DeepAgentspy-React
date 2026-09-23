@@ -10,9 +10,9 @@
     "test": "npx --yes tsx --conditions=react-server --test src/lib/*.test.ts"
   },
   "dependencies": {
-    "@copilotkit/a2ui-renderer": "^1.69.0",
-    "@copilotkit/react-core": "^1.69.0",
-    "@copilotkit/runtime": "^1.69.0",
+    "@copilotkit/a2ui-renderer": "^1.73.3",
+    "@copilotkit/react-core": "^1.73.3",
+    "@copilotkit/runtime": "^1.73.3",
     "lucide-react": "^0.525.0",
     "next": "16.3.0",
     "react": "19.2.8",

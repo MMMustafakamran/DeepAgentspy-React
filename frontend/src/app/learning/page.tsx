@@ -5,7 +5,7 @@ import { SourceCode } from "@/components/source-code";
 import { Callout, Panel, TryIt } from "@/components/ui";
 
 // The page's "Agent server environment" block, quoted as published.
-const AGENT_ENV = `CPK_INTELLIGENCE_API_KEY=your-project-key
+const AGENT_ENV = `CPK_INTELLIGENCE_API_KEY=cpk-...
 CPK_INTELLIGENCE_LEARNING_CONTAINER_ID=expense-review`;
 
 const SERVER_LOG = `GET  /api/copilotkit-learning/info   → 500
@@ -73,9 +73,11 @@ export default function Page() {
 
       <Callout tone="warn" title="No version floor">
         <code>getLearningContainerId</code> exists on{" "}
-        <code>CopilotKitIntelligence</code> from runtime 1.70; on the 1.69.0
-        this repo&apos;s lockfile pins, the option is a type error (1.69.0 has
-        only the <code>ɵlearning</code> runtime option). The page names no
+        <code>CopilotKitIntelligence</code> from runtime 1.70; on 1.69.0, which
+        this repo&apos;s lockfile pinned until 2026-09-23, the option is a type
+        error (1.69.0 has only the <code>ɵlearning</code> runtime option). This
+        repo now declares <code>^1.73.3</code> and installs 1.73.3, where it
+        compiles. The page names no
         version and never mentions <code>ɵlearning</code>, so a reader on an
         older runtime is not told what to use instead.
       </Callout>
@@ -84,7 +86,7 @@ export default function Page() {
         <p>
           The 2026-09-21 sync replaced the one-line pointer to{" "}
           <code>/deepagents/intelligence/learned-skills</code> with a three-step{" "}
-          <strong>Set up automatic skill delivery</strong> section. Step 2 tells
+          <strong>Set up skill delivery</strong> section. Step 2 tells
           you to configure &ldquo;the supported native adapter&rdquo; in the
           agent server environment with this block:
         </p>
@@ -99,15 +101,20 @@ export default function Page() {
             href="/intelligence/learned-skills"
             className="underline underline-offset-4"
           >
-            Automatic learned skill delivery
+            Skill delivery
           </Link>
           . So the environment block configures nothing, and step 3 (&ldquo;
-          Verify delivery in a new invocation&rdquo;) has nothing to verify. The
-          page&apos;s own list of manual-setup frameworks (LangGraph Python,
-          LangGraph TypeScript, Mastra, Google ADK, Microsoft Agent Framework)
-          omits the one row of the adapter table that is a CopilotKit package,
-          BuiltInAgent, whose option does not exist on the installed runtime
-          either.
+          Verify delivery in a new invocation&rdquo;) has nothing to verify.
+          Step 2 no longer lists frameworks; it says &ldquo;Pick the adapter for
+          the agent you already run.&rdquo; For this repo that is LangGraph
+          Python, the unpublished one. The new &ldquo;Collect runs and deliver
+          Skills&rdquo; section points agent setup at the Mastra, LangGraph
+          TypeScript or LangGraph Python example, in that order, and names
+          BuiltInAgent only among the others the delivery guide &ldquo;also
+          covers&rdquo;. BuiltInAgent&apos;s <code>learnedSkills</code> now
+          compiles on the installed runtime (1.73.3), but it replaces the Deep
+          Agent rather than attaching to it, so it is not the adapter for the
+          agent this repo runs.
         </p>
         <p className="mt-2">
           The container id in the block is <code>expense-review</code>, the same
@@ -135,7 +142,8 @@ export default function Page() {
         Container assignment itself (what happens when a Thread is routed to{" "}
         <code>expense-review</code>, and whether a container that does not
         exist breaks the run), creating a container, Run Learning, reviewing
-        Insights, approving a Skill, and <code>copilotkit skills download</code>{" "}
+        Insights, approving a Skill, and{" "}
+        <code>npx copilotkit@latest skills download</code>{" "}
         all need a provisioned Intelligence project and a dashboard login this
         harness does not have. They are not on the clip, and nothing here says
         whether they work.

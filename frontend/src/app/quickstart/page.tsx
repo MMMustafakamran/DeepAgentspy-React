@@ -60,7 +60,8 @@ export default function Page() {
           runtime route takes — so the rename is recorded rather than
           implemented. The link under the callout also moved from{" "}
           <code>/deepagents/premium/connect-your-runtime</code> to{" "}
-          <code>/deepagents/intelligence/connect-your-runtime</code>.
+          <code>/deepagents/intelligence/connect-your-runtime</code>, then to{" "}
+          <code>/deepagents/intelligence/quickstart</code>.
         </p>
       </Callout>
 

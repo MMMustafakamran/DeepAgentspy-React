@@ -5,7 +5,7 @@ import { CopilotChat } from "@copilotkit/react-core/v2";
 import { DemoFrame } from "@/components/demo-frame";
 
 /**
- * Automatic learned skill delivery, against this repo's Quickstart agent.
+ * Skill delivery, against this repo's Quickstart agent.
  *
  * There is no adapter to mount. The page's LangGraph Python adapter,
  * `copilotkit-intelligence-langgraph`, is not on PyPI (nor is the base client
@@ -15,10 +15,10 @@ import { DemoFrame } from "@/components/demo-frame";
  *
  * The BuiltInAgent row added on 2026-09-21 is not a way round that. It is a
  * different agent, not an adapter for this one -- taking it would mean dropping
- * the Deep Agent this section is about -- and its `learnedSkills` option does
- * not exist on the installed runtime anyway. Both of its snippets are in
- * `../built-in-agent-classic.ts` and `../built-in-agent-factory.ts`, verbatim
- * and uncompilable.
+ * the Deep Agent this section is about. Its `learnedSkills` option did not
+ * exist on runtime 1.71.0; it compiles on the 1.73.3 installed since
+ * 2026-09-23. Both of its snippets are in `../built-in-agent-classic.ts` and
+ * `../built-in-agent-factory.ts`, verbatim, imported by nothing.
  *
  * So the demo shows the absence rather than faking the presence: the agent is
  * this repo's normal `sample_agent`, and the prompt asks for the exact tool

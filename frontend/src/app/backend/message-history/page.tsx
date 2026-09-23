@@ -51,17 +51,19 @@ export default function Page() {
         </div>
       </Panel>
 
-      <Callout tone="warn" title="messageFilter does not exist in any published release">
+      <Callout tone="warn" title="messageFilter: resolved at 1.73.3; failed at 1.71.0 and 1.73.0">
         The page&apos;s first and recommended recipe,{" "}
         <code>messageFilter=&#123;(messages) =&gt; messages.slice(-1)&#125;</code>{" "}
-        on <code>&lt;CopilotKit&gt;</code>, is not a prop on{" "}
-        <code>@copilotkit/react-core</code> 1.71.0 (installed) or 1.73.0 (the
-        latest on npm, published 2026-09-19). It is a type error, and at runtime
-        an ignored prop, so none of what the page says it does (trimming the
+        on <code>&lt;CopilotKit&gt;</code>, was not a prop on{" "}
+        <code>@copilotkit/react-core</code> 1.71.0 (installed until 2026-09-23)
+        or 1.73.0 (published 2026-09-19): a type error, and at runtime an
+        ignored prop. It first ships in 1.73.1 (published 2026-09-22), the day
+        after this page went live. The repo now declares <code>^1.73.3</code>{" "}
+        and installs 1.73.3, the demo&apos;s <code>@ts-expect-error</code> went
+        unused as intended, and it has been removed. The page names no minimum
+        version. Whether the prop now does what the page says (trimming the
         request body, repairing split tool-call pairs, re-applying across agent
-        replacement) happens. The demo mounts it verbatim under a{" "}
-        <code>@ts-expect-error</code>, so the typecheck fails the day a release
-        adds it.
+        replacement) has not been re-observed here.
       </Callout>
 
       <Callout tone="warn" title="The runtime snippet assumes an AG-UI endpoint this integration does not serve">
@@ -128,7 +130,7 @@ export default function Page() {
 
       <Panel
         title="Trim an agent you construct yourself"
-        description="Quoted, not mounted. selfManagedAgents is Enterprise Intelligence tier."
+        description="Quoted, not mounted. selfManagedAgents is Enterprise plan."
       >
         <CodeBlock filename="app/page.tsx" language="tsx" code={SELF_MANAGED_SNIPPET} />
       </Panel>

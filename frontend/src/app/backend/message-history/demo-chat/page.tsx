@@ -15,9 +15,12 @@ import { DemoFrame } from "@/components/demo-frame";
  *   middleware (NOT FROM THE PAGE; see the route). Each run reaches
  *   `langgraph dev` with the final turn only; the transcript here stays whole.
  * - **Browser messageFilter** is the page's first recipe, verbatim, on the main
- *   runtime. No published `@copilotkit/react-core` declares `messageFilter`
- *   (checked on the installed 1.71.0 and the latest, 1.73.0), so it is a type
- *   error and, at runtime, an ignored prop: the full transcript goes out.
+ *   runtime. RESOLVED AT 1.73.3 (type level); FAILED AT 1.71.0 AND 1.73.0.
+ *   `messageFilter` was declared on no `@copilotkit/react-core` up to 1.73.0,
+ *   so it was a type error and an ignored prop; it first ships in 1.73.1
+ *   (2026-09-22), and this repo installs 1.73.3 (declared ^1.73.3) since the
+ *   2026-09-23 upgrade, so the `@ts-expect-error` is gone. Whether the prop
+ *   now actually trims the request body has not been re-observed here.
  *
  * In a normal conversation the tabs answer alike: LangGraph checkpoints the
  * thread, so a trimmed run still sees the earlier turns (observed 2026-09-22:
@@ -87,9 +90,6 @@ export default function Page() {
             // [!code highlight]
             <CopilotKit
               runtimeUrl="/api/copilotkit"
-              // @ts-expect-error `messageFilter` is not a prop on any published
-              // release (1.71.0 installed, 1.73.0 latest). If one ships it, this
-              // suppression goes unused and the typecheck says so.
               messageFilter={(messages) => messages.slice(-1)}
             >
               <YourApp />

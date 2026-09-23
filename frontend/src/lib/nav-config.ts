@@ -300,7 +300,7 @@ export const NAV: NavGroup[] = [
           "Putting one Learning container's published Skills in front of an agent through a framework-native adapter, with no CLI download and no restart.",
         status: "broken",
         statusNote:
-          "No row of the page's adapter table can be followed here. Every Python package it names is 404 on PyPI, including the base client it says Python uses. The BuiltInAgent row added on 2026-09-21 is the one whose package this repo installs, and its `learnedSkills` option is on no config in the installed runtime 1.71.0: TS2353, plus TS2339 on the factory argument and TS2724 on the `BuiltInAgentFactoryContext` the page tells you to import. All three land in 1.73.0, which the page does not name.",
+          "Skill delivery: no row of the page's adapter table can be followed for this backend. Every Python package it names is 404 on PyPI, including the base client it says Python uses (unflagged, unlike the two adapters now marked pending release). The BuiltInAgent row's `learnedSkills` failed on runtime 1.71.0 (TS2353, TS2339, TS2724) and compiles on the 1.73.3 installed since 2026-09-23; the page still names no version, and BuiltInAgent replaces the Deep Agent rather than attaching to it. Every snippet now pins the placeholder revision `exact-revision-id`.",
       },
       {
         path: "/learning",
@@ -345,7 +345,7 @@ export const NAV: NavGroup[] = [
           "Trimming the transcript forwarded to the agent: the page's middleware inside a second runtime, and its messageFilter prop.",
         status: "partial",
         statusNote:
-          "The middleware and its check work as published, and on a LangGraph thread trimming loses nothing (the checkpointer holds the history). `messageFilter`, the page's recommended recipe, is not a prop on any published @copilotkit/react-core (1.71.0 installed, 1.73.0 latest), so it is a type error and does nothing. The runtime snippet's `HttpAgent({ url: process.env.AGENT_URL! })` needs an AG-UI endpoint this backend does not serve; the demo runs the same middleware on the Quickstart's LangGraphAgent instead.",
+          "The middleware and its check work as published, and on a LangGraph thread trimming loses nothing (the checkpointer holds the history). `messageFilter`, the page's recommended recipe, was not a prop on @copilotkit/react-core 1.71.0 or 1.73.0 (a type error that did nothing); it first ships in 1.73.1 and typechecks on the 1.73.3 installed since 2026-09-23, runtime effect not re-observed. The runtime snippet's `HttpAgent({ url: process.env.AGENT_URL! })` needs an AG-UI endpoint this backend does not serve; the demo runs the same middleware on the Quickstart's LangGraphAgent instead.",
       },
     ],
   },

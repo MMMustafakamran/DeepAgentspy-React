@@ -674,23 +674,23 @@ export const PAGES = definePages([
   },
   {
     id: 'intelligence-learned-skills',
-    name: 'Intelligence - Automatic learned skill delivery',
+    name: 'Intelligence - Skill delivery',
     videoName: 'LearnedSkills',
     docPath: 'intelligence/learned-skills',
     route: 'intelligence/learned-skills',
     // The one adapter row whose package this repo has: BuiltInAgent, added to
-    // the table on 2026-09-21. Verbatim, and uncompilable on the installed
-    // runtime.
+    // the table on 2026-09-21. Verbatim. Uncompilable on runtime 1.71.0;
+    // compiles on the 1.73.3 installed since 2026-09-23.
     ideFile: 'frontend/src/app/intelligence/learned-skills/built-in-agent-classic.ts',
-    startLine: 23,
-    endLine: 34,
+    startLine: 30,
+    endLine: 41,
     extraTabs: [
       // Factory mode, where the page's "every factory receives a learnedSkills
-      // object" meets an AgentFactoryContext that has no such property.
+      // object" met an AgentFactoryContext with no such property on 1.71.0.
       {
         filePath: 'frontend/src/app/intelligence/learned-skills/built-in-agent-factory.ts',
-        startLine: 27,
-        endLine: 52,
+        startLine: 31,
+        endLine: 58,
       },
       // The Python side: no adapter to mount, so the demo lists the two tool
       // names the page reserves as absent rather than registered.
@@ -703,7 +703,7 @@ export const PAGES = definePages([
     prompt: 'List the skills you can load, then load the refund-policy skill and follow it.',
     waitAfterPromptMs: 3000,
     knownIssue: {
-      area: 'Deep Agents - Intelligence - Automatic learned skill delivery',
+      area: 'Deep Agents - Intelligence - Skill delivery',
       problem:
         'The adapter the page names for this flavour, `copilotkit-intelligence-langgraph`, is not on ' +
         'PyPI (404 as of 2026-09-16), and neither is the base client the page says Python uses, ' +
@@ -711,13 +711,15 @@ export const PAGES = definePages([
         '`uv pip install` resolves to "not found in the package registry". The TypeScript siblings ' +
         '@copilotkit/intelligence-langgraph and -mastra are published at 1.71.2 (2026-09-14), so the ' +
         'gap is Python-side rather than the whole feature being unreleased. The BuiltInAgent row added ' +
-        'on 2026-09-21 is the one whose package this repo installs, and it does not compile: ' +
-        '`learnedSkills` is on no BuiltInAgent config in the installed 1.71.0 (TS2353), no factory ' +
-        'context carries it (TS2339), and `BuiltInAgentFactoryContext`, which the page tells you to ' +
-        'import, is not an export (TS2724). All three land in 1.73.0, published 2026-09-19.',
+        'on 2026-09-21 is the one whose package this repo installs. On runtime 1.71.0 it did not ' +
+        'compile: `learnedSkills` was on no BuiltInAgent config (TS2353), no factory context carried it ' +
+        '(TS2339), and `BuiltInAgentFactoryContext`, which the page tells you to import, was not an ' +
+        'export (TS2724). All three land in 1.73.0 (2026-09-19); resolved here at 1.73.3 (declared ' +
+        '^1.73.3), and the page still names no minimum version. BuiltInAgent is not an adapter for the ' +
+        'Deep Agent in any case: it replaces it.',
       impact:
-        'No row of the adapter table can be followed here: the Python ones cannot be installed and the ' +
-        'TypeScript BuiltInAgent one does not typecheck against the shipped runtime. ' +
+        'No row of the adapter table can be followed for this backend: the Python ones cannot be ' +
+        'installed, and BuiltInAgent (which now typechecks on 1.73.3) would replace the Deep Agent. ' +
         'Nothing on the page can be followed from a Python backend. The two tools it reserves, ' +
         '`copilotkit_load_skill` and `copilotkit_read_skill_file`, are never registered, so the agent ' +
         'answers from its own instructions and the failure looks like an ordinary reply rather than a ' +
@@ -726,18 +728,21 @@ export const PAGES = definePages([
       likelyCause:
         "The page's own closing section says \"The server migration and v1 delivery endpoint must " +
         'deploy before adapters rely on them\", i.e. the feature may not be live yet -- but that is a ' +
-        'deployment note at the bottom, not a prerequisite at the top, and nothing earlier is marked ' +
-        'unavailable. The same page is also published under /agno (no Agno adapter exists at all) and ' +
+        'deployment note at the bottom, not a prerequisite at the top. Since 2026-09-23 the LangGraph ' +
+        'Python and ADK sections do say \"Python adapter pending release\"; the adapter table and the ' +
+        'base client `copilotkit-intelligence-runtime` are still unflagged. The same page is also ' +
+        'published under /agno (no Agno adapter exists at all) and ' +
         '/ms-agent-python (whose only Microsoft Agent Framework adapter is .NET 9, under a Python ' +
         'section).',
       expectsNoResponse: false,
       note: [
         'learned-skills - no row of the adapter table works here',
         '',
-        'new BuiltInAgent row (21 sep): learnedSkills isnt on any config in 1.71.0',
+        'BuiltInAgent row (21 sep): learnedSkills wasnt on any config in 1.71.0',
         'TS2353 on the option, TS2339 on the factory arg,',
         'TS2724 on BuiltInAgentFactoryContext which the prose says to import',
-        'all three ship in 1.73.0 (19 sep), page names no version',
+        'all three ship in 1.73.0 (19 sep). upgraded to 1.73.3 on 23 sep: compiles now',
+        'page still names no version. and every snippet pins revision "exact-revision-id"',
         '',
         'copilotkit-intelligence-langgraph -> 404',
         'copilotkit-intelligence-runtime -> 404 (page says "Python uses" this one)',
@@ -766,7 +771,7 @@ export const PAGES = definePages([
     // undefined supplied above it.
     ideFile: 'frontend/src/lib/learning-runtime.ts',
     startLine: 36,
-    endLine: 68,
+    endLine: 69,
     extraTabs: [
       // Where it is mounted: its own route, so the page's code cannot take
       // down the app's main runtime.
@@ -798,7 +803,8 @@ export const PAGES = definePages([
         'to say why -- the troubleshooting table only says the Thread will not appear in the container. ' +
         'The non-null assertion hides the key requirement from the type checker. The snippet also uses ' +
         '`agents` and `identifyUser` without defining them, and `getLearningContainerId` does not exist ' +
-        "before runtime 1.70 (this repo's lockfile pins 1.69.0), a floor the page never states.",
+        "before runtime 1.70 (this repo's lockfile pinned 1.69.0 until 2026-09-23; now declared ^1.73.3, " +
+        'installed 1.73.3), a floor the page never states.',
       likelyCause:
         'The example container has to be created in the dashboard first, and a missing one fails the ' +
         'Thread rather than skipping assignment. The page also assumes the Intelligence Quickstart has ' +
@@ -814,7 +820,7 @@ export const PAGES = definePages([
         'tried expense-agent and sample_agent, both silent',
         '',
         'also: agents and identifyUser never defined on the page',
-        'getLearningContainerId needs runtime 1.70+, lockfile here is 1.69.0',
+        'getLearningContainerId needs runtime 1.70+, page never says so (here: 1.73.3 now)',
       ].join('\n'),
     },
   },

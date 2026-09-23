@@ -40,8 +40,9 @@ import { LANGGRAPH_DEPLOYMENT_URL, LANGSMITH_API_KEY } from "@/lib/agents";
  *   identifyUser  The same fixed demo identity the Intelligence runtime uses.
  *
  * A separate mount rather than an edit to `/api/copilotkit`, for two reasons.
- * `getLearningContainerId` exists only from runtime 1.70 — this repo's lockfile
- * pins 1.69.0, where the option is a type error, and the page names no
+ * `getLearningContainerId` exists only from runtime 1.70 — on 1.69.0, which
+ * this repo's lockfile pinned until 2026-09-23, the option is a type error
+ * (now declared ^1.73.3, installed 1.73.3), and the page names no
  * version — and the constructor throws on a blank key, so the page's code
  * belongs where a failure takes down one route and not every chat in the app.
  * This harness has no `CPK_INTELLIGENCE_API_KEY`, so that throw is what

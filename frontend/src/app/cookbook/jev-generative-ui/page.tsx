@@ -22,16 +22,16 @@ void runPicker(input, controller.signal, (event) => subscriber.next(event))
   });`;
 
 const VERSIONS: [string, string, string][] = [
-  ["@copilotkit/core", "1.73.0", "1.71.0 installed · undeclared (transitive)"],
-  ["@copilotkit/react-core", "1.73.0", "1.71.0 installed · declared ^1.69.0"],
-  ["@copilotkit/runtime", "1.73.0", "1.71.0 installed · declared ^1.69.0"],
+  ["@copilotkit/core", "1.73.0", "1.73.3 installed · undeclared (transitive)"],
+  ["@copilotkit/react-core", "1.73.0", "1.73.3 installed · declared ^1.73.3"],
+  ["@copilotkit/runtime", "1.73.0", "1.73.3 installed · declared ^1.73.3"],
   ["@ag-ui/client", "0.0.59", "0.0.59 installed · undeclared (transitive)"],
   ["@ag-ui/core", "0.0.59", "0.0.59 installed · undeclared (transitive)"],
   ["@typesafe-ai/sdk", "0.6.0", "absent"],
   ["rxjs", "7.8.1", "7.8.1 installed · undeclared (transitive)"],
   ["zod", "4.6.5", "3.25.76 installed · declared ^3.25.76"],
   ["@langchain/openai", "1.5.13", "absent"],
-  ["@langchain/core", "1.2.11", "1.2.10 installed · undeclared (transitive)"],
+  ["@langchain/core", "1.2.11", "1.2.12 installed · undeclared (transitive)"],
 ];
 
 export default function Page() {
@@ -106,7 +106,8 @@ export default function Page() {
           <code>frontend/package.json</code>. Two do not exist here at all. One
           is a major version behind. And the 1.73.0 floor on the three
           CopilotKit packages is never justified: every published block in this
-          repo typechecks against the installed <strong>1.71.0</strong>,
+          repo typechecks against <strong>1.71.0</strong> (installed until
+          2026-09-23) and against the 1.73.3 installed since,
           including the runtime registration and the whole of{" "}
           <code>app/page.tsx</code>. The page states no reason for the pin and
           names no feature that needs it, so a reader cannot tell whether
@@ -174,7 +175,7 @@ export default function Page() {
         &ldquo;Optional: improve decisions and UI with Automatic Learning&rdquo;
         sends you to <a className="underline underline-offset-4" href="/learning">Learning</a>,{" "}
         <a className="underline underline-offset-4" href="/intelligence/learned-skills">
-          Automatic learned skill delivery
+          Skill delivery
         </a>{" "}
         and <code>/deepagents/intelligence/quickstart</code>. The first is ❌
         here (its runtime snippet throws at module load without{" "}
@@ -262,8 +263,9 @@ export default function Page() {
             [
               "Result",
               <>
-                All of it typechecks on <strong>1.71.0</strong>, three minor
-                versions below the page&apos;s pin, and on zod 3 rather than
+                All of it typechecks on <strong>1.71.0</strong>, two minor
+                versions below the page&apos;s pin, and again on 1.73.3 after
+                the 2026-09-23 upgrade, and on zod 3 rather than
                 the pinned zod 4. Nothing was run: the decision layer and the
                 fallback both need packages and keys this project does not
                 have.

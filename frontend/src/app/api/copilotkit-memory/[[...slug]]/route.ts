@@ -15,7 +15,8 @@ import { GRAPH_IDS, LANGGRAPH_DEPLOYMENT_URL, LANGSMITH_API_KEY } from "@/lib/ag
  * entitlement is ever consulted: every `/memories/*` request 404s at the
  * runtime unless it is constructed with `memory: { access }` (or the deprecated
  * `exposeMemoryRoutes: true`) — a "secure default", per the runtime's own
- * typings, present on this repo's locked 1.69.0 and on CI's 1.71.0 alike.
+ * typings, present on 1.69.0 (this repo's lockfile until 2026-09-23) and on
+ * CI's 1.71.0 alike; not re-checked on the 1.73.3 installed since.
  * `/api/copilotkit`, built the way the Deep Agents Quickstart builds it, has
  * neither (and no `intelligence` either), so the page's `useMemories()`
  * reports unavailable there no matter what the organization is entitled to.

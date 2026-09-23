@@ -66,7 +66,8 @@ export default function Page() {
         payload to <code>/agent/sample_agent/run</code> carried only{" "}
         <code>user</code>, and the agent answered &quot;I haven&apos;t been
         shown any deployment card in this conversation.&quot; Runtime and
-        react-core 1.71.0 (this repo&apos;s lockfile pins 1.69.0).
+        react-core 1.71.0 (the lockfile then pinned 1.69.0; since 2026-09-23
+        the repo declares ^1.73.3 and installs 1.73.3, not re-observed there).
       </Callout>
 
       <Callout tone="warn" title="A card added before the runtime connects is silently lost">

@@ -79,7 +79,7 @@ export default function Page() {
       </Callout>
 
       <Callout tone="warn" title="The page's own success check does not pass here">
-        The 2026-09-17 sync added &quot;Set up Memory manually&quot;, which ends
+        The 2026-09-17 sync added &quot;Set up User Memories&quot;, which ends
         with <em>Save and recall a memory</em>: save one for the signed-in user,
         recall it with a related query in a new conversation, and confirm it
         comes back. This demo cannot complete that step. The agent in the take
@@ -94,7 +94,7 @@ export default function Page() {
         <code>realtimeStatus</code> stayed <code>connecting</code> on both
         runtimes and never reached the <code>unavailable</code> the page
         describes. The REST examples post to{" "}
-        <code>https://your-deployment</code> without saying that managed users
+        <code>https://your-deployment</code> without saying that cloud-hosted users
         call <code>api.intelligence.copilotkit.ai</code>.
       </Callout>
 
