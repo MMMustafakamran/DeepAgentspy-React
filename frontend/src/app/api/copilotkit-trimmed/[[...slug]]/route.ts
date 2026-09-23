@@ -17,7 +17,7 @@ import { lastTurnOnly, TrimHistoryMiddleware } from "./trim-history";
  * speaks the LangGraph Platform API, which only `LangGraphAgent` talks to. The
  * page never says what `AGENT_URL` is, and nothing here can honestly default
  * it, so it is left unset. The published `default` agent is registered as
- * written and fails when run (observed 2026-09-22, see README §9 item 37).
+ * written and fails when run (observed 2026-09-22, see FINDINGS.md #37).
  */
 
 // [1] message-history: attach the middleware before registering the agent

@@ -63,7 +63,7 @@ export default function Page() {
         <code>ThreadControls</code> calls{" "}
         <code>config?.setActiveThreadId(existingId, {"{"} explicit: true {"}"})</code>,
         and <code>existingId</code> appears nowhere else on the page. The demo
-        supplies the first thread that held a conversation. See README section 9.
+        supplies the first thread that held a conversation. See FINDINGS.md.
       </Callout>
 
       <Callout tone="info" title="Two layers, one id">

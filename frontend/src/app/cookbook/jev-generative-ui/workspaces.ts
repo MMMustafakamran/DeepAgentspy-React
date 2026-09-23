@@ -15,7 +15,7 @@
  * zod 3.25.76 (declared `^3.25.76`). The two blocks happen to be valid on
  * both — `z.object`, `z.enum`, `.nullable()`, `.default()`, `.min()` and
  * `z.infer` all mean the same thing in 3 and 4 — so the schema is shipped
- * unchanged and typechecks. That is luck, not compatibility; see README §9.
+ * unchanged and typechecks. That is luck, not compatibility; see FINDINGS.md.
  */
 
 import { z } from "zod";

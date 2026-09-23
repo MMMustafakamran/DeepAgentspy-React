@@ -792,7 +792,7 @@ export const PAGES = definePages([
       area: 'Deep Agents - Intelligence - Learning',
       problem:
         "With an Intelligence key, the page's example selector routes `expense-agent` to the container " +
-        '`expense-review` (this runtime ships a constant selector instead -- see README section 9 item ' +
+        '`expense-review` (this runtime ships a constant selector instead -- see FINDINGS.md #' +
         '25); where that container does not exist the platform answers ' +
         '`LEARNING_CONTAINER_NOT_FOUND`, the run fails with "Failed to initialize thread", and the chat ' +
         'shows nothing, while `sample_agent` (not assigned) answers. Without a key the snippet fails at ' +
@@ -827,7 +827,7 @@ export const PAGES = definePages([
   // -- Added 2026-09-21: two pages new upstream and tracked nowhere until now.
   // Only one of them is filmable; /cookbook/jev-generative-ui deliberately has
   // no entry here, because its decision layer needs a third-party vendor key
-  // and every take of it would be a stand-in. See README section 9.
+  // and every take of it would be a stand-in. See FINDINGS.md.
   {
     id: 'markdown-rendering',
     name: 'Custom Look and Feel - Markdown Rendering',
@@ -890,7 +890,7 @@ export const PAGES = definePages([
         'The page is written framework-agnostically and assumes an agent registered as "default". The ' +
         'Deep Agents Quickstart names its agent `sample_agent` and puts the id on the provider; none of ' +
         'these blocks has a provider at all. The same assumption already broke Frontend-Driven Cards ' +
-        '(README section 9 #22), so this is the second page with it.',
+        '(FINDINGS.md #22), so this is the second page with it.',
       note: [
         'markdown rendering - published blocks crash the route',
         '',

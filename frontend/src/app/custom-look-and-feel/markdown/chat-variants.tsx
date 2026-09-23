@@ -4,7 +4,7 @@
  * Markdown Rendering — all three of the page's techniques, each block verbatim.
  *
  * Two things are added to every block and nothing is removed. Both are written
- * up in README section 9 as well as here.
+ * up in FINDINGS.md as well as here.
  *
  * 1. `"use client"` on line 1. Each published block is a `page.tsx` under the
  *    App Router that passes inline arrow functions as props to `<CopilotChat>`.
@@ -15,7 +15,7 @@
  * 2. `agentId="sample_agent"`, added on a *copy* of each block rather than on
  *    the block itself. The published `<CopilotChat>` carries no agent id, so it
  *    resolves to `"default"`, which a Deep Agents runtime does not register —
- *    the same defect already filed against Frontend-Driven Cards (README §9
+ *    the same defect already filed against Frontend-Driven Cards (FINDINGS.md
  *    #22). `Chat` below is the published block untouched and is what the demo's
  *    first tab mounts, so the throw is on camera; the three `…WithAgent`
  *    copies below it are the same code plus that one prop, which is what makes

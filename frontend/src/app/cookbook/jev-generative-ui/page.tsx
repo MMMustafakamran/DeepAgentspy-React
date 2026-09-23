@@ -179,7 +179,7 @@ export default function Page() {
         </a>{" "}
         and <code>/deepagents/intelligence/quickstart</code>. The first is ❌
         here (its runtime snippet throws at module load without{" "}
-        <code>CPK_INTELLIGENCE_API_KEY</code>, README §9 #24); the second is ❌
+        <code>CPK_INTELLIGENCE_API_KEY</code>, FINDINGS.md #24); the second is ❌
         here (no row of its adapter table can be followed, §9 #26); the third
         is a page this repo deleted its route for and does not track. On top of
         that the section says to install{" "}

@@ -25,7 +25,7 @@ import { LANGGRAPH_DEPLOYMENT_URL, LANGSMITH_API_KEY } from "@/lib/agents";
  * recording is meant to land in. Two things follow from it: the agent-conditional
  * branch the page is actually teaching (assigned agent versus unassigned) is not
  * exercised, and a run on `sample_agent` is assigned where the page would leave
- * it unassigned. See README §9 item 25.
+ * it unassigned. See FINDINGS.md #25.
  *
  * The rest of the snippet below the rule is verbatim. It uses two identifiers it
  * never defines, `agents` and `identifyUser`, and says nothing about them; the page
@@ -73,7 +73,7 @@ const intelligence = new CopilotKitIntelligence({
   apiKey: process.env.CPK_INTELLIGENCE_API_KEY!,
   // Published:  getLearningContainerId: ({ agentId }) =>
   //               agentId === "expense-agent" ? "expense-review" : undefined,
-  // Shipped: one container for every agent. See the header, and README §9 #25.
+  // Shipped: one container for every agent. See the header, and FINDINGS.md #25.
   getLearningContainerId: () => "firstlearningtest",
 });
 

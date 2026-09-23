@@ -22,7 +22,7 @@ import { DemoFrame } from "@/components/demo-frame";
  * The selector that actually ships in `lib/learning-runtime.ts` is not that
  * one: it returns a single container for every agent, so the conditional half
  * of the experiment is not live. The panel prints both values rather than
- * showing the page's over code that does something else. README §9 item 25.
+ * showing the page's over code that does something else. FINDINGS.md #25.
  *
  * What this route can and cannot show. Assignment happens server-side, inside
  * the runtime, and the page gives the client no way to read it back — the
@@ -50,7 +50,7 @@ const PUBLISHED: Record<AgentId, string> = {
  * What the selector in `lib/learning-runtime.ts` actually returns. It is a
  * constant rather than the page's agent-conditional expression, so the panel
  * prints both instead of showing the published values over shipped code that
- * does something else. See README §9 item 25.
+ * does something else. See FINDINGS.md #25.
  */
 const SHIPPED: Record<AgentId, string> = {
   "expense-agent": '"firstlearningtest"',

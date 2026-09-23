@@ -13,7 +13,7 @@
  *
  * Two copies of a published block is worse than one, so: if the page's version
  * changes, both change. `picker-agent.ts` is the record of what was published;
- * this is the copy under test. See README §9.
+ * this is the copy under test. See FINDINGS.md.
  */
 
 import { candidates, clarificationOptions, type PickerState } from "./workspaces";
