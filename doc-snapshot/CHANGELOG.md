@@ -9,6 +9,48 @@ Holds the 3 most recent dated entries. When a change lands on a fourth
 date, the oldest entry is dropped. Entries are counted, not aged, so a gap of
 weeks between changes does not expire anything.
 
+## 2026-09-24
+
+### 07:28 UTC — 2 pages, highest severity medium · _npm run drift:sync_
+
+**Medium — /deepagents/intelligence/memories**
+
+`/deepagents/intelligence/memories` · route `/intelligence/memories` · `deepagents__intelligence__memories.md`
+
+Headings / Structure changed. Hash 2887cb7c ➔ 51788919.
+
+````diff
+- ## What is a memory?
+- A memory is a short, durable statement about a user or a project, stored outside
+- any single thread. "Prefers concise status updates" is a memory. The forty
+- messages that revealed the preference are a thread.
++ ## Start with your coding agent
++ Copy this prompt into your coding agent to inspect your existing CopilotKit app and configure long-term memory for your users. Prefer to work through the setup yourself? Follow the manual steps below.
++ ### Copy this prompt into your coding agent
++ ```text
+  … region truncated
+````
+
+**Medium — /deepagents/learning**
+
+`/deepagents/learning` · route `/learning` · `deepagents__learning.md`
+
+Headings / Structure changed. Hash 17c0c2fd ➔ 85a381fe.
+
+````diff
+- ## How Automatic Learning works
+- Learning starts with a container, which groups Threads from the same kind of work. Intelligence analyzes completed runs in that container and summarizes recurring patterns as Insights.
+- When a pattern can be reused, Learning proposes a Skill. You review the supporting Threads and decide whether to publish it. A published Skill is a versioned set of instructions that you load into your agent; Learning does not change the model itself.
+- Automatic Learning checks eligible containers on a daily schedule. After you approve a skill, [skill delivery](/deepagents/intelligence/learned-skills) makes it available to connected agents. A scheduled run does not approve skills. Turning on delivery does not connect your agent for you.
++ ## Start with your coding agent
++ Copy this prompt into your coding agent to inspect your existing app and configure Automatic Learning for one focused workflow. Prefer to work through the setup yourself? Follow the manual steps below.
++ #### Copy this prompt into your coding agent
++ ```text
+  … region truncated
+````
+
+---
+
 ## 2026-09-23
 
 ### 07:50 UTC — 10 pages, highest severity high · _npm run drift:sync_
@@ -132,6 +174,8 @@ Listed upstream, tracked nowhere in this repo. Not snapshotted by this run.
 
 ---
 
+---
+
 ## 2026-09-22
 
 ### 09:33 UTC — 1 page, highest severity high · _npm run drift:sync_
@@ -226,107 +270,6 @@ Prose / text phrasing updated. Hash 2edc4cdd ➔ f5724a70.
 Listed upstream, tracked nowhere in this repo. Not snapshotted by this run.
 
 **New — https://docs.copilotkit.ai/deepagents/intelligence/self-hosting-ecs**
-
-Listed upstream, tracked nowhere in this repo. Not snapshotted by this run.
-
----
-
----
-
----
-
-## 2026-09-21
-
-### 07:26 UTC — 7 pages, highest severity high · _npm run drift:sync_
-
-**High — /deepagents**
-
-`/deepagents` · routes `/`, `/doc-sync` · `deepagents.md`
-
-Code fence count changed. Hash d0d82bb3 ➔ e3a39f80.
-
-````diff
-- {/* TODO: swap feature-viewer URLs back to /deepagents/ once the dojo supports that route */}
-- <FrameworkOverview
-- frameworkName="Deep Agents"
-- frameworkIcon={<DeepAgentsIcon className="h-14 w-14" />}
-+ <FrameworkOverview
-+ frameworkName="Deep Agents"
-+ frameworkIcon={<DeepAgentsIcon className="h-12 w-12" />}
-+ header="Bring your Deep Agents to your users"
-  … region truncated
-````
-
-**High — /deepagents/quickstart**
-
-`/deepagents/quickstart` · route `/quickstart` · `deepagents__quickstart.md`
-
-Code fence count changed. Hash 71a72a31 ➔ 615688b8.
-
-````diff
-- ### Create a free account
-- <SignupLink surface="docs_deepagents_quickstart_step1">Sign up for a free developer account</SignupLink> for CopilotKit Intelligence to get a license key. You'll use it later to enable persistent threads and the inspector.
-- </Step>
-- <Step>
-+ ### Set up CopilotKit Intelligence
-+ <SignupLink surface="docs_deepagents_quickstart_step1">Sign in to managed Intelligence</SignupLink>. Managed setup uses a server-side project API key and does not issue `COPILOTKIT_LICENSE_TOKEN`. You will connect the app after you create it below.
-+ </Step>
-+ <Step>
-  … region truncated
-````
-
-**Low — /deepagents/intelligence/memories**
-
-`/deepagents/intelligence/memories` · route `/intelligence/memories` · `deepagents__intelligence__memories.md`
-
-Prose / text phrasing updated. Hash 49fff6f3 ➔ 5fdd2ea3.
-
-````diff
-- import { useMemories } from "@copilotkit/react-core";
-+ import { useMemories } from "@copilotkit/react-core/v2";
-````
-
-**High — /deepagents/learning**
-
-`/deepagents/learning` · route `/learning` · `deepagents__learning.md`
-
-Code fence count changed. Hash 8eac3883 ➔ 19331937.
-
-````diff
-- ## Start with your coding agent
-- Copy this prompt into your coding agent to inspect your existing app and configure Automatic Learning for one focused workflow. Prefer to work through the setup yourself? Follow the manual steps below.
-- #### Copy this prompt into your coding agent
-- ```text
-+ Automatic Learning checks eligible containers on a daily schedule. After you approve a Skill, automatic skill delivery makes it available to connected agents. Scheduling, publication, and delivery are separate: a scheduled run does not approve Skills, and enabling delivery does not connect your agent for you.
-+ ## Start with your coding agent
-+ Copy this prompt into your coding agent to inspect your existing app and configure Automatic Learning for one focused workflow. Prefer to work through the setup yourself? Follow the manual steps below.
-+ #### Copy this prompt into your coding agent
-  … region truncated
-````
-
-**High — /deepagents/intelligence/learned-skills**
-
-`/deepagents/intelligence/learned-skills` · route `/intelligence/learned-skills` · `deepagents__intelligence__learned-skills.md`
-
-Code fence count changed. Hash 30274955 ➔ 2edc4cdd.
-
-````diff
-- ## Choose an adapter
-- | Framework                 | Package                                  | Native extension                                                     |
-- | ------------------------- | ---------------------------------------- | -------------------------------------------------------------------- |
-- | LangGraph Python          | `copilotkit-intelligence-langgraph`      | `create_skill_registry_middleware`                                   |
-+ <Callout type="info">
-+ Start with the [Learning guide](/deepagents/learning) to collect Threads, configure daily runs, and review Skills. Before connecting an adapter, check that **Skill delivery** is enabled in the container's **Skills** tab. For guided setup, select **Set up skill delivery** there and copy the prompt into your coding agent.
-+ </Callout>
-+ ## Choose an adapter
-  … region truncated
-````
-
-**New — https://docs.copilotkit.ai/deepagents/cookbook/jev-generative-ui**
-
-Listed upstream, tracked nowhere in this repo. Not snapshotted by this run.
-
-**New — https://docs.copilotkit.ai/deepagents/custom-look-and-feel/markdown**
 
 Listed upstream, tracked nowhere in this repo. Not snapshotted by this run.
 
