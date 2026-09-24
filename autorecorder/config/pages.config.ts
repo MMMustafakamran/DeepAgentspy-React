@@ -569,25 +569,17 @@ export const PAGES = definePages([
     videoName: 'FrontendCards',
     docPath: 'generative-ui/frontend-cards',
     route: 'generative-ui/frontend-cards',
-    // Step 1: the renderer, verbatim.
-    ideFile: 'frontend/src/app/generative-ui/frontend-cards/event-card.tsx',
-    startLine: 8,
-    endLine: 28,
-    extraTabs: [
-      // Step 2: registered on the provider, props as published -- and beside
-      // it the Quickstart-agent variant the take switches to.
-      {
-        filePath: 'frontend/src/app/generative-ui/frontend-cards/demo-chat/page.tsx',
-        startLine: 251,
-        endLine: 271,
-      },
-      // Step 3: the bare useAgent() and addMessage with role "activity", verbatim.
-      {
-        filePath: 'frontend/src/app/generative-ui/frontend-cards/deployment-watcher.tsx',
-        startLine: 16,
-        endLine: 38,
-      },
-    ],
+    // DEMO_SCRIPT.md Clip 9: a scripted take (actions/take.ts) -- doc snippet,
+    // note, IDE, the real crash, note, the fix line, note, the fix working,
+    // note. The handler films all of it in that order, so the engine's fixed
+    // doc -> IDE -> demo intro is off.
+    ownsTake: true,
+    // Step 2's provider as published, in the demo -- the first IDE beat. The
+    // take's other ranges (:71, :267) are checked against the file by the take
+    // itself, since the doctor wants every configured range on a marker.
+    ideFile: 'frontend/src/app/generative-ui/frontend-cards/demo-chat/page.tsx',
+    startLine: 255,
+    endLine: 256,
     prompt:
       'Have you been shown any deployment card in this conversation? List the roles of every message you received.',
     waitAfterPromptMs: 4000,

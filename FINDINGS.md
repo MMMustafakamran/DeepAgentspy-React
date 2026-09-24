@@ -1,80 +1,54 @@
 # Findings — DeepAgentspy-react
-Current open doc defects only. A finding is added here only after a human reviews and approves it; page failures in a run are never written here automatically. Resolved or superseded findings are removed (see git history).
-Stack: `@copilotkit/react-core`/`runtime`/`a2ui-renderer` 1.73.3, `copilotkit` (PyPI) 0.1.94, `deepagents` 0.7.4, `langgraph-api` 0.12.0, Next 16.3.0, React 19.2.8. No `CPK_INTELLIGENCE_API_KEY`.
-Major = blocks a reader (doesn't compile, crashes/throws, silently broken behaviour, step impossible to follow, missing required step/package, 404 target). Minor = one-line notes.
+Open doc defects only. An entry is added only after the user approves it. Numbers are stable IDs (code cites `FINDINGS.md #N`), so gaps are removed findings.
+Stack: `@copilotkit/react-core`/`runtime`/`a2ui-renderer` 1.73.3, `@ag-ui/langgraph` 0.0.43, `copilotkit` (PyPI) 0.1.96, `deepagents` 0.7.4, `langgraph-api` 0.14.4, Next 16.3.0. No `CPK_INTELLIGENCE_API_KEY`.
 
-## Major
-
-### Quickstart
-29. **`touch app/api/copilotkit/route.ts` contradicts the `[[...slug]]` titles**: a plain route has no `/info`, so from core 1.70.2 it throws on a relative URL. Next rejects having both files.
-14. **Python `compile(checkpointer=MemorySaver())` crashes the server**: hard `ValueError` at load (langgraph-api 0.12.0) takes all 15 graphs down. JS accepts it.
-
-### A2UI: [fixed-schema](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/fixed-schema), [advanced](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/advanced), [styling](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/styling)
-1. **Wrong `copilotkit.a2ui` names** (0.1.94): `surface_update`→`update_components`, `data_model_update`→`update_data_model`, `begin_rendering`→`create_surface(id, catalog_id)` (must come first). `render()` has no `action_handlers`.
-2. **A2UI buttons can't trigger actions**: no `action_handlers`; `useA2UIActionHandler`, `resolveDeclaredOps`, `defaultActionOrchestrator` not exported.
-4. **Invalid dark-mode CSS**: `.dark .a2ui-surface, @media (…) {}` — an at-rule in a selector list drops the whole rule.
-12. **Schemas and catalog never shown**: no `flight_schema.json`, "Bring Your Own Catalog" leaves Deep Agents docs, advanced primitives must be self-defined.
+## Dev blockers (seen with `npm run dev` and normal use of the page)
 
 ### [Interrupt-based](https://docs.copilotkit.ai/deepagents/generative-ui/your-components/interrupt-based)
-3. **`enabled: ({ eventValue })` never fires**: predicate receives `{ name, value }`; `interrupt()` arrives as `on_interrupt` with `value` as a string, so `event.value.type` is undefined. TS2339 ×2 on 1.73.3.
-
-### [Tool rendering](https://docs.copilotkit.ai/deepagents/generative-ui/tool-rendering)
-5. **`useDefaultRenderTool` has no `args`**: the prop is `parameters`.
-
-### Frontend tools, state rendering, shared state, predictive state updates
-7. **No page shows how custom state reaches a Deep Agent**: `create_deep_agent` has no `state=`; needs `AgentMiddleware` with `state_schema`.
-8. **state-rendering never calls `emit_research_progress`**: needs a `@tool` (only place with `RunnableConfig`); emitted state is overwritten when the node returns; a `Command` needs a `ToolMessage` with `tool_call_id`.
-9. **Agent-written state not what the UI sees**: needs `CopilotKitMiddleware(expose_state=["language"])` (off by default); neither shared-state page mentions it.
-10. **`setState` replaces instead of merging**: one-key `setState({ language })` drops `copilotkit` (frontend tools).
-11. **`Literal[...] = "english"` not applied as a default** on a dict-subclass state.
-6. **Predictions need `<CopilotKit>`, not `<CopilotKitProvider>`, unstated**: `PredictState` listener only mounted by `<CopilotKit>`; otherwise fails silently.
-13. **predictive-state-updates manual emission (Python) incomplete**: no graph/compile/imports, `cpk_action_node` undefined, `state["copilotkit"]["actions"]` passed to `bind_tools` unconverted.
-
-### [State inputs/outputs](https://docs.copilotkit.ai/deepagents/shared-state/state-inputs-outputs) and workflow-execution
-15. **`workflow-execution` serves the state-inputs-outputs page** byte for byte (only h1 differs).
+**#3 Typed interrupt dispatch never shows a card, and the run hangs.**
+- **Doc:** `useInterrupt({ enabled: ({ eventValue }) => eventValue.type === 'ask', render: … event.value.content })`, plus a second hook for `'approval'`.
+- **Error:** the console logs `[CopilotKit] useInterrupt enabled predicate threw; treating interrupt as disabled`, no card appears, and the agent stays paused. The predicate receives `{ name, value }`, not `eventValue`. `@ag-ui/langgraph` also sends `value` as a JSON string, so `event.value.type` would be undefined too. In `tsc` it's `TS2339: Property 'eventValue' does not exist on type 'InterruptEvent<any>'` ×2.
+- **Harness:** the verbatim code is on the "Two, dispatched by type" tab, which the recorder never opens.
 
 ### [Frontend-Driven Cards](https://docs.copilotkit.ai/deepagents/generative-ui/frontend-cards)
-22. **Targets agent `default`, but Deep Agents registers `sample_agent`**: `useAgent()` throws and the route crashes. Card added before connecting silently dropped; `<DeploymentWatcher />` never mounted; its `wss://example.com` URL 404s.
+**#22 The page throws: agent `default` not found.**
+- **Doc:** `<CopilotKit runtimeUrl="/api/copilotkit" renderActivityMessages={[eventCardRenderer]}><CopilotChat /></CopilotKit>` and `const { agent } = useAgent();`, with no agent id.
+- **Error:** `useAgent: Agent 'default' not found after runtime sync (runtimeUrl=/api/copilotkit). Known agents: [sample_agent, …]`. Deep Agents registers its graphs by name and has no `default`. Also: `<DeploymentWatcher />` is never mounted, and a card added before the agent connects is dropped.
 
-### [Markdown Rendering](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/markdown)
-32. **Targets agent `default`** (as #22), no `"use client"`; custom-tag example gives TS7031. (Minor bits in notes.)
-
-### [Jev](https://docs.copilotkit.ai/deepagents/cookbook/jev-generative-ui)
-33. **No Deep Agent anywhere**: step 4 replaces the Deep Agents runtime route. 6 of 10 exact pins unmet (zod 3.25.76 vs 4.6.5; `@typesafe-ai/sdk`, `@langchain/openai` absent), 5 deps undeclared; needs `TYPESAFE_API_KEY`; `.catch(() => …)` masks every error as "Try again"; `choosePanel` throws on a missing score.
-
-### [Thread Lifecycle](https://docs.copilotkit.ai/deepagents/threads-lifecycle)
-35. **`existingId` is undefined**; "re-mint on remount" is false under `<CopilotKit>` (inherits parent threadId).
-
-### [Message history](https://docs.copilotkit.ai/deepagents/backend/message-history)
-37. **`new HttpAgent({ url: AGENT_URL })` has no AG-UI endpoint on Deep Agents** (`RUN_ERROR`); `.use()` on `LangGraphAgent` works. Check script has TS2339.
-
-### [Memories](https://docs.copilotkit.ai/deepagents/intelligence/memories)
-23. **Fails silently without an Intelligence runtime**: no `/memories` request, list shows empty, `addMemory` says "Runtime URL is not configured"; `/memories/*` 404s without `memory: { access }` (unmentioned); agent still claims it saved.
-
-### [Learning](https://docs.copilotkit.ai/deepagents/learning) and Automatic Learning
-24. **Runtime throws at load without a key** (`apiKey is required`, hidden by `!`, key not a listed prerequisite) so `/info` 500s. Uses undefined `agents` and `identifyUser`; `getLearningContainerId` needs ≥1.70.
-27. **Delivery steps point to an uninstallable adapter**: LangGraph Python is 404 on PyPI, so the env block configures nothing.
-39. **Automatic Learning recommends LangGraph Python** (404 on PyPI) with no warning.
-
-### [Skill delivery](https://docs.copilotkit.ai/deepagents/intelligence/learned-skills)
-38. **Broken examples and unpublished packages**: `revision: "exact-revision-id"` live in all 8 examples; `copilotkit-intelligence-runtime` (and `-langgraph`, `-adk`) 404 on PyPI; `intelligence-mastra`/`-langgraph` 1.71.2 hard-pin runtime 1.71.2 → nested copy + TS2322 `#private` with 1.73.3; reuse block sets `apiUrl` without `wsUrl`; `npx tsx agent.mts` doesn't load `.env`. (Minor bits in notes.)
-
-### [Plans](https://docs.copilotkit.ai/deepagents/intelligence/plans)
-40. **Says free Developer plan includes User Memory**, but the API returns `403 MEMORY_NOT_ENTITLED`.
-
-### Intelligence connect-your-runtime
-41. **`/intelligence/connect-your-runtime` returns 404 with no redirect**; five pages link to its replacement `/intelligence/quickstart`.
+### [Reading](https://docs.copilotkit.ai/deepagents/shared-state/in-app-agent-read) / [Writing agent state](https://docs.copilotkit.ai/deepagents/shared-state/in-app-agent-write)
+**#9 Language toggle doesn't change the chat language; replies stay in English.** (Includes #7, #10 and #11.)
+- **Doc:** `class AgentState(CopilotKitState): language: Literal["english","spanish"] = "english"` is the only backend code. `agent.setState({ language: … })` follows, and the page promises "You'll see the language change".
+- **Cause:** three breaks:
+  1. `AgentState` is never passed to `create_deep_agent`, so `@ag-ui/langgraph` strips `language` from the run input (#7).
+  2. `CopilotKitMiddleware` defaults to `expose_state=False` (`copilotkit_lg_middleware.py:260`), so the model never sees the state.
+  3. `setState` replaces the whole state: it drops `copilotkit` (#10), and the next snapshot removes `language`. The `Literal` default is never applied (#11).
+- **Correct setup (for reference):** a middleware with `state_schema`, plus `expose_state=["language"]`, plus `setState({ ...agent.state, language })`.
 
 ## Minor notes
-- #28 Landing/Quickstart: different code for `app/api/copilotkit/[[...slug]]/route.ts` (landing lacks `intelligence`/`identifyUser`, unguarded `process.env.X!`, adds `PATCH`/`DELETE`).
-- #30 Quickstart: two unlabelled `.env` captions (agent vs frontend); `COPILOTKIT_LICENSE_TOKEN` mentioned only to say you won't get one.
-- #21 Quickstart: installs unused `@copilotkit/react-ui` (all imports are `react-core/v2`).
-- #20 Multiple pages: model ids vary (`openai:gpt-4o`, `gpt-5.4`, `gpt-4`).
-- #19 [A2UI advanced](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/advanced): broken anchors `#adding-interactivity-action-handlers`, `./fixed-schema-streaming`.
-- #17 [Tool rendering](https://docs.copilotkit.ai/deepagents/generative-ui/tool-rendering): says `useRenderToolCall` where `useRenderTool` is meant (×3).
-- #18 frontend-tools: links to `/langgraph/quickstart`; steps 4–5 repeat the same text and snippet.
-- #16 [State inputs/outputs](https://docs.copilotkit.ai/deepagents/shared-state/state-inputs-outputs): deprecated `input=`/`output=` (warns on LangGraph 1.2.10); snippet imports nothing, mixes `list`/`List`, never fills `resources`.
-- #32 [Markdown](https://docs.copilotkit.ai/deepagents/custom-look-and-feel/markdown): `my-link`/`my-heading` undefined classes; "Drop `node`" triggers `no-unused-vars` ×4; `streamdown` only a transitive dep.
-- #33 [Jev](https://docs.copilotkit.ai/deepagents/cookbook/jev-generative-ui): 1.73.0 minimum unexplained; optional half pins intelligence-langgraph 1.71.2.
-- #37 [Message history](https://docs.copilotkit.ai/deepagents/backend/message-history): `selfManagedAgents` only quoted, never shown in use.
-- #38 [Skill delivery](https://docs.copilotkit.ai/deepagents/intelligence/learned-skills): Mastra example prints nothing; placeholders inconsistent.
+- #29 Quickstart: `touch app/api/copilotkit/route.ts`, but the code blocks are titled `[[...slug]]/route.ts`. A plain route has no `/info`. Not reproduced at runtime.
+- #6 Predictive state: needs `<CopilotKit>`, not `<CopilotKitProvider>`, and the page doesn't say so. Fails silently.
+- #13 Predictive state (Python): the manual emission fragment is incomplete, and `cpk_action_node` is undefined.
+- #12 A2UI fixed-schema: `flight_schema.json` contents aren't shown (you author it in A2UI Composer).
+- #15 `workflow-execution` serves the same page as state-inputs-outputs.
+- #23 Memories: silently empty without an Intelligence runtime.
+- #24 Learning: the runtime throws "`apiKey` is required" without a key. The key is now a listed prerequisite. `agents` and `identifyUser` are placeholders.
+- #27/#39 Learning: recommends LangGraph Python, whose package returns 404 on PyPI. Flagged only on learned-skills:145.
+- #38 Skill delivery: `-runtime`/`-langgraph` return 404 on PyPI (disclosed), and `revision: "exact-revision-id"` is in every example.
+- #33 Jev: all pins now exist on npm, but it needs `TYPESAFE_API_KEY` and has no Deep Agent.
+- #35 Threads Lifecycle: `existingId` is undefined (a placeholder).
+- #37 Message history: generic `HttpAgent({ url: AGENT_URL })` snippet.
+- #40 Plans: says Developer includes User Memory. Not re-tested (needs a key).
+- #41 `/intelligence/connect-your-runtime` returns 404 with no redirect.
+- #28 Landing and Quickstart use different code for the same `route.ts`.
+- #30 Quickstart: two unlabelled `.env` captions.
+- #21 Quickstart installs the unused `@copilotkit/react-ui`.
+- #20 Model ids vary across pages.
+- #17 Tool rendering says `useRenderToolCall` where it means `useRenderTool` (×2).
+- #18 Frontend tools links to `/langgraph/quickstart`.
+- #16 State I/O: deprecated `input=`/`output=`, and the snippet has no imports.
+- #32 Markdown: `my-link`/`my-heading` classes are undefined, and `node` is unused.
+
+## Build-only (`tsc` / `next build`; `npm run dev` runs fine)
+- **#5 [Tool rendering](https://docs.copilotkit.ai/deepagents/generative-ui/tool-rendering):** `useDefaultRenderTool({ render: ({ name, args, status, result }) => … })` fails with `TS2339: Property 'args' does not exist on type 'DefaultRenderProps'`. The prop is `parameters`, and in dev `args` is just undefined.
+- **#4 [A2UI Styling](https://docs.copilotkit.ai/deepagents/generative-ui/a2ui/styling):** `.dark .a2ui-surface,` followed by `@media (prefers-color-scheme: dark) { … }` makes `next build` fail with `Turbopack build failed … Parsing CSS source code failed … Invalid empty selector`. You can't put an at-rule in a selector list. `npm run dev` probably shows the same overlay (same parser), but that's untested.
+- **#3** (TS side): `TS2339` on `eventValue` ×2. The runtime effect is listed under Dev blockers.

@@ -118,6 +118,17 @@ export interface PageDefinition {
    * button-first flow).
    */
   demo?: DemoScript;
+
+  /**
+   * The page's handler films the whole take -- doc, IDE, demo, notes -- in the
+   * order the demo script gives, instead of after the engine's fixed
+   * doc -> IDE -> demo intro. Set it for a scripted take (a doc snippet, a note
+   * about it, then the file, then the app) that the fixed intro would otherwise
+   * film twice or in the wrong order. The handler starts on a blank stage and
+   * owns every navigation; console capture starts on its first visit to the
+   * demo's origin, and the verdict (`ctx.fail`, `knownIssue`) is unchanged.
+   */
+  ownsTake?: boolean;
 }
 
 /** A place to rest the cursor: a selector (first visible match) or fixed coordinates. */

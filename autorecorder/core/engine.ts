@@ -1,6 +1,6 @@
 import { existsSync, mkdirSync, rmSync, unlinkSync } from 'node:fs';
 import { basename, join } from 'node:path';
-import { chromium, type Browser, type BrowserContext, type Page } from 'playwright';
+import { chromium, type Browser, type BrowserContext, type Frame, type Page } from 'playwright';
 import { executePageAction } from '../actions';
 import { AgentSilentError } from './actions';
 import { diagnoseError } from './diagnostics';
@@ -663,127 +663,154 @@ export class RecordingEngine {
     });
 
     try {
-      // ----------------------------------------------------
-      // STEP 1: OFFICIAL DOC PAGE & HUMAN READING SCROLL
-      // ----------------------------------------------------
-      const docNote = await this.showDocPage(page, config.docUrl, 'vscode', timeouts);
-      if (docNote) warnings.push(docNote);
-
-      // ----------------------------------------------------
-      // STEP 2: SHOW PROJECT CODE IN VS CODE IDE WITH SNIPPET SELECTION
-      // ----------------------------------------------------
-      const hasExtraTabs = Boolean(config.extraTabs && config.extraTabs.length > 0);
-      console.log(
-        `\n💻 Step 2: Displaying Project Code in VS Code IDE (${config.ideFile}: lines ${config.startLine}-${config.endLine})...`,
-      );
-      try {
-        await this.showIde(
-          page,
-          [
-            { filePath: config.ideFile, startLine: config.startLine, endLine: config.endLine },
-            ...(config.extraTabs ?? []),
-          ],
-          config.demoUrl,
-          { dwellMs: hasExtraTabs ? 1500 : 1800, clickTabs: true },
-        );
-
-        console.log(`   🖱️ Switching back to Chrome via Windows 11 Taskbar...`);
-        await clickTaskbarApp(page, 'chrome');
-      } catch (e) {
-        const msg = `IDE view failed: ${diagnoseError(e, 'ide-simulation')}`;
-        fail(msg);
-        console.error(`❌ ${msg}`);
-        await sleep(600);
-      }
-
-      // ----------------------------------------------------
-      // STEP 3: FRONTEND DEMO PAGE & TAILORED ACTION EXECUTION
-      // ----------------------------------------------------
-      console.log(`\n🚀 Step 3: Opening Demo (${config.demoUrl})...`);
-      console_ = captureConsole(page);
-      try {
-        // Belt-and-braces: paint the outgoing document dark so that even a slow
-        // demo compile holds on a dark frame rather than anything bright.
-        await page.evaluate(`
-          (function() {
-            document.body.style.backgroundColor = '#0f172a';
-            document.body.style.transition = 'none';
-          })()
-        `).catch(() => {});
-
-        const response = await page.goto(config.demoUrl, {
-          waitUntil: 'domcontentloaded',
-          timeout: timeouts.demoNavMs,
-        });
-
-        // A 404/500 used to sail through as a PASS -- the route simply did not exist.
-        const status = response?.status() ?? 0;
-        if (status >= 400) {
-          throw new Error(
-            `Demo route returned HTTP ${status} (${config.demoUrl})`,
-          );
-        }
-
-        // The framework may delete the overlays when it hydrates -- but the
-        // guard inside ensureOverlays re-attaches them. No wait here: nothing
-        // scrolls this page, and if hydration has already finished the probe
-        // would never fire and just burn its timeout.
-        await ensureOverlays(page, 'chrome');
-
-        // Wait for page body and chat element readiness
-        console.log(`   ⏳ Waiting for Next.js compilation & React hydration to settle...`);
-        await page.waitForSelector('body', { timeout: 10000 }).catch(() => {});
-
-        // A dev server that refuses its own chunks for the host the page was
-        // opened on (127.0.0.1 instead of localhost, typically) paints the
-        // server render and never hydrates; the take then spends minutes
-        // retyping into a composer that cannot submit. The failures are on
-        // the console the moment the page loads, so say so now rather than
-        // "agent never responded" later.
-        const blocked = console_?.entries.find(
-          (e) =>
-            /\/_next\/static\/.*(403|ERR_ABORTED)/.test(e.text) ||
-            /Blocked cross-origin/i.test(e.text) ||
-            /Blocked request\. This host .* is not allowed/i.test(e.text),
-        );
-        if (blocked) {
-          throw new Error(
-            `Dev server refused its own assets (${blocked.text.slice(0, 120)}). ` +
-              `The page will never hydrate. Open the frontend on the host the dev server lists as Local -- ` +
-              `usually http://localhost:<port>, not 127.0.0.1 -- or allow the host in its config.`,
-          );
-        }
-        // No .catch() here: if the demo never renders an interactive surface there
-        // is nothing to record, and that must fail rather than warn.
-        await page.waitForSelector(SELECTORS.chatReady, {
-          state: 'visible',
-          timeout: timeouts.chatReadyMs,
-        });
-        await sleep(1000);
-
-        // Dispatch specific demo actions
-        await executePageAction(page, config, this.rootDir, ctx);
-
-        if (actionFailures.length > 0) {
-          throw new Error(actionFailures.join('; '));
-        }
-
-        console.log(`✅ Demo execution completed for ${config.id}.`);
-        await pause(1500);
-      } catch (e) {
-        // Silence is the defect on a page that says so, and a break everywhere
-        // else. Nothing else gets this treatment -- a 404, or a chat surface
-        // that never rendered, still fails whether `knownIssue` is set or not.
-        if (e instanceof AgentSilentError && config.knownIssue?.expectsNoResponse) {
-          const msg = `Documented defect reproduced -- the agent never answered. ${config.knownIssue.problem}`;
-          warnings.push(msg);
-          console.log(`\n🐞 [Known issue on ${config.id}]: ${msg}\n`);
-        } else {
-          const msg = `Demo step failed: ${diagnoseError(e, config.demoUrl)}`;
+      if (config.ownsTake) {
+        // A scripted take: the handler films doc, IDE and demo itself, in the
+        // script's order. Console capture waits for the demo's origin so the
+        // doc site's own console stays out of the result, as it does below.
+        console.log(`\n🎬 ${config.id} owns its take: skipping the fixed doc -> IDE -> demo intro.`);
+        const demoOrigin = new URL(config.demoUrl).origin;
+        const onNav = (frame: Frame): void => {
+          if (frame === page.mainFrame() && !console_ && frame.url().startsWith(demoOrigin)) {
+            console_ = captureConsole(page);
+          }
+        };
+        page.on('framenavigated', onNav);
+        try {
+          await executePageAction(page, config, this.rootDir, ctx);
+          if (actionFailures.length > 0) throw new Error(actionFailures.join('; '));
+          console.log(`✅ Take completed for ${config.id}.`);
+          await pause(1500);
+        } catch (e) {
+          const msg = `Take failed: ${diagnoseError(e, config.demoUrl)}`;
           fail(msg);
-          console.error(`\n❌ [Demo Failure on ${config.id}]:\n${msg}\n`);
+          console.error(`\n❌ [Take Failure on ${config.id}]:\n${msg}\n`);
+          await sleep(1000);
+        } finally {
+          page.off('framenavigated', onNav);
         }
-        await sleep(1000);
+      } else {
+        // ----------------------------------------------------
+        // STEP 1: OFFICIAL DOC PAGE & HUMAN READING SCROLL
+        // ----------------------------------------------------
+        const docNote = await this.showDocPage(page, config.docUrl, 'vscode', timeouts);
+        if (docNote) warnings.push(docNote);
+
+        // ----------------------------------------------------
+        // STEP 2: SHOW PROJECT CODE IN VS CODE IDE WITH SNIPPET SELECTION
+        // ----------------------------------------------------
+        const hasExtraTabs = Boolean(config.extraTabs && config.extraTabs.length > 0);
+        console.log(
+          `\n💻 Step 2: Displaying Project Code in VS Code IDE (${config.ideFile}: lines ${config.startLine}-${config.endLine})...`,
+        );
+        try {
+          await this.showIde(
+            page,
+            [
+              { filePath: config.ideFile, startLine: config.startLine, endLine: config.endLine },
+              ...(config.extraTabs ?? []),
+            ],
+            config.demoUrl,
+            { dwellMs: hasExtraTabs ? 1500 : 1800, clickTabs: true },
+          );
+
+          console.log(`   🖱️ Switching back to Chrome via Windows 11 Taskbar...`);
+          await clickTaskbarApp(page, 'chrome');
+        } catch (e) {
+          const msg = `IDE view failed: ${diagnoseError(e, 'ide-simulation')}`;
+          fail(msg);
+          console.error(`❌ ${msg}`);
+          await sleep(600);
+        }
+
+        // ----------------------------------------------------
+        // STEP 3: FRONTEND DEMO PAGE & TAILORED ACTION EXECUTION
+        // ----------------------------------------------------
+        console.log(`\n🚀 Step 3: Opening Demo (${config.demoUrl})...`);
+        console_ = captureConsole(page);
+        try {
+          // Belt-and-braces: paint the outgoing document dark so that even a slow
+          // demo compile holds on a dark frame rather than anything bright.
+          await page.evaluate(`
+            (function() {
+              document.body.style.backgroundColor = '#0f172a';
+              document.body.style.transition = 'none';
+            })()
+          `).catch(() => {});
+
+          const response = await page.goto(config.demoUrl, {
+            waitUntil: 'domcontentloaded',
+            timeout: timeouts.demoNavMs,
+          });
+
+          // A 404/500 used to sail through as a PASS -- the route simply did not exist.
+          const status = response?.status() ?? 0;
+          if (status >= 400) {
+            throw new Error(
+              `Demo route returned HTTP ${status} (${config.demoUrl})`,
+            );
+          }
+
+          // The framework may delete the overlays when it hydrates -- but the
+          // guard inside ensureOverlays re-attaches them. No wait here: nothing
+          // scrolls this page, and if hydration has already finished the probe
+          // would never fire and just burn its timeout.
+          await ensureOverlays(page, 'chrome');
+
+          // Wait for page body and chat element readiness
+          console.log(`   ⏳ Waiting for Next.js compilation & React hydration to settle...`);
+          await page.waitForSelector('body', { timeout: 10000 }).catch(() => {});
+
+          // A dev server that refuses its own chunks for the host the page was
+          // opened on (127.0.0.1 instead of localhost, typically) paints the
+          // server render and never hydrates; the take then spends minutes
+          // retyping into a composer that cannot submit. The failures are on
+          // the console the moment the page loads, so say so now rather than
+          // "agent never responded" later.
+          const blocked = console_?.entries.find(
+            (e) =>
+              /\/_next\/static\/.*(403|ERR_ABORTED)/.test(e.text) ||
+              /Blocked cross-origin/i.test(e.text) ||
+              /Blocked request\. This host .* is not allowed/i.test(e.text),
+          );
+          if (blocked) {
+            throw new Error(
+              `Dev server refused its own assets (${blocked.text.slice(0, 120)}). ` +
+                `The page will never hydrate. Open the frontend on the host the dev server lists as Local -- ` +
+                `usually http://localhost:<port>, not 127.0.0.1 -- or allow the host in its config.`,
+            );
+          }
+          // No .catch() here: if the demo never renders an interactive surface there
+          // is nothing to record, and that must fail rather than warn.
+          await page.waitForSelector(SELECTORS.chatReady, {
+            state: 'visible',
+            timeout: timeouts.chatReadyMs,
+          });
+          await sleep(1000);
+
+          // Dispatch specific demo actions
+          await executePageAction(page, config, this.rootDir, ctx);
+
+          if (actionFailures.length > 0) {
+            throw new Error(actionFailures.join('; '));
+          }
+
+          console.log(`✅ Demo execution completed for ${config.id}.`);
+          await pause(1500);
+        } catch (e) {
+          // Silence is the defect on a page that says so, and a break everywhere
+          // else. Nothing else gets this treatment -- a 404, or a chat surface
+          // that never rendered, still fails whether `knownIssue` is set or not.
+          if (e instanceof AgentSilentError && config.knownIssue?.expectsNoResponse) {
+            const msg = `Documented defect reproduced -- the agent never answered. ${config.knownIssue.problem}`;
+            warnings.push(msg);
+            console.log(`\n🐞 [Known issue on ${config.id}]: ${msg}\n`);
+          } else {
+            const msg = `Demo step failed: ${diagnoseError(e, config.demoUrl)}`;
+            fail(msg);
+            console.error(`\n❌ [Demo Failure on ${config.id}]:\n${msg}\n`);
+          }
+          await sleep(1000);
+        }
       }
 
       recordSuccess = !recordError;

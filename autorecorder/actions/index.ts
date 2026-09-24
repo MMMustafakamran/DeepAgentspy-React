@@ -61,6 +61,7 @@
 
 import { type ActionContext, type PageActionHandler, type PageRecordConfig } from '../core/types';
 import { runStandardAction } from '../core/actions';
+import { writeIssueNote } from '../core/issue-note';
 import { type Page } from 'playwright';
 
 import { runA2uiFixedSchemaAction, runA2uiSurfaceAction } from './a2ui.action';
@@ -111,10 +112,30 @@ export const ACTION_MAP: Record<string, PageActionHandler> = {
   'frontend-cards': runFrontendCardsAction,
   'intelligence-memories': runMemoriesAction,
   learning: runLearningAction,
+  'intelligence-learned-skills': runPromptThenIssueNote,
 
   'markdown-rendering': runMarkdownRenderingAction,
   'threads-lifecycle': runThreadsLifecycleAction,
 };
+
+/**
+ * The prompt, then the page's `knownIssue` typed into Notepad over the reply.
+ *
+ * Only `intelligence-learned-skills` uses it, and that page is in
+ * SKIP_RECORDING, so today it never runs. It exists because the doctor
+ * requires every knownIssue page to have a handler that writes the note, and
+ * so that taking the page off SKIP_RECORDING films the defect rather than a
+ * bare prompt. Give the page a real take before filming it for a report.
+ */
+async function runPromptThenIssueNote(
+  page: Page,
+  config: PageRecordConfig,
+  rootPath: string,
+  ctx: ActionContext,
+): Promise<void> {
+  await runStandardAction(page, config, rootPath, ctx);
+  if (config.knownIssue) await writeIssueNote(page, config.id, config.knownIssue);
+}
 
 export async function executePageAction(
   page: Page,
