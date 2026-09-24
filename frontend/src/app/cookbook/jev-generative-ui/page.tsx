@@ -73,7 +73,7 @@ export default function Page() {
         <code>new PickerAgent()</code> and reaches no backend at all. Following
         it inside a Deep Agents project means deleting the integration the
         section documents. This harness runs a Python backend on{" "}
-        <code>:8123</code>, so the recipe&apos;s stack is not reachable from
+        <code>:8030</code>, so the recipe&apos;s stack is not reachable from
         this integration at all: there is no step that connects the two, and
         the page never says one is needed.
       </Callout>

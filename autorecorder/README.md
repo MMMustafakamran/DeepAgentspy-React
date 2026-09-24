@@ -24,8 +24,8 @@ Both services must be up first — the recorder refuses to start otherwise, beca
 a video of a dead page is worse than no video.
 
 ```bash
-cd backend  && uv run langgraph dev --port 8123 --no-browser   # :8123
-cd frontend && npm run dev                                     # :3000
+cd backend  && uv run langgraph dev --port 8030 --no-browser   # :8030
+cd frontend && npm run dev                                     # :3030
 ```
 
 Then:
@@ -304,7 +304,7 @@ Two details worth knowing, because both were bugs once:
 
 **`Aborting before launching a browser`** — a service is down. The message names
 which one and the command to start it. `--force` overrides. Note this backend is
-`langgraph dev` on **:8123** answering `/ok`, not a FastAPI app on :8000.
+`langgraph dev` on **:8030** answering `/ok`, not a FastAPI app on :8000.
 
 **A page fails with "Agent never produced a response within 30s"** — either the
 demo is genuinely broken, or `selectors.config.ts → assistantMessage` does not

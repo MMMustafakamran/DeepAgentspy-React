@@ -109,8 +109,8 @@ Not the arrangement the sibling repos use, and the difference matters:
 
 | | Port | Started with | Health |
 |---|---|---|---|
-| Agent | 8123 | `uv run langgraph dev --port 8123 --no-browser` | `/ok` |
-| Frontend | 3000 | `npm run dev` | `/` |
+| Agent | 8030 | `uv run langgraph dev --port 8030 --no-browser` | `/ok` |
+| Frontend | 3030 | `npm run dev` | `/` |
 
 The backend is the **LangGraph dev server**, which serves every graph declared
 in `backend/langgraph.json` — not a FastAPI app, and it has no `/health`.

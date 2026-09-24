@@ -36,10 +36,10 @@ export type GraphId = (typeof GRAPH_IDS)[number];
 
 /**
  * Where the LangGraph dev server is listening. The Quickstart's own default,
- * and the port `langgraph dev --port 8123` uses.
+ * and the port `langgraph dev --port 8030` uses.
  */
 export const LANGGRAPH_DEPLOYMENT_URL =
-  process.env.LANGGRAPH_DEPLOYMENT_URL ?? "http://localhost:8123";
+  process.env.LANGGRAPH_DEPLOYMENT_URL ?? "http://localhost:8030";
 
 /**
  * Sent as `langsmithApiKey`. `langgraph dev` running locally does not check it,

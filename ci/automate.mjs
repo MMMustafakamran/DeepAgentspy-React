@@ -21,6 +21,8 @@ import fs from 'node:fs';
 import path from 'node:path';
 import { checkAllDocDrift } from './check-doc-drift.mjs';
 import {
+  BACKEND_PORT,
+  FRONTEND_PORT,
   BACKEND_DIR,
   BACKEND_HEALTH_URL,
   FRONTEND_DIR,
@@ -247,7 +249,7 @@ async function main() {
 
       if (!ignoreDocDrift) {
         console.log('⚠️ Halting so you can review the doc changes first.');
-        console.log('👉 Review in browser: http://localhost:3000/doc-sync');
+        console.log('👉 Review in browser: http://localhost:3030/doc-sync');
         console.log('👉 To run anyway, pass `--ignore-doc-drift` or `--force`.');
         generateReport(reportData);
         process.exit(2);
@@ -316,7 +318,7 @@ async function main() {
       // opens LangGraph Studio in the default browser, which steals focus from
       // the window Playwright is recording.
       const backend = spawnServer(
-        'uv run langgraph dev --port 8123 --no-browser',
+        `uv run langgraph dev --port ${BACKEND_PORT} --no-browser`,
         BACKEND_DIR,
         'backend.log',
       );
@@ -329,7 +331,7 @@ async function main() {
       console.log('▶ [Step] Frontend already running; reusing it.');
     } else {
       console.log('▶ [Step] Starting Frontend Server...');
-      const frontend = spawnServer('npm run dev', FRONTEND_DIR, 'frontend.log');
+      const frontend = spawnServer(`npm run dev -- -p ${FRONTEND_PORT}`, FRONTEND_DIR, 'frontend.log');
       frontendProc = frontend.proc;
       frontendLog = frontend.logPath;
     }

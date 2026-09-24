@@ -38,7 +38,7 @@ browser
        CopilotRuntime { agents: { <graphId>: LangGraphAgent } }
             │  LangGraph Platform API
             ▼
-       LangGraph dev server  :8123                    backend/langgraph.json
+       LangGraph dev server  :8030                    backend/langgraph.json
        ├─ 10 compiled graphs from create_deep_agent   backend/main.py, backend/src/*.py
        └─  3 hand-built StateGraphs                   predictive_state_manual / predictive_state_tool
             │                                         / state_inputs_outputs
@@ -95,11 +95,11 @@ cp .env.example frontend/.env.local # then keep the frontend block
 |---|---|---|---|
 | `OPENAI_API_KEY` | `backend/.env` | **yes** | The model key. Every agent reads it. |
 | `OPENAI_MODEL` | `backend/.env` | no | Model id for every agent. Defaults to `gpt-4o`. |
-| `LANGGRAPH_DEPLOYMENT_URL` | `frontend/.env.local` | no | Where the runtime route forwards runs. Defaults to `http://localhost:8123`. |
+| `LANGGRAPH_DEPLOYMENT_URL` | `frontend/.env.local` | no | Where the runtime route forwards runs. Defaults to `http://localhost:8030`. |
 | `LANGSMITH_API_KEY` | `frontend/.env.local` | no | Sent as `langsmithApiKey`. Ignored by a local `langgraph dev`. |
 | `COPILOTKIT_TELEMETRY_DISABLED` | `frontend/.env.local` | no | Silences the runtime's telemetry notice. |
 
-**Ports:** frontend `3000`, agent server `8123`. Change the agent port and you must change `LANGGRAPH_DEPLOYMENT_URL` to match.
+**Ports:** frontend `3030`, agent server `8030`. Change the agent port and you must change `LANGGRAPH_DEPLOYMENT_URL` to match.
 
 ---
 
@@ -110,7 +110,7 @@ Two terminals — the CLI does not start both.
 **Terminal 1 — the agent server:**
 
 ```bash
-cd backend && uv run langgraph dev --port 8123 --no-browser
+cd backend && uv run langgraph dev --port 8030 --no-browser
 ```
 
 Success looks like this, with all thirteen graphs importing:
@@ -120,14 +120,14 @@ Welcome to
 ╦  ┌─┐┌┐┌┌─┐╔═╗┬─┐┌─┐┌─┐┬ ┬
 ║  ├─┤││││ ┬║ ╦├┬┘├─┤├─┘├─┤
 ╩═╝┴ ┴┘└┘└─┘╚═╝┴└─┴ ┴┴  ┴ ┴
-- 🚀 API: http://localhost:8123
+- 🚀 API: http://localhost:8030
 ...
 Importing graph  graph_id=sample_agent  path=./main.py
 Importing graph  graph_id=tool_rendering_agent  ...
 Application started up in 3.55s
 ```
 
-Confirm with `curl http://localhost:8123/ok` → `{"ok":true}`.
+Confirm with `curl http://localhost:8030/ok` → `{"ok":true}`.
 
 **Terminal 2 — the app:**
 
@@ -135,9 +135,9 @@ Confirm with `curl http://localhost:8123/ok` → `{"ok":true}`.
 cd frontend && npm run dev
 ```
 
-You should see `✓ Ready in …` and `- Local: http://localhost:3000`.
+You should see `✓ Ready in …` and `- Local: http://localhost:3030`.
 
-**Open <http://localhost:3000>.** Start at `/quickstart` — if that streams a reply, every other route's plumbing is fine.
+**Open <http://localhost:3030>.** Start at `/quickstart` — if that streams a reply, every other route's plumbing is fine.
 
 > The Quickstart's Deep Agent tab says to start the agent with `npx @langchain/langgraph-cli dev --port 8123`. That does work against this Python manifest, but the CLI itself prints *"Launching Python server from @langchain/langgraph-cli is experimental. Please use the `langgraph-cli` package from PyPi instead"* and then downloads its own copy of `uv`. This repo takes that advice.
 
@@ -318,7 +318,7 @@ The Deep Agents doc tree has **no** Troubleshooting section as of 2026-08-06 —
 | Symptom | Cause | Fix |
 |---|---|---|
 | `Failed to create thread: HTTP 422: Invalid thread ID: must be a UUID` | Something posted a non-UUID `threadId`. The browser always generates one; scripted clients often don't. | Use `crypto.randomUUID()`. |
-| Chat shows an error banner; agent server log is silent | The runtime cannot reach `:8123`. | Is `langgraph dev` running? `curl http://localhost:8123/ok`. Check `LANGGRAPH_DEPLOYMENT_URL`. |
+| Chat shows an error banner; agent server log is silent | The runtime cannot reach `:8030`. | Is `langgraph dev` running? `curl http://localhost:8030/ok`. Check `LANGGRAPH_DEPLOYMENT_URL`. |
 | Agent runs but every reply is an auth error | `OPENAI_API_KEY` missing. | It goes in **`backend/.env`**, not `frontend/.env.local`. `langgraph.json` points at `.env` next to it. |
 | A route 500s with "Agent … not found" | Graph id mismatch. | `frontend/src/lib/agents.ts` must list the same ids as `backend/langgraph.json`. |
 | Predictive State Updates panel never fills | Root provider is `<CopilotKitProvider>`. | Use `<CopilotKit>` — see [FINDINGS.md](FINDINGS.md) #6. Fails silently. |

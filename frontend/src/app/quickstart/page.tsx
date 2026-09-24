@@ -36,7 +36,7 @@ export default function Page() {
                 reply says Lisbon is sunny.
               </>
             }
-            fail="An error banner in the chat, or no reply at all. Check that `langgraph dev` is up on :8123 and that backend/.env has OPENAI_API_KEY."
+            fail="An error banner in the chat, or no reply at all. Check that `langgraph dev` is up on :8030 and that backend/.env has OPENAI_API_KEY."
           />
         </div>
       </Panel>

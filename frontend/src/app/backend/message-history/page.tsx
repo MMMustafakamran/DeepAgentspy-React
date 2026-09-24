@@ -46,7 +46,7 @@ export default function Page() {
           <TryIt
             prompts={["My name is Sam.", "What is my name?"]}
             expect="On both tabs the second answer is Sam. Observed 2026-09-22: across two runs on one thread the trimmed runtime answered Sam 3/3, because LangGraph's checkpointer already holds the first turn. Trimming only shows when the history is not stored: one run carrying the whole transcript answered UNKNOWN through /api/copilotkit-trimmed and Sam through /api/copilotkit, 3/3 each (curl, see below)."
-            fail="The Runtime middleware tab errors or never answers: /api/copilotkit-trimmed could not reach langgraph dev on :8123."
+            fail="The Runtime middleware tab errors or never answers: /api/copilotkit-trimmed could not reach langgraph dev on :8030."
           />
         </div>
       </Panel>

@@ -13,7 +13,7 @@ import { lastTurnOnly, TrimHistoryMiddleware } from "./trim-history";
  * as published, so the page's `./trim-history` import is its own text.
  *
  * The page's agent is an `HttpAgent` pointed at `process.env.AGENT_URL`, i.e.
- * an AG-UI HTTP endpoint. This backend serves none: `langgraph dev` on :8123
+ * an AG-UI HTTP endpoint. This backend serves none: `langgraph dev` on :8030
  * speaks the LangGraph Platform API, which only `LangGraphAgent` talks to. The
  * page never says what `AGENT_URL` is, and nothing here can honestly default
  * it, so it is left unset. The published `default` agent is registered as

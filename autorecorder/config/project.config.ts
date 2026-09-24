@@ -72,18 +72,18 @@ export const PROJECT: ProjectConfig = {
 
   docBaseUrl: 'https://docs.copilotkit.ai/deepagents',
 
-  frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3000',
+  frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3030',
 
   // Not :8000. This backend is not a FastAPI app — it is the LangGraph dev
   // server, which serves every graph in `backend/langgraph.json` and answers
   // `/ok` rather than `/health`. Change the port here and `LANGGRAPH_DEPLOYMENT_URL`
   // in `frontend/.env.local` has to change with it, or the runtime route keeps
   // forwarding runs to the old one.
-  backendUrl: process.env.BACKEND_URL || 'http://localhost:8123',
+  backendUrl: process.env.BACKEND_URL || 'http://localhost:8030',
   backendHealthPath: '/ok',
 
   frontendStartCmd: 'cd frontend && npm run dev',
-  backendStartCmd: 'cd backend && uv run langgraph dev --port 8123 --no-browser',
+  backendStartCmd: `cd backend && uv run langgraph dev --port ${new URL(process.env.BACKEND_URL || 'http://localhost:8030').port} --no-browser`,
 
   demoSuffix: '/demo-chat',
 };

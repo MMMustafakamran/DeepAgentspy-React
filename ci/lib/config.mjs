@@ -28,7 +28,7 @@ export const isWindows = process.platform === 'win32';
 export const PROJECT_SLUG = 'DeepAgentspy-react';
 
 /**
- * 8123, not 8000. The backend here is the LangGraph dev server, which serves
+ * 8030, not 8000. The backend here is the LangGraph dev server, which serves
  * every graph in `backend/langgraph.json`.
  *
  * Two things break together if this changes: the recorder's `backendUrl` in
@@ -37,8 +37,8 @@ export const PROJECT_SLUG = 'DeepAgentspy-react';
  * forwarding runs to the old port and every demo answers with an error banner
  * while this health check reports the server up.
  */
-export const BACKEND_PORT = Number(process.env.AGENT_PORT || 8123);
-export const FRONTEND_PORT = Number(process.env.FRONTEND_PORT || 3000);
+export const BACKEND_PORT = Number(process.env.AGENT_PORT || 8030);
+export const FRONTEND_PORT = Number(process.env.FRONTEND_PORT || 3030);
 
 /** `langgraph dev` answers `/ok` with `{"ok":true}`. It has no `/health`. */
 export const BACKEND_HEALTH_URL = `http://127.0.0.1:${BACKEND_PORT}/ok`;
