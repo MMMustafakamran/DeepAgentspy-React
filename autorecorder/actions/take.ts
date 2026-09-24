@@ -159,6 +159,9 @@ async function docStep(env: TakeEnv, url: string, selections: DocSelection[]): P
  * to the upper third of the screen, and stashes it on window for the drag.
  */
 async function scrollToDocText(page: Page, sel: DocSelection): Promise<boolean> {
+  // tsx compiles with keepNames, so a named function inside a page.evaluate
+  // callback is wrapped in `__name(...)`, which the page does not define.
+  await page.evaluate('window.__name = window.__name || function (f) { return f; }').catch(() => {});
   const ok = await page
     .evaluate(
       ({ from, to, within, blockSel }) => {

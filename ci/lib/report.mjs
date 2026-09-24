@@ -6,6 +6,7 @@
  */
 import fs from 'node:fs';
 import path from 'node:path';
+import { probesMarkdown } from '../run-probes.mjs';
 import { FRONTEND_PORT, BACKEND_PORT, FRONTEND_DIR, BACKEND_DIR, VIDEOS_DIR } from './config.mjs';
 
 /**
@@ -222,6 +223,7 @@ export function generateReport(data) {
     healthChecks: data.health || {},
     videos,
     error: data.error || null,
+    probes: data.probes || null,
   };
 
   fs.writeFileSync(
@@ -272,6 +274,9 @@ export function generateReport(data) {
       report.healthChecks.frontend ? `✅ Healthy (${report.healthChecks.frontend}s)` : '❌ Offline'
     }\n`,
   );
+
+  lines.push('## Finding probes');
+  lines.push(probesMarkdown(report.probes));
 
   lines.push('## 4. 🎬 Generated Demo Videos');
   if (videos.length > 0) {

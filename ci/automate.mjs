@@ -37,6 +37,7 @@ import { assertModelCredentials, assertPortsFree } from './lib/preflight.mjs';
 import { muxAudioFiles } from './lib/mux.mjs';
 import { generateReport } from './lib/report.mjs';
 import { buildDocumentedReport } from './build-report.mjs';
+import { runProbes } from './run-probes.mjs';
 import { writeVersionsFile } from './write-versions.mjs';
 
 const OWN_FLAGS = [
@@ -228,6 +229,7 @@ async function main() {
     error: null,
     args: forwardArgs,
     refreshed: shouldRefresh,
+    probes: null,
   };
 
   try {
@@ -365,6 +367,17 @@ async function main() {
     ).elapsedSec;
 
     // 6. Warm routes so the recorder's own preflight is not racing a cold build.
+
+    // 6b. Finding probes: has a package update fixed an open finding? Never
+    // fatal -- a probe that cannot run must not cost the recording.
+    console.log('\n▶ [Step] Running finding probes...');
+    try {
+      reportData.probes = await runProbes();
+      for (const r of reportData.probes.results) console.log(`   #${r.finding} ${r.status}: ${r.evidence}`);
+      for (const h of reportData.probes.headlines) console.log(`\n🚨🚨 ${h}`);
+    } catch (err) {
+      console.warn(`⚠️  Finding probes failed to run: ${err.message || err}`);
+    }
 
     // 7. Record
     console.log('\n▶ [Step] Running Autorecorder...');

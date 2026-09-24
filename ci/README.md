@@ -40,6 +40,7 @@ ci/
 | `npm run drift` | Doc drift check on its own |
 | `npm run drift:sync` | Update `doc-snapshot/` to match live docs |
 | `npm run ci:pages` | List valid page ids |
+| `npm run probes` | Finding probes against running servers (see below) |
 
 Anything not consumed by `automate.mjs` is forwarded to the recorder:
 
@@ -198,6 +199,23 @@ tested. Stage 4 of the workflow exists for this.
 A row marked failed is a page on the known-issues list that recorded cleanly.
 That is not the same as "the defect was confirmed today" — nothing automated can
 establish that. Watch the clip before sending the report.
+
+## Finding probes
+
+CI installs the newest packages daily, so an open finding can stop reproducing
+with no doc drift. `ci/findings.probes.mjs` holds one browser probe per such
+finding (keyed by FINDINGS.md number; currently #22), each checking only the
+as-published variant. `ci/run-probes.mjs` classifies each as `still-broken`,
+`possibly-fixed` (error absent **and** the page rendered and connected) or
+`probe-error` (app not up, timeout, unexpected error), records the relevant
+package versions, and writes `autorecorder/videos/PROBES_REPORT.{json,md}`
+(appended to `$GITHUB_STEP_SUMMARY` when run standalone). `automate.mjs` runs it
+after the health checks, before recording, non-fatally, and adds a "Finding
+probes" section to RUN_REPORT. It always exits 0 and never edits FINDINGS.md: a
+`possibly-fixed` line is a prompt to verify by hand.
+
+To add a probe (e.g. #3, #9), add a key with `route` and `run(page)` returning
+`{ broken, rendered, evidence }`; throw when the outcome is ambiguous.
 
 ## Which versions get recorded
 
