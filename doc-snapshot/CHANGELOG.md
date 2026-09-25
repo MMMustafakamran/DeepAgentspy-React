@@ -9,6 +9,30 @@ Holds the 3 most recent dated entries. When a change lands on a fourth
 date, the oldest entry is dropped. Entries are counted, not aged, so a gap of
 weeks between changes does not expire anything.
 
+## 2026-09-25
+
+### 07:49 UTC — 1 page, highest severity high · _npm run drift:sync_
+
+**High — /deepagents/intelligence/learned-skills**
+
+`/deepagents/intelligence/learned-skills` · route `/intelligence/learned-skills` · `deepagents__intelligence__learned-skills.md`
+
+Code fence count changed. Hash efaf6dd6 ➔ 4108356b.
+
+````diff
+- Skill delivery makes one Learning container's published skills available to an agent without another CLI download or process restart. A framework adapter adds an alphabetical catalog and two tools.
+- <Image
+- src="/images/cloud-hosted/cloud-hosted-skill-delivery.png"
+- alt="The Skills tab of a Learning container in cloud-hosted Intelligence. The Skill delivery toggle is on, and skill candidates wait for review."
++ Skill delivery makes published skills from one or more Learning containers available to an agent without another CLI download or process restart. A framework adapter adds an alphabetical catalog and two tools.
++ <Image
++ src="/images/cloud-hosted/cloud-hosted-skill-delivery.png"
++ alt="The Skills tab of a Learning container in cloud-hosted Intelligence. The Skill delivery toggle is on, and skill candidates wait for review."
+  … region truncated
+````
+
+---
+
 ## 2026-09-24
 
 ### 07:28 UTC — 2 pages, highest severity medium · _npm run drift:sync_
@@ -48,6 +72,8 @@ Headings / Structure changed. Hash 17c0c2fd ➔ 85a381fe.
 + ```text
   … region truncated
 ````
+
+---
 
 ---
 
@@ -171,109 +197,6 @@ Listed upstream, tracked nowhere in this repo. Not snapshotted by this run.
 **New — https://docs.copilotkit.ai/deepagents/intelligence/plans**
 
 Listed upstream, tracked nowhere in this repo. Not snapshotted by this run.
-
----
-
----
-
-## 2026-09-22
-
-### 09:33 UTC — 1 page, highest severity high · _npm run drift:sync_
-
-**High — /deepagents/backend/message-history**
-
-`/deepagents/backend/message-history` · route `/backend/message-history` · `deepagents__backend__message-history.md`
-
-Code fence count changed. Hash  ➔ 19d87af9.
-
-````diff
-+ # Message history
-+ > Trim the conversation history CopilotKit forwards to an agent that already stores its own.
-+ CopilotKit forwards the whole conversation on every run. The frontend holds the
-+ transcript, and each run carries it to your agent as `input.messages`. A
-+ stateless agent needs that, because the transcript is the only record of the
-+ conversation.
-+ An agent that stores its own history does not need it. If your backend keeps a
-+ LangGraph checkpointer, Mastra memory, an AWS Strands `SessionManager`, or a
-  … region truncated
-````
-
-### 08:52 UTC — 6 pages, highest severity high · _npm run drift:sync_
-
-**Low — /deepagents/quickstart**
-
-`/deepagents/quickstart` · route `/quickstart` · `deepagents__quickstart.md`
-
-Prose / text phrasing updated. Hash 615688b8 ➔ 39ca33ef.
-
-````diff
-- 3. Open **Threads**. The list is unlocked (Intelligence is on), or locked with Enable Intelligence (Intelligence is off).
-+ 3. Open **Rich Threads**. The list is unlocked (Intelligence is on), or locked with Enable Intelligence (Intelligence is off).
-````
-
-**Medium — /deepagents/intelligence/memories**
-
-`/deepagents/intelligence/memories` · route `/intelligence/memories` · `deepagents__intelligence__memories.md`
-
-Headings / Structure changed. Hash 5fdd2ea3 ➔ 2dc8fc55.
-
-````diff
-- # Memories & Recall
-- > Give your agents long-term memory across conversations.
-- Threads remember a conversation. Memories remember a person. This page explains
-- what a memory is, how recall selects them, and what has to be true of your
-+ # User Memories
-+ > Give your agents long-term memory across conversations.
-+ Rich Threads remember a conversation. User Memories remember a person. This page explains
-+ what a memory is, how recall selects them, and what has to be true of your
-  … region truncated
-````
-
-**High — /deepagents/learning**
-
-`/deepagents/learning` · route `/learning` · `deepagents__learning.md`
-
-Code block content changed. Hash 19331937 ➔ 75436379.
-
-````diff
-- # Learning
-- > Turn real application use into evidence-backed Insights and reviewed, reusable Skills.
-- ## Overview
-- Learning turns patterns from real agent runs into reusable Skills. It looks at completed conversations and application interactions in [Rich Threads](/deepagents/threads), produces evidence-backed Insights, and proposes instructions you can review before publishing.
-+ # Automatic Learning
-+ > Turn real application use into evidence-backed Insights and reviewed, reusable Skills.
-+ ## Overview
-+ Automatic Learning turns patterns from real agent runs into reusable Skills. It looks at completed conversations and application interactions in [Rich Threads](/deepagents/threads), produces evidence-backed Insights, and proposes instructions you can review before publishing.
-  … region truncated
-````
-
-**Low — /deepagents/intelligence/learned-skills**
-
-`/deepagents/intelligence/learned-skills` · route `/intelligence/learned-skills` · `deepagents__intelligence__learned-skills.md`
-
-Prose / text phrasing updated. Hash 2edc4cdd ➔ f5724a70.
-
-````diff
-- Start with the [Learning guide](/deepagents/learning) to collect Threads, configure daily runs, and review Skills. Before connecting an adapter, check that **Skill delivery** is enabled in the container's **Skills** tab. For guided setup, select **Set up skill delivery** there and copy the prompt into your coding agent.
-- </Callout>
-- ## Choose an adapter
-- | Framework                 | Package                                  | Native extension                                                     |
-+ Start with the [Automatic Learning guide](/deepagents/learning) to collect Threads, configure daily runs, and review Skills. Before connecting an adapter, check that **Skill delivery** is enabled in the container's **Skills** tab. For guided setup, select **Set up skill delivery** there and copy the prompt into your coding agent.
-+ </Callout>
-+ ## Choose an adapter
-+ | Framework                 | Package                                  | Native extension                                                     |
-  … region truncated
-````
-
-**New — https://docs.copilotkit.ai/deepagents/backend/message-history**
-
-Listed upstream, tracked nowhere in this repo. Not snapshotted by this run.
-
-**New — https://docs.copilotkit.ai/deepagents/intelligence/self-hosting-ecs**
-
-Listed upstream, tracked nowhere in this repo. Not snapshotted by this run.
-
----
 
 ---
 

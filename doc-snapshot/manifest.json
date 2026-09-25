@@ -1,7 +1,7 @@
 {
   "schema": 1,
   "docsRoot": "https://docs.copilotkit.ai/deepagents",
-  "syncedAt": "2026-09-24T07:28:13.390Z",
+  "syncedAt": "2026-09-25T07:49:08.992Z",
   "pages": {
     "/deepagents": {
       "file": "deepagents.md",
@@ -246,15 +246,15 @@
     },
     "/deepagents/intelligence/learned-skills": {
       "file": "deepagents__intelligence__learned-skills.md",
-      "sha256": "efaf6dd65f5b09d1dcd1f6122c5e70b74b6f68d620d07b01798b1a8f42a97e1e",
-      "bytes": 27405,
-      "lines": 465,
+      "sha256": "4108356baba3cf86b06a849b956b82a64f79a01fb1d644e5ffa54584b6a42ee2",
+      "bytes": 31593,
+      "lines": 580,
       "routes": [
         "/intelligence/learned-skills"
       ],
       "status": "ok",
       "age": 0,
-      "date": "Wed, 23 Sep 2026 07:50:28 GMT"
+      "date": "Fri, 25 Sep 2026 07:49:08 GMT"
     },
     "/deepagents/custom-look-and-feel/markdown": {
       "file": "deepagents__custom-look-and-feel__markdown.md",
