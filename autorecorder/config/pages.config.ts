@@ -53,6 +53,8 @@ export const SKIP_RECORDING: Record<string, string> = {
   'markdown-rendering':
     'owner instruction: not reachable from the docs sidebar, so not under test yet',
   'message-history': 'owner instruction: tracked and built 2026-09-22, not recorded yet',
+  'frontend-cards':
+    'owner instruction (2026-09-24): not reachable from the docs sidebar, so not recorded for now',
 };
 
 export const PAGES = definePages([
