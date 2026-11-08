@@ -1,0 +1,18 @@
+{
+ "clip": "DEEPAGENTS-react-48-Sub-agents",
+ "finding": "57",
+ "segments": [
+  {
+   "at": "doc",
+   "text": "Ok so, this is the sub-agents page in the CopilotKit docs, for Deep Agents, the Python agent with React."
+  },
+  {
+   "at": "evidence#1",
+   "text": "And umm, the page itself says not available for Langchain Deep Agents yet, so there's nothing to run here."
+  },
+  {
+   "at": "+",
+   "text": "So basically this needs fixing, kindly look into it."
+  }
+ ]
+}

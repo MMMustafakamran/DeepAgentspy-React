@@ -1,0 +1,22 @@
+{
+ "clip": "DEEPAGENTS-react-38-PrebuiltAgent",
+ "finding": "43",
+ "segments": [
+  {
+   "at": "doc",
+   "text": "Ok so, this is the state streaming, prebuilt agent page in the CopilotKit docs, for Deep Agents, the Python agent with React, and I have implemented this page in my project."
+  },
+  {
+   "at": "ide",
+   "text": "This is the code from the doc."
+  },
+  {
+   "at": "demo",
+   "text": "Moving on to the demo. The agent called the step progress tool and answered, but the agent progress list stayed empty, uh, no steps came through."
+  },
+  {
+   "at": "+",
+   "text": "Okay so this one needs a fix too, please check."
+  }
+ ]
+}

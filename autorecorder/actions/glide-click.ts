@@ -1,8 +1,6 @@
 import { type Locator, type Page } from 'playwright';
-import { writeIssueNote } from '../core/issue-note';
 import { humanClick, humanGlide, sleep } from '../core/overlays/cursor';
-import { type PageRecordConfig } from '../core/types';
-import { type LogMark, serverLogSince, showNextIssues, showServerTerminal } from './error-evidence';
+import { describe, tracked } from '../core/timeline';
 
 /**
  * Glide the on-screen cursor to an element and click it, the way the other
@@ -10,14 +8,17 @@ import { type LogMark, serverLogSince, showNextIssues, showServerTerminal } from
  * yet (mid-layout), so a take never stalls on the cursor overlay.
  */
 export async function glideClick(page: Page, target: Locator): Promise<void> {
-  await target.scrollIntoViewIfNeeded().catch(() => {});
-  const box = await target.boundingBox();
-  if (box) {
-    await humanGlide(page, box.x + box.width / 2, box.y + box.height / 2, 20);
-    await humanClick(page);
-  } else {
-    await target.click();
-  }
+  // Logged to events.jsonl (ok, or the error) and rethrown unchanged.
+  await tracked('click', describe(target), async () => {
+    await target.scrollIntoViewIfNeeded().catch(() => {});
+    const box = await target.boundingBox();
+    if (box) {
+      await humanGlide(page, box.x + box.width / 2, box.y + box.height / 2, 20);
+      await humanClick(page);
+    } else {
+      await target.click();
+    }
+  });
 }
 
 /** Rest the cursor on an element so the viewer's eye lands there. */
@@ -47,55 +48,13 @@ export async function waitForText(
 }
 
 /**
- * Whether an element becomes visible within `timeoutMs`. Not
+ * Whether an element becomes visible within the time given. Not
  * `locator.isVisible({ timeout })`: Playwright ignores that timeout and answers
- * at once, which on a cold `next dev` route reads "not there yet" as "never".
+ * immediately, so a card still rendering would read as "never rendered".
  */
 export async function visibleWithin(target: Locator, timeoutMs: number): Promise<boolean> {
   return target
     .waitFor({ state: 'visible', timeout: timeoutMs })
     .then(() => true)
     .catch(() => false);
-}
-
-/**
- * The end of every defect take here: the real Next.js issues overlay, then the
- * dev servers' own lines from this take, then the ONE note -- the page's
- * `knownIssue`, typed by core `writeIssueNote`. Same order as Agno-react's
- * `showEvidence`; the explanation comes from the config because this repo's
- * report and Notepad share that object.
- *
- * `note` replaces `knownIssue.note` for a take whose outcome depends on the
- * environment (an Intelligence key or not); `extraLines(serverLines)` adds what
- * only this take knows (a save result) before the version lines.
- *
- * `writeNote: false` skips the note and still shows the overlay and terminal:
- * those are what the app and servers actually said, while the note asserts the
- * knownIssue, and a take that did not observe it must not type it.
- */
-export async function evidenceThenIssueNote(
-  page: Page,
-  config: PageRecordConfig,
-  logs: LogMark,
-  relevant: RegExp,
-  opts: {
-    note?: (serverLines: string[]) => string;
-    extraLines?: (serverLines: string[]) => string[];
-    writeNote?: boolean | ((serverLines: string[]) => boolean);
-  } = {},
-): Promise<string[]> {
-  const overlay = await showNextIssues(page);
-  console.log(`   [evidence] Next overlay: ${overlay ?? '(no issues badge)'}`);
-  const serverLines = serverLogSince(logs, { relevant });
-  console.log(`   [evidence] ${serverLines.length} server line(s) on screen`);
-  for (const l of serverLines) console.log(`      | ${l}`);
-  await showServerTerminal(page, serverLines);
-  const write = typeof opts.writeNote === 'function' ? opts.writeNote(serverLines) : opts.writeNote ?? true;
-  if (config.knownIssue && write) {
-    const issue = opts.note ? { ...config.knownIssue, note: opts.note(serverLines) } : config.knownIssue;
-    await writeIssueNote(page, config.id, issue, { extraLines: opts.extraLines?.(serverLines) ?? [] });
-  } else if (config.knownIssue) {
-    console.log(`   [evidence] knownIssue not observed in this take -- no note typed.`);
-  }
-  return serverLines;
 }

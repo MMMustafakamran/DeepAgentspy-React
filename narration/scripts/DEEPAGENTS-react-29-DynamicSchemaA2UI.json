@@ -1,0 +1,42 @@
+{
+ "clip": "DEEPAGENTS-react-29-DynamicSchemaA2UI",
+ "finding": "46",
+ "segments": [
+  {
+   "at": "doc",
+   "text": "Ok so, this is the dynamic schema A2UI page in the CopilotKit docs, for Deep Agents, the Python agent with React, and I have implemented this page in my project."
+  },
+  {
+   "at": "ide",
+   "text": "So this is my project, this is the exact code from the doc, and this is the CopilotKit version, one point eighty-five."
+  },
+  {
+   "at": "demo",
+   "text": "Moving on to the demo."
+  },
+  {
+   "at": "+",
+   "text": "So I asked for a pricing card, and no UI came up, the run failed with an error, something is bound to a different event loop."
+  },
+  {
+   "at": "evidence#1",
+   "text": "Back on the doc, the runtime turns on the A2UI tool here,"
+  },
+  {
+   "at": "evidence#2",
+   "text": "and this is the agent, exactly as the page has it."
+  },
+  {
+   "at": "notepad",
+   "text": "So yeah, every run fails inside generate A2UI, umm, the error comes from the A2UI tool calling the OpenAI model."
+  },
+  {
+   "at": "+",
+   "text": "It failed three out of three times, and also the my catalog in the frontend step is never defined on the page."
+  },
+  {
+   "at": "+",
+   "text": "So umm, please fix this one when you can."
+  }
+ ]
+}

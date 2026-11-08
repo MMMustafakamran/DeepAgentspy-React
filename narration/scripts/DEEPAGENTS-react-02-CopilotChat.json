@@ -1,0 +1,18 @@
+{
+ "clip": "DEEPAGENTS-react-02-CopilotChat",
+ "finding": "57",
+ "segments": [
+  {
+   "at": "doc",
+   "text": "Ok so, this is the CopilotChat page in the CopilotKit docs, for Deep Agents, the Python agent with React."
+  },
+  {
+   "at": "evidence#1",
+   "text": "And umm, the page itself says not available for Langchain Deep Agents yet, so there's nothing to run here."
+  },
+  {
+   "at": "+",
+   "text": "So yeah, this is the issue, kindly fix it."
+  }
+ ]
+}

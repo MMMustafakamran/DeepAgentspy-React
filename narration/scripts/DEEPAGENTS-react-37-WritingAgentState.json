@@ -1,0 +1,22 @@
+{
+ "clip": "DEEPAGENTS-react-37-WritingAgentState",
+ "finding": "9",
+ "segments": [
+  {
+   "at": "doc",
+   "text": "Ok so, this is the writing agent state page in the CopilotKit docs, for Deep Agents, the Python agent with React, and I have implemented this page in my project."
+  },
+  {
+   "at": "ide",
+   "text": "This is the code from the doc."
+  },
+  {
+   "at": "demo",
+   "text": "Moving on to the demo. After toggling, the label says spanish, but the agent still answered in English, and the label went back to english after the run."
+  },
+  {
+   "at": "+",
+   "text": "So, uh, kindly look at this and fix it."
+  }
+ ]
+}

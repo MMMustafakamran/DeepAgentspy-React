@@ -1,0 +1,38 @@
+{
+ "clip": "DEEPAGENTS-react-34-MCPApps",
+ "finding": "47",
+ "segments": [
+  {
+   "at": "doc",
+   "text": "Ok so, this is the MCP apps page in the CopilotKit docs, for Deep Agents, the Python agent with React, and I have implemented this page in my project."
+  },
+  {
+   "at": "ide",
+   "text": "So this is my project, this is the exact code from the doc, and this is the CopilotKit version, one point eighty-five."
+  },
+  {
+   "at": "demo",
+   "text": "Moving on to the demo."
+  },
+  {
+   "at": "+",
+   "text": "So I asked it to draw a flowchart in Excalidraw, and uh, the agent just replied in text, no Excalidraw app showed up in the chat."
+  },
+  {
+   "at": "evidence#1",
+   "text": "Back on the doc, this is the Excalidraw server URL from the page."
+  },
+  {
+   "at": "notepad",
+   "text": "So that URL redirects to slash MCP, and the runtime log says MCP tool discovery failed, unexpected redirect."
+  },
+  {
+   "at": "+",
+   "text": "So the agent never gets the Excalidraw tools. With the slash MCP URL, the drawing renders fine."
+  },
+  {
+   "at": "+",
+   "text": "So yeah, this page needs a fix, kindly have a look."
+  }
+ ]
+}

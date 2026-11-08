@@ -1,0 +1,38 @@
+{
+ "clip": "DEEPAGENTS-react-31-Advanced",
+ "finding": "46",
+ "segments": [
+  {
+   "at": "doc",
+   "text": "Ok so, this is the A2UI advanced page in the CopilotKit docs, for Deep Agents, the Python agent with React, and I have implemented this page in my project."
+  },
+  {
+   "at": "ide",
+   "text": "So this is my project, this is the exact code from the doc, and this is the CopilotKit version, one point eighty-five."
+  },
+  {
+   "at": "demo",
+   "text": "Moving on to the demo."
+  },
+  {
+   "at": "+",
+   "text": "So this page builds on dynamic schema, and the run failed again with the same event loop error, so the progress renderer never showed."
+  },
+  {
+   "at": "evidence#1",
+   "text": "On the doc, it says it uses the dynamic schema flow, where a secondary LLM builds the UI."
+  },
+  {
+   "at": "notepad",
+   "text": "So basically the custom progress part can't be seen at all, because the dynamic schema agent fails first."
+  },
+  {
+   "at": "+",
+   "text": "Umm, it's the same error as the dynamic schema page."
+  },
+  {
+   "at": "+",
+   "text": "Alright, that's the problem here, kindly check it."
+  }
+ ]
+}

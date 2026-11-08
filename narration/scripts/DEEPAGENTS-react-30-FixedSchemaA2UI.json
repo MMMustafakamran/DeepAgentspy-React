@@ -1,0 +1,22 @@
+{
+ "clip": "DEEPAGENTS-react-30-FixedSchemaA2UI",
+ "finding": "12",
+ "segments": [
+  {
+   "at": "doc",
+   "text": "Ok so, this is the fixed schema A2UI page in the CopilotKit docs, for Deep Agents, the Python agent with React, and I have implemented this page in my project."
+  },
+  {
+   "at": "ide",
+   "text": "This is the code from the doc."
+  },
+  {
+   "at": "demo",
+   "text": "Moving on to the demo. The page never shows the flight schema file, so with a hand-written one, umm, the cards come up as unknown component instead of the flight details."
+  },
+  {
+   "at": "+",
+   "text": "So yeah, that's it, kindly check this page."
+  }
+ ]
+}

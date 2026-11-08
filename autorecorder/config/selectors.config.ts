@@ -56,20 +56,21 @@ export interface SelectorContract {
 }
 
 export const SELECTORS: SelectorContract = {
-  chatInput:
-    '[data-testid="copilot-chat-textarea"], textarea, input[type="text"], [contenteditable="true"]',
+  // LangGraph harness: CopilotKit's composer is a textarea. A plain text input on the page (the
+  // Shared State 'Name' field) must not be taken for the chat box.
+  chatInput: 'textarea, [contenteditable="true"]',
 
-  // CopilotKit v2 ships `data-testid` hooks on the composer, and the send
-  // button is disabled until React holds the typed text -- so this doubles as
-  // the "is it actually interactive yet" signal sendPrompt waits on.
   chatSubmit:
-    '[data-testid="copilot-send-button"], button[type="submit"], .copilotKitSendButton, button[aria-label*="Send"], button[title*="Send"]',
+    'button[type="submit"], button:has-text("Send"), .copilotKitSendButton, button[aria-label*="Send"]',
 
   assistantMessage:
     '.copilotKitAssistantMessage, [data-message-role="assistant"], .copilotKitMessage:not(:first-child), [class*="assistant"]',
 
+  // Bare `input` excludes file/hidden inputs: the engine waits for the FIRST match to be
+  // visible, and attachment-enabled chats (css, headless-ui) render a display:none
+  // <input type="file"> before the textarea, so the wait could never succeed there.
   chatReady:
-    'textarea, input[type="text"], input, [contenteditable="true"], .copilotKitChat, [class*="copilotKit"]',
+    'textarea, input[type="text"], input:not([type="file"]):not([type="hidden"]), [contenteditable="true"], .copilotKitChat, [class*="copilotKit"]',
 
   docContentReady: 'h1, article, main, [class*="content"], pre',
 

@@ -1,0 +1,22 @@
+{
+ "clip": "DEEPAGENTS-react-20-ComponentsAndSurfaces",
+ "finding": "49",
+ "segments": [
+  {
+   "at": "doc",
+   "text": "Ok so, this is the components and surfaces page in the CopilotKit docs, for Deep Agents, the Python agent with React, and I have implemented this page in my project."
+  },
+  {
+   "at": "ide",
+   "text": "This is the code from the doc."
+  },
+  {
+   "at": "demo",
+   "text": "Moving on to the demo. So the install step leaves out maplibre-gl, the page didn't even compile without it, and after adding it the try-it agent fails with chat needs a thread ID."
+  },
+  {
+   "at": "+",
+   "text": "Alright, so please sort this one out."
+  }
+ ]
+}

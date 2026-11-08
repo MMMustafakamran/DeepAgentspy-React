@@ -1,0 +1,238 @@
+{
+ "root": "deepagents",
+ "savedAt": "2026-11-08",
+ "pages": {
+  "/deepagents/quickstart": [
+   "/deepagents/inspector",
+   "/deepagents/intelligence/quickstart"
+  ],
+  "/deepagents/build-with-agents": [],
+  "/deepagents": [],
+  "/deepagents/prebuilt-components/popup": [
+   "/deepagents/custom-look-and-feel/slots",
+   "/deepagents/migrate/v2",
+   "/deepagents/prebuilt-components/chat",
+   "/deepagents/prebuilt-components/sidebar"
+  ],
+  "/deepagents/prebuilt-components/sidebar": [
+   "/deepagents/custom-look-and-feel/slots",
+   "/deepagents/migrate/v2",
+   "/deepagents/prebuilt-components/chat",
+   "/deepagents/prebuilt-components/copilot-threads-drawer",
+   "/deepagents/prebuilt-components/popup"
+  ],
+  "/deepagents/prebuilt-components/chat": [
+   "/deepagents/custom-look-and-feel/css",
+   "/deepagents/custom-look-and-feel/headless-ui",
+   "/deepagents/custom-look-and-feel/slots",
+   "/deepagents/headless-threads",
+   "/deepagents/migrate/v2",
+   "/deepagents/prebuilt-components/copilot-threads-drawer",
+   "/deepagents/prebuilt-components/popup",
+   "/deepagents/prebuilt-components/sidebar"
+  ],
+  "/deepagents/prebuilt-components/chat-controls": [
+   "/deepagents/custom-look-and-feel/slots",
+   "/deepagents/intelligence/capture-interactions",
+   "/deepagents/prebuilt-components/popup",
+   "/deepagents/prebuilt-components/sidebar",
+   "/deepagents/programmatic-control"
+  ],
+  "/deepagents/custom-look-and-feel/css": [
+   "/deepagents/custom-look-and-feel/headless-ui",
+   "/deepagents/custom-look-and-feel/slots"
+  ],
+  "/deepagents/custom-look-and-feel/slots": [
+   "/deepagents/custom-look-and-feel/markdown",
+   "/deepagents/generative-ui/tool-rendering"
+  ],
+  "/deepagents/custom-look-and-feel/markdown": [
+   "/deepagents/custom-look-and-feel/slots",
+   "/deepagents/generative-ui/tool-rendering"
+  ],
+  "/deepagents/custom-look-and-feel/headless-ui": [
+   "/deepagents/custom-look-and-feel/css",
+   "/deepagents/custom-look-and-feel/slots"
+  ],
+  "/deepagents/custom-look-and-feel/reasoning-messages": [],
+  "/deepagents/multimodal-attachments": [],
+  "/deepagents/voice": [
+   "/deepagents/multimodal-attachments"
+  ],
+  "/deepagents/generative-ui/reasoning": [],
+  "/deepagents/frontend-tools": [],
+  "/deepagents/prebuilt-components/copilot-threads-drawer": [
+   "/deepagents/AG-UI-Streams",
+   "/deepagents/headless-threads",
+   "/deepagents/migrate/v2",
+   "/deepagents/prebuilt-components/chat",
+   "/deepagents/threads-lifecycle"
+  ],
+  "/deepagents/headless-threads": [
+   "/deepagents/intelligence/quickstart",
+   "/deepagents/intelligence/self-hosting",
+   "/deepagents/intelligence/threads-explained",
+   "/deepagents/prebuilt-components/copilot-threads-drawer",
+   "/deepagents/threads-import",
+   "/deepagents/threads-lifecycle"
+  ],
+  "/deepagents/generative-ui/tool-based": [
+   "/deepagents/custom-look-and-feel/headless-ui",
+   "/deepagents/generative-ui/tool-rendering",
+   "/deepagents/human-in-the-loop"
+  ],
+  "/deepagents/generative-ui/tool-rendering": [],
+  "/deepagents/generative-ui/state-rendering": [],
+  "/deepagents/generative-ui/components": [
+   "/deepagents/generative-ui/components/catalogs",
+   "/deepagents/generative-ui/components/from-a2ui",
+   "/deepagents/generative-ui/components/markdown-mode",
+   "/deepagents/generative-ui/components/state-and-actions",
+   "/deepagents/generative-ui/components/surfaces",
+   "/deepagents/generative-ui/components/theming",
+   "/deepagents/generative-ui/components/transports",
+   "/deepagents/inspector"
+  ],
+  "/deepagents/generative-ui/components/surfaces": [
+   "/deepagents/generative-ui/components",
+   "/deepagents/generative-ui/components/catalogs"
+  ],
+  "/deepagents/generative-ui/components/catalogs": [
+   "/deepagents/generative-ui/components/state-and-actions"
+  ],
+  "/deepagents/generative-ui/components/standard-catalog": [
+   "/deepagents/generative-ui/components/catalogs",
+   "/deepagents/generative-ui/components/theming"
+  ],
+  "/deepagents/generative-ui/components/state-and-actions": [],
+  "/deepagents/generative-ui/components/theming": [],
+  "/deepagents/generative-ui/components/transports": [
+   "/deepagents/generative-ui/components/markdown-mode"
+  ],
+  "/deepagents/generative-ui/components/markdown-mode": [
+   "/deepagents/generative-ui/components/state-and-actions",
+   "/deepagents/generative-ui/components/surfaces"
+  ],
+  "/deepagents/generative-ui/components/from-a2ui": [
+   "/deepagents/generative-ui/components/catalogs",
+   "/deepagents/generative-ui/components/markdown-mode",
+   "/deepagents/generative-ui/components/state-and-actions",
+   "/deepagents/generative-ui/components/surfaces"
+  ],
+  "/deepagents/generative-ui/a2ui": [],
+  "/deepagents/generative-ui/a2ui/dynamic-schema": [],
+  "/deepagents/generative-ui/a2ui/fixed-schema": [],
+  "/deepagents/generative-ui/json-render": [
+   "/deepagents/generative-ui/hashbrown"
+  ],
+  "/deepagents/generative-ui/hashbrown": [
+   "/deepagents/generative-ui/json-render"
+  ],
+  "/deepagents/generative-ui/mcp-apps": [
+   "/deepagents/generative-ui/mcp-apps"
+  ],
+  "/deepagents/generative-ui/open-generative-ui": [
+   "/deepagents/frontend-tools"
+  ],
+  "/deepagents/shared-state/in-app-agent-read": [
+   "/deepagents/shared-state/predictive-state-updates"
+  ],
+  "/deepagents/shared-state/in-app-agent-write": [
+   "/deepagents/shared-state/predictive-state-updates"
+  ],
+  "/deepagents/shared-state/predictive-state-updates": [],
+  "/deepagents/shared-state/state-inputs-outputs": [
+   "/deepagents/shared-state/in-app-agent-read"
+  ],
+  "/deepagents/shared-state/workflow-execution": [
+   "/deepagents/shared-state/in-app-agent-read"
+  ],
+  "/deepagents/human-in-the-loop": [
+   "/deepagents/human-in-the-loop/headless",
+   "/deepagents/human-in-the-loop/useInterrupt",
+   "/deepagents/inspector"
+  ],
+  "/deepagents/human-in-the-loop/useInterrupt": [],
+  "/deepagents/human-in-the-loop/headless": [],
+  "/deepagents/human-in-the-loop/governed-actions": [],
+  "/deepagents/webmcp": [
+   "/deepagents/frontend-tools"
+  ],
+  "/deepagents/multi-agent/subagents": [
+   "/deepagents/shared-state",
+   "/deepagents/shared-state/streaming"
+  ],
+  "/deepagents/AG-UI-Streams": [
+   "/deepagents/headless-threads",
+   "/deepagents/inspector",
+   "/deepagents/intelligence/bring-your-own-thread-system",
+   "/deepagents/intelligence/managed-intelligence-platform",
+   "/deepagents/intelligence/quickstart",
+   "/deepagents/intelligence/self-hosting",
+   "/deepagents/intelligence/threads-explained",
+   "/deepagents/prebuilt-components/copilot-threads-drawer",
+   "/deepagents/threads-import",
+   "/deepagents/threads-lifecycle"
+  ],
+  "/deepagents/threads-import": [
+   "/deepagents/headless-threads",
+   "/deepagents/intelligence/bring-your-own-thread-system",
+   "/deepagents/intelligence/managed-intelligence-platform",
+   "/deepagents/intelligence/quickstart",
+   "/deepagents/intelligence/self-hosting",
+   "/deepagents/intelligence/threads-explained",
+   "/deepagents/prebuilt-components/copilot-threads-drawer"
+  ],
+  "/deepagents/threads-lifecycle": [
+   "/deepagents/auth",
+   "/deepagents/headless-threads",
+   "/deepagents/intelligence/bring-your-own-thread-system",
+   "/deepagents/intelligence/quickstart",
+   "/deepagents/intelligence/threads-explained",
+   "/deepagents/threads-import"
+  ],
+  "/deepagents/learning": [
+   "/deepagents/AG-UI-Streams",
+   "/deepagents/cli",
+   "/deepagents/inspector",
+   "/deepagents/intelligence/capture-interactions",
+   "/deepagents/intelligence/learned-skills",
+   "/deepagents/intelligence/memories",
+   "/deepagents/intelligence/overview",
+   "/deepagents/intelligence/quickstart",
+   "/deepagents/intelligence/threads-explained"
+  ],
+  "/deepagents/inspector": [
+   "/deepagents/AG-UI-Streams",
+   "/deepagents/agent-config",
+   "/deepagents/agentic-protocols/ag-ui",
+   "/deepagents/backend/copilot-runtime",
+   "/deepagents/backend/runtime-endpoints",
+   "/deepagents/frontend-tools",
+   "/deepagents/generative-ui/components",
+   "/deepagents/headless-threads",
+   "/deepagents/intelligence/overview",
+   "/deepagents/intelligence/quickstart",
+   "/deepagents/learning",
+   "/deepagents/quickstart",
+   "/deepagents/react-native",
+   "/deepagents/shared-state",
+   "/deepagents/shared-state/agent-readonly",
+   "/deepagents/troubleshooting/debug-mode",
+   "/deepagents/troubleshooting/error-debugging",
+   "/deepagents/vs-code-extension"
+  ],
+  "/deepagents/contributing/code-contributions": [
+   "/deepagents/contributing/code-contributions/package-linking"
+  ],
+  "/deepagents/telemetry": [],
+  "/deepagents/contributing/docs-contributions": [],
+  "/deepagents/community-frameworks": [],
+  "/deepagents/generative-ui/a2ui/advanced": [],
+  "/deepagents/programmatic-control": [],
+  "/deepagents/shared-state/streaming": [
+   "/deepagents/shared-state",
+   "/deepagents/shared-state/agent-readonly"
+  ]
+ }
+}

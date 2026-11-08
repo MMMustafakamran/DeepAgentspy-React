@@ -16,7 +16,8 @@
         "state_io_harness": "./pages/state_io_harness.py:graph",
         "a2ui_dynamic": "./pages/a2ui_dynamic.py:graph",
         "a2ui_fixed": "./pages/a2ui_fixed_main.py:agent",
-        "shared_state_streaming": "./pages/shared_state_streaming.py:graph"
+        "shared_state_streaming": "./pages/shared_state_streaming.py:graph",
+        "state_io_imports": "./pages/state_io_imports.py:graph"
     },
     "env": ".env"
 }

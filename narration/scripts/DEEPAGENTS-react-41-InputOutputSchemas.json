@@ -1,0 +1,38 @@
+{
+ "clip": "DEEPAGENTS-react-41-InputOutputSchemas",
+ "finding": "16",
+ "segments": [
+  {
+   "at": "doc",
+   "text": "Ok so, this is the input output schemas page in the CopilotKit docs, for Deep Agents, the Python agent with React, and I have implemented this page in my project."
+  },
+  {
+   "at": "ide",
+   "text": "So this is my project, this is the exact code from the doc, and this is the CopilotKit version, one point eighty-five."
+  },
+  {
+   "at": "demo",
+   "text": "Moving on to the demo."
+  },
+  {
+   "at": "+",
+   "text": "So I asked a quick question, and uh, no reply came back, the run just failed."
+  },
+  {
+   "at": "evidence#1",
+   "text": "Back on the doc, the code has no imports at all, and this line creates the model with no model name."
+  },
+  {
+   "at": "notepad",
+   "text": "So first it fails with list is not defined, and with the imports added, ChatOpenAI uses the default GPT three point five turbo, which OpenAI says is deprecated, on every run."
+  },
+  {
+   "at": "+",
+   "text": "With a model name set, it answers fine."
+  },
+  {
+   "at": "+",
+   "text": "So, uh, kindly fix this page."
+  }
+ ]
+}

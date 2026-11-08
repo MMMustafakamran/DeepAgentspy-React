@@ -1,15 +1,15 @@
 /**
- * Automated Screen Recording & Demonstration
+ * Automated Screen Recording & Demonstration Pipeline
  * Entrypoint & CLI runner
  */
-import { existsSync, mkdirSync, readFileSync, writeFileSync } from 'node:fs';
+import { existsSync, mkdirSync, renameSync, unlinkSync, writeFileSync } from 'node:fs';
 import { join } from 'node:path';
 import { fileURLToPath } from 'node:url';
 import { parseArgs } from 'node:util';
 import { PAGES, SKIP_RECORDING } from './config/pages.config';
 import { PROJECT } from './config/project.config';
 import { checkServicesHealth } from './core/diagnostics';
-import { RecordingEngine, type RecordOutcome } from './core/engine';
+import { RecordingEngine } from './core/engine';
 import { runDoctor } from './core/doctor';
 import { prewarmDemoRoutes } from './core/prewarm';
 import { selectPages } from './core/select';
@@ -18,17 +18,66 @@ const __dirname = fileURLToPath(new URL('.', import.meta.url));
 const ROOT = join(__dirname, '..');
 const VIDEOS_DIR = join(__dirname, 'videos');
 
+/** Where the CLI pipeline's clips live, mirroring `cli-render.ts`. */
+const CLI_VIDEO_SUBDIR = 'cli';
+
+/**
+ * Moves a finished `demo-<pm>` clip into `videos/cli/`.
+ *
+ * A demo is the *third* clip of a package manager's CLI set — the CLI run, the
+ * install, then the app it produced — so it belongs beside the other two rather
+ * than among the per-doc-page recordings. `cli-render.ts` writes its own clips
+ * straight into that folder, but it records a demo by spawning this file with
+ * `--pages=demo-<pm>`, and `recordPage` has nowhere to put a subdir: only
+ * `recordCliFlow` takes one, and widening `PageRecordConfig` means editing
+ * manifest-covered `core/types.ts`. Moving the finished file keeps the whole
+ * set together without forking core.
+ *
+ * Returns the filename either way, so a page that is not a demo, or whose
+ * recording produced no file, passes through untouched.
+ */
+function placeDemoWithCliClips(pageId: string, filename: string): string {
+  if (!pageId.startsWith('demo-') || !filename) return filename;
+
+  const from = join(VIDEOS_DIR, filename);
+  if (!existsSync(from)) return filename;
+
+  const targetDir = join(VIDEOS_DIR, CLI_VIDEO_SUBDIR);
+  mkdirSync(targetDir, { recursive: true });
+  const to = join(targetDir, filename);
+  if (existsSync(to)) unlinkSync(to);
+  renameSync(from, to);
+  console.log(`   ↪ ${filename} -> videos/${CLI_VIDEO_SUBDIR}/`);
+
+  return filename;
+}
+
+/**
+ * Per-run results, next to the videos.
+ *
+ * Casts get a `*.report.json`; page recordings had nothing, so the only record
+ * of a run was every `.webm` in the folder — a run of one page looked like
+ * five, four of them days old. This is what says what the run recorded.
+ */
+export const RESULTS_FILE = 'RECORD_RESULTS.json';
+
 export interface PageResult {
   id: string;
   name: string;
   filename: string;
   success: boolean;
-  outcome: RecordOutcome;
   durationSec: number;
   error?: string;
   warnings: string[];
   consoleErrors?: string[];
-  reproduced?: string[];
+}
+
+export interface RunResults {
+  timestamp: string;
+  args: string[];
+  passed: number;
+  failed: number;
+  results: PageResult[];
 }
 
 /**
@@ -63,90 +112,6 @@ async function assertServicesUp(force: boolean): Promise<void> {
   process.exit(1);
 }
 
-/**
- * Per-page outcomes, on disk, for anything downstream that has to say what this
- * run found.
- *
- * The console summary is for a person watching the run; this is for whoever
- * writes up the QA report afterwards. It is written here rather than
- * reconstructed later because the recorder is the only thing that knows *why*
- * a page passed -- a .webm on disk cannot tell you whether it shows a feature
- * working or a defect reproducing.
- *
- * ── Why this merges instead of overwriting ─────────────────────────────────
- * Re-recording one page after fixing it is the single most common thing anyone
- * does here. Written as a plain overwrite, that dropped the other fourteen
- * pages from the file, and any QA report built from it claimed that one page
- * had been tested -- a document that is wrong in the one
- * direction that matters, and wrong silently.
- *
- * So results merge by page id, newest wins, and every entry carries its own
- * `recordedAt`. Nothing is ever lost by re-recording, and the report can say
- * which rows are from today and which are older.
- */
-function writeResultsFile(results: PageResult[]): string {
-  mkdirSync(VIDEOS_DIR, { recursive: true });
-
-  const name = 'RECORD_RESULTS.json';
-  const target = join(VIDEOS_DIR, name);
-  const recordedAt = new Date().toISOString();
-
-  const fresh = results.map((r) => {
-    const page = PAGES.find((pg) => pg.id === r.id);
-    return {
-      id: r.id,
-      name: r.name,
-      order: page?.order ?? null,
-      filename: r.filename,
-      outcome: r.outcome,
-      success: r.success,
-      durationSec: r.durationSec,
-      recordedAt,
-      docUrl: page?.docUrl ?? null,
-      route: page?.route ?? null,
-      error: r.error ?? null,
-      warnings: r.warnings,
-      consoleErrors: r.consoleErrors ?? [],
-      reproduced: r.reproduced ?? [],
-      knownIssue: page?.knownIssue ?? null,
-    };
-  });
-
-  // Anything this run did not touch is carried forward as it was. A page that
-  // has since been deleted from the registry is dropped rather than kept
-  // forever -- the report should not carry rows for routes that no longer exist.
-  const byId = new Map<string, (typeof fresh)[number]>();
-  if (existsSync(target)) {
-    try {
-      const previous = JSON.parse(readFileSync(target, 'utf8'));
-      for (const r of previous.results ?? []) {
-        if (r?.id && PAGES.some((p) => p.id === r.id)) byId.set(r.id, r);
-      }
-    } catch {
-      // Unreadable or hand-edited: this run's results stand on their own.
-      console.warn(`   ⚠️ ${name} could not be read; writing this run's results only.`);
-    }
-  }
-  for (const r of fresh) byId.set(r.id, r);
-
-  const merged = [...byId.values()].sort((a, b) => (a.order ?? 0) - (b.order ?? 0));
-  const carried = merged.length - fresh.length;
-  if (carried > 0) {
-    console.log(`   ↻ Carried forward ${carried} page(s) from earlier runs.`);
-  }
-
-  const payload = {
-    generatedAt: recordedAt,
-    project: PROJECT.videoPrefix,
-    framework: PROJECT.framework,
-    frameworkLabel: PROJECT.frameworkLabel,
-    results: merged,
-  };
-
-  writeFileSync(target, JSON.stringify(payload, null, 2), 'utf8');
-  return target;
-}
-
 function printUsage(): void {
   console.log(`
 🎬 npm run record -- [selection] [options]
@@ -155,7 +120,6 @@ Selection (default: every page, in nav order)
   --<page-id>, <page-id>     one page, e.g. --quickstart
   --page=<id>                same thing, explicit form
   --pages=<id,id>            exactly these pages (--only= is an alias)
-  --pages=issues             every page that carries a knownIssue
   --filter=<text>            pages whose id or name contains the text
   <word> [<word> ...]        same as --filter, for each word
   --limit=<n>                first n of the selection (--first=, --count=)
@@ -167,7 +131,7 @@ Options
   --force                    record even if the pre-flight health check fails
   --help, -h                 this text
 
-Results merge into videos/RECORD_RESULTS.json; the process exits 1 only if a page FAILED -- a documented [ISSUE] exits 0.
+Results go to videos/${RESULTS_FILE}; the process exits 1 if any page failed.
 `);
 }
 
@@ -180,9 +144,6 @@ function printList(): void {
     console.log(`      Doc:     ${p.docUrl}`);
     console.log(`      Demo:    ${p.demoUrl}`);
     console.log(`      File:    ${p.ideFile} (lines ${p.startLine}-${p.endLine})`);
-    if (p.knownIssue) {
-      console.log(`      Issue:   ${p.knownIssue.area}`);
-    }
   }
   console.log('');
 }
@@ -248,37 +209,36 @@ async function main(): Promise<void> {
   const limitRaw = values.limit ?? values.first ?? values.count;
   const limit = limitRaw ? Number.parseInt(String(limitRaw), 10) : undefined;
 
-  // `--pages=issues` means every page carrying a knownIssue. It is resolved
-  // from the registry rather than written out anywhere, because "re-record
-  // the broken ones" is the usual selection here and a hand-maintained copy
-  // of that list would be wrong the first time a defect was fixed.
-  const idList = values.pages ?? values.only;
-  let ids = idList ? String(idList).split(',').map((s) => s.trim()).filter(Boolean) : undefined;
-  if (ids?.some((id) => id.toLowerCase() === 'issues')) {
-    const issueIds = PAGES.filter((p) => p.knownIssue).map((p) => p.id);
-    ids = [...ids.filter((id) => id.toLowerCase() !== 'issues'), ...issueIds];
-    console.log(`\n🐞 [--pages=issues] ${issueIds.length} page(s) with a known issue.`);
-  }
+  // Pages whose source files the CLI pipeline has not produced yet are dropped
+  // from an unfiltered run. Recording them would boot a dev server in a
+  // directory that does not exist and report four failures for work that simply
+  // has not happened. Naming one explicitly still records it — and still fails,
+  // which is the right answer to "record this specific thing that is missing".
+  const missingGenerated = PAGES.filter(
+    (p) => p.generated && !existsSync(join(ROOT, p.ideFile)),
+  );
 
-  // Pages listed in SKIP_RECORDING stay registered (doctor, --list, the
-  // note) but are never recorded, by any selection.
+  // Pages listed in SKIP_RECORDING stay registered (doctor, the note) but are
+  // never recorded, by any selection.
   const notRecorded = PAGES.filter((p) => p.id in SKIP_RECORDING);
   const recordable = PAGES.filter((p) => !(p.id in SKIP_RECORDING));
   for (const p of notRecorded) {
     console.log(`\n⏸️ Not recording ${p.id}: ${SKIP_RECORDING[p.id]}`);
   }
 
+  const idList = values.pages ?? values.only;
   const { pages: targetPages } = selectPages(recordable, {
-    ids,
+    ids: idList ? String(idList).split(',').map((s) => s.trim()).filter(Boolean) : undefined,
     page: values.page ? String(values.page) : pageWord,
     filter: values.filter ? String(values.filter) : undefined,
     queries,
     limit: limit && Number.isFinite(limit) ? limit : undefined,
+    excluded: new Set(missingGenerated.map((p) => p.id)),
   });
 
   if (targetPages.length === 0) {
     if (notRecorded.length > 0 && selectPages(PAGES, {
-      ids,
+      ids: idList ? String(idList).split(',').map((s) => s.trim()).filter(Boolean) : undefined,
       page: values.page ? String(values.page) : pageWord,
       filter: values.filter ? String(values.filter) : undefined,
       queries,
@@ -292,7 +252,27 @@ async function main(): Promise<void> {
     process.exit(1);
   }
 
-  await assertServicesUp(Boolean(values.force));
+  if (missingGenerated.length > 0 && !targetPages.some((p) => missingGenerated.includes(p))) {
+    console.log(
+      `\nℹ️ Skipping ${missingGenerated.length} page(s) whose files the CLI pipeline has not produced yet:`,
+    );
+    console.log(`   ${missingGenerated.map((p) => p.id).join(', ')}`);
+    console.log(
+      `   Produce them with: npm run capture -- --scaffold && npm run capture -- --distribute`,
+    );
+  }
+
+  // Pages that boot their own dev server do not touch this repo's frontend or
+  // backend, so gating them on those being up would refuse to record a
+  // perfectly recordable page — and, worse, tell the operator to start services
+  // that have nothing to do with what they asked for.
+  if (targetPages.every((p) => p.devServer)) {
+    console.log(
+      `\nℹ️ Every selected page brings its own dev server; skipping the pre-flight check on ${PROJECT.frontendUrl}.`,
+    );
+  } else {
+    await assertServicesUp(Boolean(values.force));
+  }
 
   console.log(`\n======================================================`);
   console.log(
@@ -314,70 +294,68 @@ async function main(): Promise<void> {
     results.push({
       id: pageConfig.id,
       name: pageConfig.name,
-      filename: res.filename,
+      filename: placeDemoWithCliClips(pageConfig.id, res.filename),
       success: res.success,
-      outcome: res.outcome,
       durationSec,
       error: res.error,
       warnings: res.warnings,
       consoleErrors: res.consoleErrors,
-      reproduced: res.reproduced,
     });
   }
-
-  const resultsPath = writeResultsFile(results);
 
   await engine.shutdown();
 
   const totalDuration = ((Date.now() - suiteStartTime) / 1000).toFixed(1);
-  const failedCount = results.filter((r) => r.outcome === 'fail').length;
-  const issueCount = results.filter((r) => r.outcome === 'issue').length;
-  const passedCount = results.filter((r) => r.outcome === 'pass').length;
+  const failedCount = results.filter((r) => !r.success).length;
   const warnedCount = results.filter((r) => r.success && r.warnings.length > 0).length;
 
   console.log(`\n======================================================`);
   console.log(`📊 RECORDING SUITE SUMMARY (Total: ${totalDuration}s)`);
   console.log(`======================================================`);
   for (const r of results) {
-    if (r.outcome === 'fail') {
+    if (r.success) {
+      const badge = r.warnings.length > 0 ? '⚠️  [PASS*]' : '✅ [PASS] ';
+      console.log(`   ${badge} (${r.durationSec}s) ${r.name} -> ${r.filename}`);
+    } else {
       console.log(
         `   ❌ [FAIL]  (${r.durationSec}s) ${r.name} -> ${r.filename || '(no video)'}`,
       );
       console.log(`        · ${r.error || 'Error captured'}`);
-      for (const w of r.warnings) console.log(`        · ${w}`);
-      continue;
     }
-
-    // ISSUE is not a lesser PASS. The take is good; the feature it documents is
-    // not, and someone reading this summary has to be able to tell those apart
-    // at a glance -- a green tick beside a broken page is how a defect quietly
-    // stops being news.
-    const badge =
-      r.outcome === 'issue'
-        ? '🐞 [ISSUE]'
-        : r.warnings.length > 0
-          ? '⚠️  [PASS*]'
-          : '✅ [PASS] ';
-    console.log(`   ${badge} (${r.durationSec}s) ${r.name} -> ${r.filename}`);
-    for (const e of r.reproduced ?? []) console.log(`        🐞 seen: ${e}`);
     for (const w of r.warnings) console.log(`        · ${w}`);
   }
   console.log(`======================================================`);
   console.log(
-    `   ${passedCount} passed` +
+    `   ${results.length - failedCount} passed` +
       (warnedCount > 0 ? ` (${warnedCount} with notes)` : '') +
-      (issueCount > 0 ? `, ${issueCount} documenting known issues` : '') +
       `, ${failedCount} failed`,
   );
-  console.log(`📁 Video files saved to: ${VIDEOS_DIR}`);
-  console.log(`📄 Per-page outcomes: ${resultsPath}\n`);
 
-  // Known issues deliberately do not gate: seven documented defects would make
-  // every run exit non-zero, and a run that always fails is one nobody reads. What gates is a break in this repo -- or a page that stopped
-  // reproducing its issue, which shows up as an unexpected [PASS] to be chased.
-  if (failedCount > 0) {
-    process.exit(1);
-  }
+  const run: RunResults = {
+    timestamp: new Date().toISOString(),
+    args: rawArgs,
+    passed: results.length - failedCount,
+    failed: failedCount,
+    results,
+  };
+  mkdirSync(VIDEOS_DIR, { recursive: true });
+  writeFileSync(join(VIDEOS_DIR, RESULTS_FILE), JSON.stringify(run, null, 2), 'utf-8');
+  console.log(`📁 Video files saved to: ${VIDEOS_DIR}`);
+  console.log(`📄 Results: ${join(VIDEOS_DIR, RESULTS_FILE)}\n`);
+
+  // Both paths exit explicitly, and the success path is the one that matters.
+  //
+  // Returning from `main` leaves the process alive for as long as anything still
+  // holds a handle — a dev server's pipe, a Playwright transport — with the work
+  // finished, the summary printed and the results file written. It looks exactly
+  // like a recorder that froze, and on 2026-09-08 a passing demo sat like that
+  // for 24 minutes before anyone looked at the results file and saw it had
+  // finished in 153s. `cli-capture.ts` documents the same trap and guards it the
+  // same way.
+  //
+  // Failures never showed this, because `exit(1)` below was already explicit —
+  // which is why only *passing* runs appeared to hang.
+  process.exit(failedCount > 0 ? 1 : 0);
 }
 
 main().catch((err) => {

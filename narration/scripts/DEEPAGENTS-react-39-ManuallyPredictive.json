@@ -1,0 +1,22 @@
+{
+ "clip": "DEEPAGENTS-react-39-ManuallyPredictive",
+ "finding": "13",
+ "segments": [
+  {
+   "at": "doc",
+   "text": "Ok so, this is the state streaming, the manual custom graph page in the CopilotKit docs, for Deep Agents, the Python agent with React, and I have implemented this page in my project."
+  },
+  {
+   "at": "ide",
+   "text": "This is the code from the doc."
+  },
+  {
+   "at": "demo",
+   "text": "Moving on to the demo. The Python code on the page is just a fragment, no imports and no graph, so I had to complete it; once completed, the steps show and it answers."
+  },
+  {
+   "at": "+",
+   "text": "So yeah, please have a look at this page."
+  }
+ ]
+}

@@ -1,0 +1,22 @@
+{
+ "clip": "DEEPAGENTS-react-36-ReadingAgentState",
+ "finding": "9",
+ "segments": [
+  {
+   "at": "doc",
+   "text": "Ok so, this is the reading agent state page in the CopilotKit docs, for Deep Agents, the Python agent with React, and I have implemented this page in my project."
+  },
+  {
+   "at": "ide",
+   "text": "This is the code from the doc."
+  },
+  {
+   "at": "demo",
+   "text": "Moving on to the demo. The language shows english, but that's just the fallback in the frontend code, the agent state never actually reaches the UI."
+  },
+  {
+   "at": "+",
+   "text": "That's what's wrong here, so please have it fixed."
+  }
+ ]
+}

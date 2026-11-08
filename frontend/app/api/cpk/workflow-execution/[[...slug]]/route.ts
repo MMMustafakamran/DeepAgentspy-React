@@ -13,7 +13,7 @@ const runtime = new CopilotRuntime({
     agents: {
         sample_agent: new LangGraphAgent({
             deploymentUrl: process.env.LANGGRAPH_DEPLOYMENT_URL || "http://localhost:8123",
-            graphId: "state_io_harness", // HARNESS
+            graphId: "state_io_imports", // HARNESS: verbatim + imports only (FINDINGS.md #16); state_io_harness = model fixed
             langsmithApiKey: process.env.LANGSMITH_API_KEY || "",
         }),
     },

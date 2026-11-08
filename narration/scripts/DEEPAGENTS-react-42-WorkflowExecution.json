@@ -1,0 +1,38 @@
+{
+ "clip": "DEEPAGENTS-react-42-WorkflowExecution",
+ "finding": "16",
+ "segments": [
+  {
+   "at": "doc",
+   "text": "Ok so, this is the workflow execution page in the CopilotKit docs, for Deep Agents, the Python agent with React, and I have implemented this page in my project."
+  },
+  {
+   "at": "ide",
+   "text": "So this is my project, this is the exact code from the doc, and this is the CopilotKit version, one point eighty-five."
+  },
+  {
+   "at": "demo",
+   "text": "Moving on to the demo."
+  },
+  {
+   "at": "+",
+   "text": "So this page has the same content as input output schemas, and umm, same result, the run fails and there's no reply."
+  },
+  {
+   "at": "evidence#1",
+   "text": "Back on the doc, same code, no imports, and the model has no name."
+  },
+  {
+   "at": "notepad",
+   "text": "So it's the deprecated GPT three point five turbo default again, every run gets a four oh four from OpenAI."
+  },
+  {
+   "at": "+",
+   "text": "And yeah, the page is identical to the schemas page."
+  },
+  {
+   "at": "+",
+   "text": "Okay, that's it for this page, please take a look."
+  }
+ ]
+}

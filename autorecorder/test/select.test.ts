@@ -25,7 +25,7 @@ const ALL = [
   page('quickstart', 'Quickstart'),
   page('slots', 'Custom Look and Feel - Slots'),
   page('headless-ui', 'Custom Look and Feel - Headless UI'),
-  page('demo-npm', 'npm demo'),
+  page('demo-npm', 'npm demo', { generated: true }),
 ];
 
 test('no request records everything except the excluded set', () => {
@@ -53,7 +53,7 @@ test('limit truncates the selection', () => {
   assert.deepEqual(pages.map((p) => p.id), ['quickstart', 'slots', 'headless-ui']);
 });
 
-test('limit applies after the excluded set is dropped', () => {
-  const { pages } = selectPages(ALL, { limit: 2, excluded: new Set(['quickstart']) });
-  assert.deepEqual(pages.map((p) => p.id), ['slots', 'headless-ui']);
+test('limit applies after the filter', () => {
+  const { pages } = selectPages(ALL, { filter: 'look and feel', limit: 1 });
+  assert.deepEqual(pages.map((p) => p.id), ['slots']);
 });

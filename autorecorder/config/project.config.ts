@@ -21,7 +21,7 @@ export interface ProjectConfig {
   /**
    * Doc slug, exactly as it appears in the URL:
    * `https://docs.copilotkit.ai/<framework>/...`
-   * e.g. 'ms-agent-python', 'ms-agent-dotnet', 'agno', 'deepagents'.
+   * e.g. 'ms-agent-python', 'ms-agent-dotnet', 'agno', 'langgraph'.
    */
   framework: string;
 
@@ -59,33 +59,49 @@ export interface ProjectConfig {
 
   /**
    * Project-wide overrides of the recorder's fixed waits. Optional; the
-   * defaults in `core/timeouts.ts` suit a warm dev server. Raise `demoNavMs`
-   * for a stack whose first request compiles the route.
+   * defaults in `core/timeouts.ts` suit a warm Next.js dev server. Raise
+   * `demoNavMs` for a stack whose first request compiles the route.
    */
   timeouts?: Partial<import('../core/types').RecorderTimeouts>;
+
+  /**
+   * Frontend path the browser calls to reach the agent, relative to
+   * `frontendUrl` — e.g. '/api/copilotkit'.
+   *
+   * Hit once before the first prompt of every recording. A dev server compiles
+   * API routes lazily and only on first request, so without this the *page* is
+   * ready while the endpoint behind it is not: the first POST then spends its
+   * time compiling instead of answering, and the recorder reports that the agent
+   * never replied. Measured here at 59s of compile inside a 74s request.
+   *
+   * The request is expected to fail (a GET against a POST-only route answers
+   * 405); compiling it is the whole point. Set to '' to skip.
+   */
+  runtimeWarmPath: string;
 }
 
 export const PROJECT: ProjectConfig = {
   framework: 'deepagents',
-  frameworkLabel: 'Deep Agents (Python)',
-  videoPrefix: 'DAPY-react',
+  frameworkLabel: 'Deep Agents (Python) + React',
+  videoPrefix: 'DEEPAGENTS-react',
 
   docBaseUrl: 'https://docs.copilotkit.ai/deepagents',
 
   frontendUrl: process.env.FRONTEND_URL || 'http://localhost:3030',
-
-  // Not :8000. This backend is not a FastAPI app — it is the LangGraph dev
-  // server, which serves every graph in `backend/langgraph.json` and answers
-  // `/ok` rather than `/health`. Change the port here and `LANGGRAPH_DEPLOYMENT_URL`
-  // in `frontend/.env.local` has to change with it, or the runtime route keeps
-  // forwarding runs to the old one.
   backendUrl: process.env.BACKEND_URL || 'http://localhost:8030',
+  // langgraphjs dev serves /ok (and /info); there is no /health.
   backendHealthPath: '/ok',
 
-  frontendStartCmd: 'cd frontend && npm run dev',
-  backendStartCmd: `cd backend && uv run langgraph dev --port ${new URL(process.env.BACKEND_URL || 'http://localhost:8030').port} --no-browser`,
+  frontendStartCmd: './start-all.sh   (frontend: cd frontend && npx next dev -p 3030)',
+  backendStartCmd: './start-all.sh   (agent: cd agent && npx @langchain/langgraph-cli dev --port 8030 --no-browser)',
 
-  demoSuffix: '/demo-chat',
+  demoSuffix: '',
+
+  // First request compiles the route and gpt-5-mini replies take a while.
+  timeouts: { demoNavMs: 120_000, replyStartMs: 120_000, replyStreamMs: 120_000 },
+
+  // The Copilot Runtime lives inside the Next app; there is no third server.
+  runtimeWarmPath: '/api/copilotkit',
 };
 
 /** Absolute doc URL for a page's `docPath`. */
