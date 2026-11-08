@@ -62,6 +62,10 @@ jobs:
           node-version: 22
           cache: npm
           cache-dependency-path: autorecorder/package-lock.json
+      - name: Install uv (versions.mjs re-resolves agent/uv.lock)
+        uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: false
       - name: Install recorder (to read the page list)
         run: npm ci --prefix autorecorder --no-audit --no-fund --ignore-scripts
       - name: Versions a new reader gets today (lockfiles re-resolved within the package.json ranges)
@@ -199,6 +203,8 @@ jobs:
           key: nm-${{ runner.os }}-node22-v1-${{ hashFiles('frontend/package-lock.json', 'autorecorder/package-lock.json') }}
       - name: Install uv (the Quickstart's Python package manager)
         uses: astral-sh/setup-uv@v6
+        with:
+          enable-cache: false
       - name: Install the agent (uv sync = the Quickstart's `uv add deepagents copilotkit langchain-openai`)
         timeout-minutes: 15
         run: uv sync --project agent
