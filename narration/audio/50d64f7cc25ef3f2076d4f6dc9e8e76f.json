@@ -1,0 +1,9 @@
+{
+ "text": "Uh, after adding agent ID sample agent, the drawer lists the threads and the chat works, so it's just missing from the snippet.",
+ "model": "s2.1-pro-free",
+ "refSha256": "2c9d0ecf4608feacc07c88e869cd4dec601481306a939b7be92fc1bff521a727",
+ "duration": 9.567,
+ "file": "50d64f7cc25ef3f2076d4f6dc9e8e76f.mp3",
+ "clip": "DEEPAGENTS-react-14-ThreadsDrawer",
+ "at": "+"
+}

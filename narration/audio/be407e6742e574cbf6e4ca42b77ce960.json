@@ -1,0 +1,9 @@
+{
+ "text": "So basically, without an agent ID the provider looks for an agent called default, and the quickstart only registers sample agent.",
+ "model": "s2.1-pro-free",
+ "refSha256": "2c9d0ecf4608feacc07c88e869cd4dec601481306a939b7be92fc1bff521a727",
+ "duration": 9.799,
+ "file": "be407e6742e574cbf6e4ca42b77ce960.mp3",
+ "clip": "DEEPAGENTS-react-14-ThreadsDrawer",
+ "at": "notepad"
+}

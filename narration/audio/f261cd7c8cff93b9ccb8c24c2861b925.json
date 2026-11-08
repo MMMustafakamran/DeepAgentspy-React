@@ -1,0 +1,9 @@
+{
+ "text": "With a model name set, it answers fine.",
+ "model": "s2.1-pro-free",
+ "refSha256": "2c9d0ecf4608feacc07c88e869cd4dec601481306a939b7be92fc1bff521a727",
+ "duration": 2.554,
+ "file": "f261cd7c8cff93b9ccb8c24c2861b925.mp3",
+ "clip": "DEEPAGENTS-react-41-InputOutputSchemas",
+ "at": "+"
+}

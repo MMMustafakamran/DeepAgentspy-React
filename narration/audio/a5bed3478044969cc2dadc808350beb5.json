@@ -1,0 +1,9 @@
+{
+ "text": "Moving on to the demo. The agent called the step progress tool and answered, but the agent progress list stayed empty, uh, no steps came through.",
+ "model": "s2.1-pro-free",
+ "refSha256": "2c9d0ecf4608feacc07c88e869cd4dec601481306a939b7be92fc1bff521a727",
+ "duration": 10.17,
+ "file": "a5bed3478044969cc2dadc808350beb5.mp3",
+ "clip": "DEEPAGENTS-react-38-PrebuiltAgent",
+ "at": "demo"
+}

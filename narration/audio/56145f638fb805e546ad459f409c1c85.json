@@ -1,0 +1,9 @@
+{
+ "text": "So that URL redirects to slash MCP, and the runtime log says MCP tool discovery failed, unexpected redirect.",
+ "model": "s2.1-pro-free",
+ "refSha256": "2c9d0ecf4608feacc07c88e869cd4dec601481306a939b7be92fc1bff521a727",
+ "duration": 8.731,
+ "file": "56145f638fb805e546ad459f409c1c85.mp3",
+ "clip": "DEEPAGENTS-react-34-MCPApps",
+ "at": "notepad"
+}

@@ -1,0 +1,9 @@
+{
+ "text": "So langgraph dev refuses that graph, it says it includes a custom checkpointer, and then the whole server stops, every graph goes down with it.",
+ "model": "s2.1-pro-free",
+ "refSha256": "2c9d0ecf4608feacc07c88e869cd4dec601481306a939b7be92fc1bff521a727",
+ "duration": 9.985,
+ "file": "85a963d751f2efc07a55c590224d13d1.mp3",
+ "clip": "DEEPAGENTS-react-40-Tool-basedPredictive",
+ "at": "notepad"
+}

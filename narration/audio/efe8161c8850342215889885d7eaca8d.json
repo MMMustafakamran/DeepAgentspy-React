@@ -1,0 +1,9 @@
+{
+ "text": "Moving on to the demo. So the install step leaves out maplibre-gl, the page didn't even compile without it, and after adding it the try-it agent fails with chat needs a thread ID.",
+ "model": "s2.1-pro-free",
+ "refSha256": "2c9d0ecf4608feacc07c88e869cd4dec601481306a939b7be92fc1bff521a727",
+ "duration": 12.91,
+ "file": "efe8161c8850342215889885d7eaca8d.mp3",
+ "clip": "DEEPAGENTS-react-20-ComponentsAndSurfaces",
+ "at": "demo"
+}

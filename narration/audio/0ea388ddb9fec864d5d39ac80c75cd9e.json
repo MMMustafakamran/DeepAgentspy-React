@@ -1,0 +1,9 @@
+{
+ "text": "So the page crashed straight away, umm, agent default not found, and the known agents list only has sample agent.",
+ "model": "s2.1-pro-free",
+ "refSha256": "2c9d0ecf4608feacc07c88e869cd4dec601481306a939b7be92fc1bff521a727",
+ "duration": 8.916,
+ "file": "0ea388ddb9fec864d5d39ac80c75cd9e.mp3",
+ "clip": "DEEPAGENTS-react-14-ThreadsDrawer",
+ "at": "+"
+}

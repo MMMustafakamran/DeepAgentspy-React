@@ -1,0 +1,9 @@
+{
+ "text": "Moving on to the demo. The language shows english, but that's just the fallback in the frontend code, the agent state never actually reaches the UI.",
+ "model": "s2.1-pro-free",
+ "refSha256": "2c9d0ecf4608feacc07c88e869cd4dec601481306a939b7be92fc1bff521a727",
+ "duration": 9.242,
+ "file": "9b0c6b6f007ab4ebd3ffc6612fb7a91b.mp3",
+ "clip": "DEEPAGENTS-react-36-ReadingAgentState",
+ "at": "demo"
+}

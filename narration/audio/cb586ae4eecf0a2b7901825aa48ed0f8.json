@@ -1,0 +1,9 @@
+{
+ "text": "So it's the deprecated GPT three point five turbo default again, every run gets a four oh four from OpenAI.",
+ "model": "s2.1-pro-free",
+ "refSha256": "2c9d0ecf4608feacc07c88e869cd4dec601481306a939b7be92fc1bff521a727",
+ "duration": 7.941,
+ "file": "cb586ae4eecf0a2b7901825aa48ed0f8.mp3",
+ "clip": "DEEPAGENTS-react-42-WorkflowExecution",
+ "at": "notepad"
+}

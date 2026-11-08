@@ -1,0 +1,9 @@
+{
+ "text": "Moving on to the demo. After toggling, the label says spanish, but the agent still answered in English, and the label went back to english after the run.",
+ "model": "s2.1-pro-free",
+ "refSha256": "2c9d0ecf4608feacc07c88e869cd4dec601481306a939b7be92fc1bff521a727",
+ "duration": 10.449,
+ "file": "1762567a167813c18023b5cd0ff6c804.mp3",
+ "clip": "DEEPAGENTS-react-37-WritingAgentState",
+ "at": "demo"
+}

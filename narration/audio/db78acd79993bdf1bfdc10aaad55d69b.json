@@ -1,0 +1,9 @@
+{
+ "text": "So yeah, every run fails inside generate A2UI, umm, the error comes from the A2UI tool calling the OpenAI model.",
+ "model": "s2.1-pro-free",
+ "refSha256": "2c9d0ecf4608feacc07c88e869cd4dec601481306a939b7be92fc1bff521a727",
+ "duration": 9.381,
+ "file": "db78acd79993bdf1bfdc10aaad55d69b.mp3",
+ "clip": "DEEPAGENTS-react-29-DynamicSchemaA2UI",
+ "at": "notepad"
+}

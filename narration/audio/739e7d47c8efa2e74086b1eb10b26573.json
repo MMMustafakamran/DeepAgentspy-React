@@ -1,0 +1,9 @@
+{
+ "text": "So first it fails with list is not defined, and with the imports added, ChatOpenAI uses the default GPT three point five turbo, which OpenAI says is deprecated, on every run.",
+ "model": "s2.1-pro-free",
+ "refSha256": "2c9d0ecf4608feacc07c88e869cd4dec601481306a939b7be92fc1bff521a727",
+ "duration": 13.421,
+ "file": "739e7d47c8efa2e74086b1eb10b26573.mp3",
+ "clip": "DEEPAGENTS-react-41-InputOutputSchemas",
+ "at": "notepad"
+}
