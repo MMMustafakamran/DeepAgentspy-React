@@ -37,7 +37,7 @@ export const BANNER_PAGES = [
 ];
 const BANNER: DocEvidence = { text: 'Not available for', caption: '"Not available for Langchain DeepAgents yet" banner (#57)' };
 for (const id of BANNER_PAGES) {
-  FINDING_NOTES[id] = 'page says not available for langchain deepagents yet (#57)';
+  FINDING_NOTES[id] = 'page says not available for langchain deepagents yet, nothing to run';
   FINDING_EVIDENCE[id] = [BANNER];
   KNOWN_ISSUE.add(id);
 }
