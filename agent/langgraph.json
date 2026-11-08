@@ -1,0 +1,22 @@
+{
+    "python_version": "3.12",
+    "dockerfile_lines": [],
+    "dependencies": [
+        "."
+    ],
+    "package_manager": "uv",
+    "graphs": {
+        "sample_agent": "./main.py:agent",
+        "tool_rendering": "./pages/tool_rendering.py:agent",
+        "state_rendering": "./pages/state_rendering.py:agent",
+        "shared_state": "./pages/shared_state.py:agent",
+        "predictive_prebuilt": "./pages/predictive_prebuilt.py:agent",
+        "predictive_tool_harness": "./pages/predictive_tool_harness.py:graph",
+        "predictive_manual_harness": "./pages/predictive_manual_harness.py:graph",
+        "state_io_harness": "./pages/state_io_harness.py:graph",
+        "a2ui_dynamic": "./pages/a2ui_dynamic.py:graph",
+        "a2ui_fixed": "./pages/a2ui_fixed_main.py:agent",
+        "shared_state_streaming": "./pages/shared_state_streaming.py:graph"
+    },
+    "env": ".env"
+}

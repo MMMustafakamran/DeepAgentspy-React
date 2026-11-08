@@ -1,62 +1,36 @@
 import { type Page } from 'playwright';
 import { PROJECT, demoUrlFor, docUrlFor } from '../config/project.config';
+import { type ServiceDefinition } from './cli/service';
 import { type IdeTabConfig } from './ide/generator';
 
 export { type IdeTabConfig };
 
 /**
- * A defect this page is known to reproduce.
+ * A dev server this page's demo needs, and which the recording shows starting.
  *
- * Some repos exist to document a working integration; this one also exists to
- * document a broken one. A page carrying this is *expected* to misbehave, so
- * the run reports it as `[ISSUE]` rather than `[FAIL]` and the process still
- * exits 0 -- a run that is red every time for seven known defects is a run
- * nobody reads. What still fails is a route that 404s, a demo that
- * renders no chat surface, or an IDE view that cannot be built: those are
- * breaks in this repo, not in the thing under test.
- *
- * The fields are the QA report's own fields, so the note the recorder types
- * into Notepad on screen and the row that ends up in the QA report are the
- * same text, written once.
+ * When present, the engine boots it before filming, replays its boot in a
+ * terminal window between the IDE and the demo, points the demo at
+ * `originUrl`, and kills it afterwards. The terminal segment is therefore the
+ * actual process serving the app in the next segment.
  */
-export interface KnownIssue {
-  /** Doc-nav path to the surface, e.g. 'Deep Agents - App control - Shared state - Writing agent state'. */
-  area: string;
-
-  /** What actually happens. One or two sentences, present tense. */
-  problem: string;
-
-  /** What the reader loses because of it. */
-  impact: string;
-
-  /** Best current theory. Say "unknown" rather than inventing one. */
-  likelyCause: string;
+export interface PageDevServer extends ServiceDefinition {
+  /** Where the demo is reached once this is up, e.g. `http://localhost:3101`. */
+  originUrl: string;
 
   /**
-   * The same finding as a tester would scribble it, for the Notepad window at
-   * the end of the take.
+   * Path to open on that origin. Defaults to `/`.
    *
-   * The four fields above are the filed version -- they go verbatim into the
-   * report someone sends on, so they are written like a report. Typed into
-   * Notepad at human speed, that register reads as staged: nobody writes
-   * "Expected impact:" while a bug is still on the screen in front of them.
-   *
-   * So this is the same thing in the other register. Lower case, no labels, no
-   * ceremony -- what was done, what happened, what it probably means. Keep it
-   * to a handful of short lines; it is typed out on camera one character at a
-   * time and every extra sentence is real seconds of video.
-   *
-   * Optional. Without it the note is derived from the fields above, which works
-   * and reads stiffer.
+   * A scaffolded starter is a different application from this repo's frontend —
+   * it has its own routes and none of this project's `demoSuffix` convention —
+   * so its URL is built from the origin and this, not from `route`.
    */
-  note?: string;
+  demoPath?: string;
 
-  /**
-   * Set when the defect is that the agent never answers at all. Without it,
-   * agent silence is a recording failure; with it, silence is the finding and
-   * the take reports `[ISSUE]` (silence counts as `ctx.reproduced`).
-   */
-  expectsNoResponse?: boolean;
+  /** Terminal title-bar text. Defaults to the command line. */
+  title?: string;
+
+  /** Pacing for the boot replay. A cold compile is mostly waiting. */
+  render?: { maxGapSec?: number; speed?: number };
 }
 
 /**
@@ -75,6 +49,16 @@ export interface PageDefinition {
 
   /** Video filename stem: `<videoPrefix>-<NN>-<videoName>.webm`. */
   videoName: string;
+
+  /**
+   * Replaces the derived `<NN>-<videoName>` stem with this, after the prefix.
+   *
+   * For pages that belong to a numbered *set* rather than to the doc-nav order —
+   * the per-package-manager videos, where the three files of one manager's set
+   * need to sort together and be readable as a set. Leave unset everywhere else,
+   * so nav order keeps naming the files.
+   */
+  videoFile?: string;
 
   /** Appended to `PROJECT.docBaseUrl`. Query strings are fine. */
   docPath: string;
@@ -102,10 +86,39 @@ export interface PageDefinition {
   waitAfterPromptMs?: number;
 
   /**
-   * The defect this page reproduces, when it reproduces one. Presence flips the
-   * take's outcome to `[ISSUE]` and is what the QA report is built from.
+   * Boot a dev server for this page, and show it booting.
+   *
+   * Omit for pages that run against the repo's own frontend — which is all of
+   * them, apart from the package-manager matrix, where each scaffold is its own
+   * app on its own port.
    */
-  knownIssue?: KnownIssue;
+  devServer?: PageDevServer;
+
+  /**
+   * This page's `ideFile` does not exist until the CLI pipeline has run.
+   *
+   * The doctor must not fail on a matrix page before the scaffold has been
+   * created and distributed — the files genuinely are not there yet — but it
+   * still says so, because a missing file at record time is a real problem.
+   */
+  generated?: boolean;
+
+  /**
+   * Only record the doc page -- no IDE, no demo. For a doc section that is
+   * an empty stub: there is no source worth showing and no route to drive,
+   * and the take is the doc read on camera.
+   */
+  docOnly?: boolean;
+
+  /** How long to hold on the doc page when `docOnly` (defaults to 6000ms). */
+  docViewDurationMs?: number;
+
+  /**
+   * With `docOnly`: run the page's action after the doc read (no IDE, no demo), e.g. a doc-only
+   * finding clip that highlights the faulty text and types the Notepad note. The action gets the
+   * doc page as it was left; a `ctx.fail` from it fails the take like a demo failure would.
+   */
+  docOnlyAction?: boolean;
 
   /** Per-page overrides of the recorder's fixed waits. See `RecorderTimeouts`. */
   timeouts?: Partial<RecorderTimeouts>;
@@ -118,17 +131,6 @@ export interface PageDefinition {
    * button-first flow).
    */
   demo?: DemoScript;
-
-  /**
-   * The page's handler films the whole take -- doc, IDE, demo, notes -- in the
-   * order the demo script gives, instead of after the engine's fixed
-   * doc -> IDE -> demo intro. Set it for a scripted take (a doc snippet, a note
-   * about it, then the file, then the app) that the fixed intro would otherwise
-   * film twice or in the wrong order. The handler starts on a blank stage and
-   * owns every navigation; console capture starts on its first visit to the
-   * demo's origin, and the verdict (`ctx.fail`, `knownIssue`) is unchanged.
-   */
-  ownsTake?: boolean;
 }
 
 /** A place to rest the cursor: a selector (first visible match) or fixed coordinates. */
@@ -200,18 +202,22 @@ export function definePages(defs: PageDefinition[]): PageRecordConfig[] {
       ...def,
       order,
       docUrl: docUrlFor(def.docPath),
-      demoUrl: demoUrlFor(def.route),
-      filename: `${PROJECT.videoPrefix}-${String(order).padStart(2, '0')}-${def.videoName}`,
+      demoUrl: def.devServer
+        ? `${def.devServer.originUrl.replace(/\/$/, '')}${def.devServer.demoPath ?? '/'}`
+        : demoUrlFor(def.route),
+      filename: def.videoFile
+        ? `${PROJECT.videoPrefix}-${def.videoFile}`
+        : `${PROJECT.videoPrefix}-${String(order).padStart(2, '0')}-${def.videoName}`,
     };
   });
 }
 
 /**
- * How a page handler reports what it saw, so the summary and the results file see it too.
+ * How a page handler reports what it saw, so the summary sees it too.
  *
  * Before this, a handler that noticed "the weather card never rendered" could
- * only `console.warn` it. The run still printed `[PASS]` with no asterisk, and
- * RECORD_RESULTS.json carried nothing. `warn` puts the note on the result as `PASS*`;
+ * only `console.log` it. The run still printed `[PASS]` with no asterisk, and
+ * the results file carried nothing. `warn` puts the note on the result as `PASS*`;
  * `fail` marks the recording failed once the handler returns, so the clip is
  * still filmed to the end and still saved as evidence.
  */
@@ -220,13 +226,6 @@ export interface ActionContext {
   warn: (message: string) => void;
   /** The feature under test did not work. The recording finishes, then fails. */
   fail: (message: string) => void;
-  /**
-   * The page's declared `knownIssue` was observed in this take, with what was
-   * seen. A page with a `knownIssue` is `[ISSUE]` only if its handler calls
-   * this; otherwise the defect did not reproduce and the take says so. Without
-   * it, a fixed defect kept reporting `[ISSUE]` forever.
-   */
-  reproduced: (evidence: string) => void;
   /** Resolved timeouts for this page. */
   timeouts: RecorderTimeouts;
 }
@@ -234,9 +233,10 @@ export interface ActionContext {
 /**
  * Every fixed wait in the recorder, in one place.
  *
- * These used to be literals scattered through `core/`. Defaults live in
- * `core/timeouts.ts`; a project sets `PROJECT.timeouts` and a page sets
- * `timeouts` to override.
+ * These used to be literals scattered through `core/`, and the yarn demo
+ * failed on exactly one of them: a cold turbopack compile overran the 45s
+ * demo navigation budget. Defaults live in `core/timeouts.ts`; a project sets
+ * `PROJECT.timeouts` and a page sets `timeouts` to override.
  */
 export interface RecorderTimeouts {
   /** Loading the external doc page. */

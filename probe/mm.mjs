@@ -1,0 +1,14 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1440, height: 900 } });
+p.on('console', m => { if (m.type()==='error' && !/Date.now/.test(m.text())) console.log('CONSOLE', m.text().slice(0, 300)); });
+p.on('pageerror', e => console.log('PAGEERROR', String(e).slice(0, 300)));
+p.on('response', r => { if (r.status() >= 400) console.log('HTTP', r.status(), r.url().slice(21,120)); });
+await p.goto('http://localhost:3030/multimodal-attachments/harness', { waitUntil: 'domcontentloaded', timeout: 240000 }); await p.waitForTimeout(12000);
+console.log('file inputs', await p.locator('input[type=file]').count());
+if (await p.locator('input[type=file]').count()) await p.locator('input[type=file]').first().setInputFiles('red.png');
+await p.waitForTimeout(2000);
+const ta = p.locator('textarea').first(); await ta.click(); await ta.pressSequentially('What color is this image? One word.'); await p.keyboard.press('Enter');
+await p.waitForTimeout(40000);
+await p.screenshot({ path: 'videos/mm.png' });
+console.log('BODY', (await p.locator('body').innerText()).replace(/\s+/g, ' ').slice(0, 800));
+await b.close();

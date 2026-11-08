@@ -1,0 +1,15 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1440, height: 900 } });
+p.on('pageerror', e => console.log('PAGEERROR', String(e).slice(0, 300)));
+await p.goto('http://localhost:3030/shared-state/in-app-agent-write', { waitUntil: 'domcontentloaded', timeout: 240000 }); await p.waitForTimeout(15000);
+const lang = async () => (await p.locator('p', { hasText: 'Language:' }).first().innerText());
+console.log('before:', await lang());
+await p.getByRole('button', { name: 'Toggle Language' }).click(); await p.waitForTimeout(1500);
+console.log('after toggle:', await lang());
+const ta = p.locator('textarea').first(); await ta.click(); await ta.pressSequentially('Tell me one short fact about the moon.'); await p.keyboard.press('Enter');
+await p.waitForTimeout(60000);
+const msgs = p.locator('[data-testid="copilot-assistant-message"]');
+console.log('reply:', (await msgs.last().innerText()).slice(0, 200));
+console.log('after run:', await lang());
+await p.screenshot({ path: 'videos/aw.png' });
+await b.close();

@@ -1,0 +1,10 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1440, height: 900 } });
+p.on('pageerror', e => console.log('PAGEERROR', String(e).slice(0, 300)));
+p.on('console', m => { if (m.type()==='error' && !/Date.now/.test(m.text())) console.log('CONSOLE', m.text().slice(0, 300)); });
+await p.goto('http://localhost:3030/programmatic-control', { waitUntil: 'domcontentloaded', timeout: 240000 }); await p.waitForTimeout(15000);
+await p.getByRole('button', { name: 'Run agent' }).click();
+await p.waitForTimeout(50000);
+console.log('MESSAGES', (await p.locator('#messages').innerText()).replace(/\s+/g, ' ').slice(0, 600));
+await p.screenshot({ path: 'videos/pc.png' });
+await b.close();

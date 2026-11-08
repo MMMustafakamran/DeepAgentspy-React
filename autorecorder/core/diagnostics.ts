@@ -29,9 +29,9 @@ interface ProbeTarget {
  * host with value [::1]:4200 is not allowed"), which is a *response* and would
  * otherwise read as healthy.
  *
- * This pre-flight used to try `127.0.0.1` alone, so on 2026-09-21 an
- * Agno-angular run whose frontend answered only on `[::1]` aborted before
- * launching a browser and filmed nothing.
+ * This pre-flight used to try only one, so on 2026-09-21 an Agno-angular run
+ * whose frontend answered only on `[::1]` aborted before launching a browser
+ * and filmed nothing.
  *
  * Non-localhost URLs are returned untouched: 127.0.0.1 needs no help.
  */

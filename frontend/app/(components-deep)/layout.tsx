@@ -1,0 +1,19 @@
+// Quickstart app/layout.tsx, verbatim ("// ..." left as the scaffold's globals.css import).
+// HARNESS: one root layout per doc page (Next.js route group), so each page has its own provider.
+import { Providers } from "./providers";
+import "@copilotkit/react-core/v2/styles.css";
+import "../globals.css"; // HARNESS: create-next-app's globals.css (the doc's "// ...")
+
+// ...
+
+export default function RootLayout({ children }: { children: React.ReactNode }) {
+    return (
+        <html lang="en">
+            <body>
+                <Providers>
+                    {children}
+                </Providers>
+            </body>
+        </html>
+    );
+}

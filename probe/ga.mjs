@@ -1,0 +1,14 @@
+import { chromium } from 'playwright';
+const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1440, height: 900 } });
+p.on('pageerror', e => console.log('PAGEERROR', String(e).slice(0, 300)));
+await p.goto('http://localhost:3030/human-in-the-loop/governed-actions', { waitUntil: 'domcontentloaded', timeout: 240000 }); await p.waitForTimeout(20000);
+const ta = p.locator('textarea').first(); await ta.click();
+await ta.pressSequentially('Before sending an email to bob@example.com saying hi, call approve_governed_action with id a1, verdict require_approval, tool send_email, reference POL-7, a summary and the arguments. After approval, just confirm in one sentence.');
+await p.keyboard.press('Enter');
+const ap = p.getByRole('button', { name: 'Approve and run' });
+await ap.waitFor({ timeout: 90000 }); console.log('card shown'); await ap.click();
+await p.waitForTimeout(30000);
+const msgs = p.locator('[data-testid="copilot-assistant-message"]');
+console.log('last reply:', (await msgs.last().innerText()).replace(/\s+/g,' ').slice(0, 300));
+await p.screenshot({ path: 'videos/ga.png' });
+await b.close();

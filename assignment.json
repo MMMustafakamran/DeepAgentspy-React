@@ -1,0 +1,1687 @@
+{
+ "framework": "Deep Agents (Python)",
+ "ui": "react",
+ "repo": "DeepAgentspy-React",
+ "docBase": "https://docs.copilotkit.ai/deepagents/",
+ "versions": {
+  "@copilotkit/react-core": "1.85.0",
+  "@copilotkit/runtime": "1.85.0",
+  "@ag-ui/client": "1.0.2",
+  "@ag-ui/mcp-apps-middleware": "0.1.3",
+  "@tanstack/ai": "1.2.0",
+  "maplibre-gl": "5.24.0",
+  "next": "16.4.5",
+  "react": "19.3.0",
+  "copilotkit (PyPI)": "0.1.96",
+  "deepagents": "0.7.34",
+  "langchain-openai": "1.7.4",
+  "langgraph": "1.2.20",
+  "ag-ui-langgraph": "0.0.47",
+  "langgraph-api": "0.17.1",
+  "@langchain/langgraph-cli": "1.7.0"
+ },
+ "testedContext": {
+  "os": "Microsoft Windows 11 Pro",
+  "packageManager": "npm 12 (Node 26.7.0)",
+  "python": "3.13 (uv)"
+ },
+ "report": {
+  "style": "team",
+  "h1": "Deep Agents",
+  "title": "Deep Agents (Python) testing",
+  "quickstartHeading": "Quickstarts",
+  "quickstartHeader": null,
+  "clipsToUpload": true,
+  "guidesHeading": "Guides",
+  "columns": [
+   "Page/Section",
+   "LangGraph.python",
+   "LangGraph.js"
+  ],
+  "resultColumn": 1
+ },
+ "sections": [
+  {
+   "label": "Basics",
+   "cells": [
+    "Section",
+    "Section"
+   ]
+  },
+  {
+   "label": "Prebuilt Components",
+   "cells": [
+    "Chat",
+    "Chat"
+   ]
+  },
+  {
+   "label": "Custom Look and Feel",
+   "cells": [
+    "Chat",
+    "Chat"
+   ]
+  },
+  {
+   "label": "Threads",
+   "cells": [
+    "-",
+    "-"
+   ]
+  },
+  {
+   "label": "Generative UI",
+   "cells": [
+    "Section",
+    "Section"
+   ]
+  },
+  {
+   "label": "Controlled",
+   "cells": [
+    "",
+    ""
+   ]
+  },
+  {
+   "label": "Declarative",
+   "cells": [
+    "",
+    ""
+   ]
+  },
+  {
+   "label": "A2UI",
+   "cells": [
+    "",
+    ""
+   ]
+  },
+  {
+   "label": "Open-ended",
+   "cells": [
+    "",
+    ""
+   ]
+  },
+  {
+   "label": "Shared State",
+   "cells": [
+    "",
+    ""
+   ]
+  },
+  {
+   "label": "State streaming",
+   "cells": [
+    "",
+    ""
+   ]
+  },
+  {
+   "label": "Human-in-the-loop",
+   "cells": [
+    "",
+    ""
+   ]
+  }
+ ],
+ "status_note": "Statuses approved by the owner 2026-11-09 (probe results; no clips recorded yet).",
+ "pages": [
+  {
+   "id": "quickstart",
+   "label": "Python (React)",
+   "kind": "quickstart",
+   "group": null,
+   "child": false,
+   "docPath": "quickstart",
+   "reachable": "sidebar",
+   "status": "✅",
+   "findings": [
+    42,
+    44
+   ],
+   "notes": [
+    "Note: on Windows the agent server needs `uv add colorama` (same as the team's note)."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Python (React) - Python",
+     "clip": "DEEPAGENTS-react-01-PythonReact",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "introduction",
+   "label": "Introduction",
+   "kind": "guide",
+   "group": null,
+   "child": false,
+   "docPath": "",
+   "reachable": "sidebar",
+   "status": "–",
+   "findings": [],
+   "notes": [],
+   "block": null,
+   "links": [],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   },
+   "excluded": "doc-only overview"
+  },
+  {
+   "id": "build-with-agents",
+   "label": "Build with agents",
+   "kind": "guide",
+   "group": null,
+   "child": false,
+   "docPath": "build-with-agents",
+   "reachable": "sidebar",
+   "status": "–",
+   "findings": [],
+   "notes": [],
+   "block": null,
+   "links": [],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   },
+   "excluded": "doc-only"
+  },
+  {
+   "id": "chat",
+   "label": "CopilotChat",
+   "kind": "guide",
+   "group": "Prebuilt Components",
+   "child": false,
+   "docPath": "prebuilt-components/chat",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    57
+   ],
+   "notes": [
+    "Issue: the page says \"Not available for Langchain DeepAgents yet\"."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Issue",
+     "clip": "DEEPAGENTS-react-02-CopilotChat",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "sidebar",
+   "label": "CopilotSidebar",
+   "kind": "guide",
+   "group": "Prebuilt Components",
+   "child": false,
+   "docPath": "prebuilt-components/sidebar",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    57
+   ],
+   "notes": [
+    "Issue: the page says \"Not available for Langchain DeepAgents yet\"."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Issue",
+     "clip": "DEEPAGENTS-react-03-CopilotSidebar",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "popup",
+   "label": "CopilotPopup",
+   "kind": "guide",
+   "group": "Prebuilt Components",
+   "child": false,
+   "docPath": "prebuilt-components/popup",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    57
+   ],
+   "notes": [
+    "Issue: the page says \"Not available for Langchain DeepAgents yet\"."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Issue",
+     "clip": "DEEPAGENTS-react-04-CopilotPopup",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "chat-controls",
+   "label": "Open, close, and feedback",
+   "kind": "guide",
+   "group": "Prebuilt Components",
+   "child": false,
+   "docPath": "prebuilt-components/chat-controls",
+   "reachable": "sidebar",
+   "status": "✅",
+   "findings": [
+    52
+   ],
+   "notes": [],
+   "block": null,
+   "links": [
+    {
+     "text": "Open, close, and feedback - Python",
+     "clip": "DEEPAGENTS-react-05-OpenCloseAndFeedback",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "css",
+   "label": "CSS Customization",
+   "kind": "guide",
+   "group": "Custom Look and Feel",
+   "child": false,
+   "docPath": "custom-look-and-feel/css",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    57
+   ],
+   "notes": [
+    "Issue: the page says \"Not available for Langchain DeepAgents yet\"."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Issue",
+     "clip": "DEEPAGENTS-react-06-CSSCustomization",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "slots",
+   "label": "Slots",
+   "kind": "guide",
+   "group": "Custom Look and Feel",
+   "child": false,
+   "docPath": "custom-look-and-feel/slots",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    57
+   ],
+   "notes": [
+    "Issue: the page says \"Not available for Langchain DeepAgents yet\"."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Issue",
+     "clip": "DEEPAGENTS-react-07-Slots",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "markdown",
+   "label": "Markdown Rendering",
+   "kind": "guide",
+   "group": "Custom Look and Feel",
+   "child": false,
+   "docPath": "custom-look-and-feel/markdown",
+   "reachable": "sidebar",
+   "status": "✅",
+   "findings": [
+    32
+   ],
+   "notes": [],
+   "block": null,
+   "links": [
+    {
+     "text": "Markdown Rendering - Python",
+     "clip": "DEEPAGENTS-react-08-MarkdownRendering",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "headless-ui",
+   "label": "Headless UI",
+   "kind": "guide",
+   "group": "Custom Look and Feel",
+   "child": false,
+   "docPath": "custom-look-and-feel/headless-ui",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    57
+   ],
+   "notes": [
+    "Issue: the page says \"Not available for Langchain DeepAgents yet\"."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Issue",
+     "clip": "DEEPAGENTS-react-09-HeadlessUI",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "reasoning-messages",
+   "label": "Reasoning Messages",
+   "kind": "guide",
+   "group": "Custom Look and Feel",
+   "child": false,
+   "docPath": "custom-look-and-feel/reasoning-messages",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    57
+   ],
+   "notes": [
+    "Issue: the page says \"Not available for Langchain DeepAgents yet\"."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Issue",
+     "clip": "DEEPAGENTS-react-10-ReasoningMessages",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "multimodal",
+   "label": "Multimodal Attachments",
+   "kind": "guide",
+   "group": "Chat",
+   "child": false,
+   "docPath": "multimodal-attachments",
+   "reachable": "sidebar",
+   "status": "✅",
+   "findings": [
+    50
+   ],
+   "notes": [
+    "Note: the snippet's agentId=\"my-agent\" has to be your own agent id."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Multimodal Attachments - Python",
+     "clip": "DEEPAGENTS-react-11-MultimodalAttachments",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "voice",
+   "label": "Voice",
+   "kind": "guide",
+   "group": "Chat",
+   "child": false,
+   "docPath": "voice",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    57
+   ],
+   "notes": [
+    "Issue: the page says \"Not available for Langchain DeepAgents yet\"."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Issue",
+     "clip": "DEEPAGENTS-react-12-Voice",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "reasoning",
+   "label": "Reasoning",
+   "kind": "guide",
+   "group": "Chat",
+   "child": false,
+   "docPath": "generative-ui/reasoning",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    57
+   ],
+   "notes": [
+    "Issue: the page says \"Not available for Langchain DeepAgents yet\"."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Issue",
+     "clip": "DEEPAGENTS-react-13-Reasoning",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "threads-drawer",
+   "label": "Threads Drawer",
+   "kind": "guide",
+   "group": "Threads",
+   "child": false,
+   "docPath": "prebuilt-components/copilot-threads-drawer",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    45
+   ],
+   "notes": [
+    "Issue: the page crashes with \"Agent 'default' not found\"; the provider snippet has no agentId."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Not Working",
+     "clip": "DEEPAGENTS-react-14-ThreadsDrawer",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "headless-threads",
+   "label": "Headless Threads",
+   "kind": "guide",
+   "group": "Threads",
+   "child": false,
+   "docPath": "headless-threads",
+   "reachable": "sidebar",
+   "status": "✅",
+   "findings": [
+    51
+   ],
+   "notes": [
+    "Note: useThreads uses the placeholder agentId \"my-agent\", which lists nothing."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Headless Threads - Python",
+     "clip": "DEEPAGENTS-react-15-HeadlessThreads",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "frontend-tools",
+   "label": "Frontend Tools",
+   "kind": "guide",
+   "group": "Basics",
+   "child": false,
+   "docPath": "frontend-tools",
+   "reachable": "sidebar",
+   "status": "✅",
+   "findings": [
+    18
+   ],
+   "notes": [],
+   "block": null,
+   "links": [
+    {
+     "text": "Frontend Tools - Python",
+     "clip": "DEEPAGENTS-react-16-FrontendTools",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "tool-based",
+   "label": "Components as Tools",
+   "kind": "guide",
+   "group": "Controlled",
+   "child": true,
+   "docPath": "generative-ui/tool-based",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    57
+   ],
+   "notes": [
+    "Issue: the page says \"Not available for Langchain DeepAgents yet\"."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Issue",
+     "clip": "DEEPAGENTS-react-17-ComponentsAsTools",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "tool-rendering",
+   "label": "Tool Call Rendering",
+   "kind": "guide",
+   "group": "Controlled",
+   "child": true,
+   "docPath": "generative-ui/tool-rendering",
+   "reachable": "sidebar",
+   "status": "✅",
+   "findings": [
+    17,
+    5
+   ],
+   "notes": [],
+   "block": null,
+   "links": [
+    {
+     "text": "Tool Call Rendering - Python",
+     "clip": "DEEPAGENTS-react-18-ToolCallRendering",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "state-rendering",
+   "label": "State Rendering",
+   "kind": "guide",
+   "group": "Controlled",
+   "child": true,
+   "docPath": "generative-ui/state-rendering",
+   "reachable": "sidebar",
+   "status": "✅",
+   "findings": [],
+   "notes": [],
+   "block": null,
+   "links": [
+    {
+     "text": "State Rendering - Python",
+     "clip": "DEEPAGENTS-react-19-StateRendering",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "components",
+   "label": "Components and surfaces",
+   "kind": "guide",
+   "group": "Declarative",
+   "child": true,
+   "docPath": "generative-ui/components",
+   "reachable": "sidebar",
+   "status": "⚠️",
+   "findings": [
+    49
+   ],
+   "notes": [
+    "Note: needs `npm install maplibre-gl`, and the \"Try it\" agent fails with \"chat() needs a threadId\"."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Issue",
+     "clip": "DEEPAGENTS-react-20-ComponentsAndSurfaces",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "components-surfaces",
+   "label": "Surfaces",
+   "kind": "guide",
+   "group": "Components and surfaces",
+   "child": true,
+   "docPath": "generative-ui/components/surfaces",
+   "reachable": "sidebar",
+   "status": "✅",
+   "findings": [
+    58
+   ],
+   "notes": [
+    "Note: now working; the provider snippet needs your agentId."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Surfaces - Python",
+     "clip": "DEEPAGENTS-react-21-Surfaces",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "components-catalogs",
+   "label": "Catalogs",
+   "kind": "guide",
+   "group": "Components and surfaces",
+   "child": true,
+   "docPath": "generative-ui/components/catalogs",
+   "reachable": "sidebar",
+   "status": "✅",
+   "findings": [
+    58
+   ],
+   "notes": [],
+   "block": null,
+   "links": [
+    {
+     "text": "Catalogs - Python",
+     "clip": "DEEPAGENTS-react-22-Catalogs",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "components-standard-catalog",
+   "label": "Standard catalog",
+   "kind": "guide",
+   "group": "Components and surfaces",
+   "child": true,
+   "docPath": "generative-ui/components/standard-catalog",
+   "reachable": "sidebar",
+   "status": "✅",
+   "findings": [
+    58
+   ],
+   "notes": [],
+   "block": null,
+   "links": [
+    {
+     "text": "Standard catalog - Python",
+     "clip": "DEEPAGENTS-react-23-StandardCatalog",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "components-state-and-actions",
+   "label": "State and actions",
+   "kind": "guide",
+   "group": "Components and surfaces",
+   "child": true,
+   "docPath": "generative-ui/components/state-and-actions",
+   "reachable": "sidebar",
+   "status": "✅",
+   "findings": [
+    58,
+    59
+   ],
+   "notes": [
+    "Note: now working once the three catalog snippets are merged into one."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "State and actions - Python",
+     "clip": "DEEPAGENTS-react-24-StateAndActions",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "components-theming",
+   "label": "Theming",
+   "kind": "guide",
+   "group": "Components and surfaces",
+   "child": true,
+   "docPath": "generative-ui/components/theming",
+   "reachable": "sidebar",
+   "status": "✅",
+   "findings": [
+    58
+   ],
+   "notes": [],
+   "block": null,
+   "links": [
+    {
+     "text": "Theming - Python",
+     "clip": "DEEPAGENTS-react-25-Theming",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "components-transports",
+   "label": "Transports",
+   "kind": "guide",
+   "group": "Components and surfaces",
+   "child": true,
+   "docPath": "generative-ui/components/transports",
+   "reachable": "sidebar",
+   "status": "✅",
+   "findings": [
+    58
+   ],
+   "notes": [],
+   "block": null,
+   "links": [
+    {
+     "text": "Transports - Python",
+     "clip": "DEEPAGENTS-react-26-Transports",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "components-markdown-mode",
+   "label": "Markdown mode",
+   "kind": "guide",
+   "group": "Components and surfaces",
+   "child": true,
+   "docPath": "generative-ui/components/markdown-mode",
+   "reachable": "sidebar",
+   "status": "✅",
+   "findings": [
+    58
+   ],
+   "notes": [],
+   "block": null,
+   "links": [
+    {
+     "text": "Markdown mode - Python",
+     "clip": "DEEPAGENTS-react-27-MarkdownMode",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "components-from-a2ui",
+   "label": "Adopt from A2UI",
+   "kind": "guide",
+   "group": "Components and surfaces",
+   "child": true,
+   "docPath": "generative-ui/components/from-a2ui",
+   "reachable": "sidebar",
+   "status": "✅",
+   "findings": [
+    58
+   ],
+   "notes": [],
+   "block": null,
+   "links": [
+    {
+     "text": "Adopt from A2UI - Python",
+     "clip": "DEEPAGENTS-react-28-AdoptFromA2UI",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "a2ui",
+   "label": "A2UI",
+   "kind": "guide",
+   "group": "A2UI",
+   "child": false,
+   "docPath": "generative-ui/a2ui",
+   "reachable": "sidebar",
+   "status": "–",
+   "findings": [],
+   "notes": [],
+   "block": null,
+   "links": [],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   },
+   "excluded": "doc-only overview"
+  },
+  {
+   "id": "a2ui-dynamic-schema",
+   "label": "Dynamic Schema A2UI",
+   "kind": "guide",
+   "group": "A2UI",
+   "child": true,
+   "docPath": "generative-ui/a2ui/dynamic-schema",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    46
+   ],
+   "notes": [
+    "Issue: every run fails with \"… is bound to a different event loop\" inside generate_a2ui; no UI is drawn."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Not Working",
+     "clip": "DEEPAGENTS-react-29-DynamicSchemaA2UI",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "a2ui-fixed-schema",
+   "label": "Fixed Schema A2UI",
+   "kind": "guide",
+   "group": "A2UI",
+   "child": true,
+   "docPath": "generative-ui/a2ui/fixed-schema",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    12
+   ],
+   "notes": [
+    "Issue: flight_schema.json is never shown and the agent registration is placeholders; a hand-written schema renders \"Unknown component\" cards."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Issue",
+     "clip": "DEEPAGENTS-react-30-FixedSchemaA2UI",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "a2ui-advanced",
+   "label": "Advanced",
+   "kind": "guide",
+   "group": "A2UI",
+   "child": true,
+   "docPath": "generative-ui/a2ui/advanced",
+   "reachable": "in-content",
+   "status": "❌",
+   "findings": [
+    46
+   ],
+   "notes": [
+    "Issue: builds on Dynamic Schema, which fails every run (event loop error), so the progress renderer never shows."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Issue",
+     "clip": "DEEPAGENTS-react-31-Advanced",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "json-render",
+   "label": "JSON Render",
+   "kind": "guide",
+   "group": "Declarative",
+   "child": true,
+   "docPath": "generative-ui/json-render",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    57
+   ],
+   "notes": [
+    "Issue: the page says \"Not available for Langchain DeepAgents yet\"."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Issue",
+     "clip": "DEEPAGENTS-react-32-JSONRender",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "hashbrown",
+   "label": "Hashbrown",
+   "kind": "guide",
+   "group": "Declarative",
+   "child": true,
+   "docPath": "generative-ui/hashbrown",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    57
+   ],
+   "notes": [
+    "Issue: the page says \"Not available for Langchain DeepAgents yet\"."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Issue",
+     "clip": "DEEPAGENTS-react-33-Hashbrown",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "mcp-apps",
+   "label": "MCP Apps",
+   "kind": "guide",
+   "group": "Open-ended",
+   "child": true,
+   "docPath": "generative-ui/mcp-apps",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    47
+   ],
+   "notes": [
+    "Issue: the Excalidraw URL redirects (308 to /mcp), MCP tool discovery fails with \"unexpected redirect\", and no MCP App renders."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Not Working",
+     "clip": "DEEPAGENTS-react-34-MCPApps",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "open-generative-ui",
+   "label": "Open Generative UI",
+   "kind": "guide",
+   "group": "Open-ended",
+   "child": true,
+   "docPath": "generative-ui/open-generative-ui",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    57
+   ],
+   "notes": [
+    "Issue: the page says \"Not available for Langchain DeepAgents yet\"."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Issue",
+     "clip": "DEEPAGENTS-react-35-OpenGenerativeUI",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "in-app-agent-read",
+   "label": "Reading agent state",
+   "kind": "guide",
+   "group": "Shared State",
+   "child": false,
+   "docPath": "shared-state/in-app-agent-read",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    9
+   ],
+   "notes": [
+    "Issue: the UI never shows the agent's state; \"english\" comes only from the fallback."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Issue",
+     "clip": "DEEPAGENTS-react-36-ReadingAgentState",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "in-app-agent-write",
+   "label": "Writing agent state",
+   "kind": "guide",
+   "group": "Shared State",
+   "child": false,
+   "docPath": "shared-state/in-app-agent-write",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    9
+   ],
+   "notes": [
+    "Issue: the toggle changes the label, but the agent keeps answering in English and the label resets after the run."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Issue",
+     "clip": "DEEPAGENTS-react-37-WritingAgentState",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "predictive-prebuilt",
+   "label": "Prebuilt agent",
+   "kind": "guide",
+   "group": "State streaming",
+   "child": true,
+   "docPath": "shared-state/predictive-state-updates?agent-type=prebuilt",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    43
+   ],
+   "notes": [
+    "Issue: Agent Progress stays empty; the steps never reach the UI."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Issue",
+     "clip": "DEEPAGENTS-react-38-PrebuiltAgent",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "predictive-manual",
+   "label": "Manually Predictive",
+   "kind": "guide",
+   "group": "State streaming",
+   "child": true,
+   "docPath": "shared-state/predictive-state-updates?agent-type=custom-graph",
+   "reachable": "sidebar",
+   "status": "⚠️",
+   "findings": [
+    13
+   ],
+   "notes": [
+    "Note: the Python snippet is a fragment (no imports, no graph, an undefined cpk_action_node); works once completed."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Issue",
+     "clip": "DEEPAGENTS-react-39-ManuallyPredictive",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "predictive-tool",
+   "label": "Tool-based Predictive",
+   "kind": "guide",
+   "group": "State streaming",
+   "child": true,
+   "docPath": "shared-state/predictive-state-updates?agent-type=custom-graph",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    48
+   ],
+   "notes": [
+    "Issue: compile(checkpointer=MemorySaver()) makes langgraph dev refuse the graph and stops the whole server."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Not Working",
+     "clip": "DEEPAGENTS-react-40-Tool-basedPredictive",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "state-inputs-outputs",
+   "label": "Input/Output Schemas",
+   "kind": "guide",
+   "group": "Shared State",
+   "child": false,
+   "docPath": "shared-state/state-inputs-outputs",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    16
+   ],
+   "notes": [
+    "Issue: the snippet has no imports, and ChatOpenAI() defaults to gpt-3.5-turbo, which OpenAI rejects as deprecated on every run."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Issue",
+     "clip": "DEEPAGENTS-react-41-InputOutputSchemas",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "workflow-execution",
+   "label": "Workflow Execution",
+   "kind": "guide",
+   "group": "Shared State",
+   "child": false,
+   "docPath": "shared-state/workflow-execution",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    16
+   ],
+   "notes": [
+    "Issue: same content as Input/Output Schemas: no imports, and ChatOpenAI() defaults to a deprecated model."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Issue",
+     "clip": "DEEPAGENTS-react-42-WorkflowExecution",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "hitl",
+   "label": "HITL Overview",
+   "kind": "guide",
+   "group": "Human-in-the-loop",
+   "child": false,
+   "docPath": "human-in-the-loop",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    57
+   ],
+   "notes": [
+    "Issue: the page says \"Not available for Langchain DeepAgents yet\"."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Issue",
+     "clip": "DEEPAGENTS-react-43-HITLOverview",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "use-interrupt",
+   "label": "Pausing the Agent for Input",
+   "kind": "guide",
+   "group": "Human-in-the-loop",
+   "child": false,
+   "docPath": "human-in-the-loop/useInterrupt",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    57
+   ],
+   "notes": [
+    "Issue: the page says \"Not available for Langchain DeepAgents yet\"."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Issue",
+     "clip": "DEEPAGENTS-react-44-PausingTheAgentForInput",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "headless-interrupts",
+   "label": "Headless Interrupts",
+   "kind": "guide",
+   "group": "Human-in-the-loop",
+   "child": false,
+   "docPath": "human-in-the-loop/headless",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    57
+   ],
+   "notes": [
+    "Issue: the page says \"Not available for Langchain DeepAgents yet\"."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Issue",
+     "clip": "DEEPAGENTS-react-45-HeadlessInterrupts",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "governed-actions",
+   "label": "Governed Action Approval UI",
+   "kind": "guide",
+   "group": "Human-in-the-loop",
+   "child": false,
+   "docPath": "human-in-the-loop/governed-actions",
+   "reachable": "sidebar",
+   "status": "✅",
+   "findings": [
+    53
+   ],
+   "notes": [
+    "Note: now working with the useHumanInTheLoop path; the useInterrupt path has no backend on the page."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Governed Action Approval UI - Python",
+     "clip": "DEEPAGENTS-react-46-GovernedActionApprovalUI",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "webmcp",
+   "label": "WebMCP",
+   "kind": "guide",
+   "group": "Interactivity",
+   "child": false,
+   "docPath": "webmcp",
+   "reachable": "sidebar",
+   "status": "✅",
+   "findings": [
+    54
+   ],
+   "notes": [],
+   "block": null,
+   "links": [
+    {
+     "text": "WebMCP - Python",
+     "clip": "DEEPAGENTS-react-47-WebMCP",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "subagents",
+   "label": "Sub-agents",
+   "kind": "guide",
+   "group": "Agent Capabilities",
+   "child": false,
+   "docPath": "multi-agent/subagents",
+   "reachable": "sidebar",
+   "status": "❌",
+   "findings": [
+    57
+   ],
+   "notes": [
+    "Issue: the page says \"Not available for Langchain DeepAgents yet\"."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "Issue",
+     "clip": "DEEPAGENTS-react-48-Sub-agents",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "programmatic-control",
+   "label": "Programmatic Control",
+   "kind": "guide",
+   "group": "Prebuilt Components",
+   "child": false,
+   "docPath": "programmatic-control",
+   "reachable": "in-content",
+   "status": "✅",
+   "findings": [
+    56
+   ],
+   "notes": [],
+   "block": null,
+   "links": [
+    {
+     "text": "Programmatic Control - Python",
+     "clip": "DEEPAGENTS-react-49-ProgrammaticControl",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "shared-state-streaming",
+   "label": "State Streaming (shared state)",
+   "kind": "guide",
+   "group": "Shared State",
+   "child": false,
+   "docPath": "shared-state/streaming",
+   "reachable": "in-content",
+   "status": "✅",
+   "findings": [
+    55
+   ],
+   "notes": [
+    "Note: the agent is LangChain create_agent and the frontend is only a useAgent fragment."
+   ],
+   "block": null,
+   "links": [
+    {
+     "text": "State Streaming (shared state) - Python",
+     "clip": "DEEPAGENTS-react-50-StateStreamingSharedState",
+     "loom": null,
+     "narration": null
+    }
+   ],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   }
+  },
+  {
+   "id": "migrate-v2",
+   "label": "Migrate from v1 to v2",
+   "kind": "guide",
+   "group": null,
+   "child": false,
+   "docPath": "migrate/v2",
+   "reachable": "in-content",
+   "status": "–",
+   "findings": [],
+   "notes": [],
+   "block": null,
+   "links": [],
+   "review": {
+    "verdict": null,
+    "approvedAt": null,
+    "by": null
+   },
+   "excluded": "doc-only"
+  }
+ ]
+}

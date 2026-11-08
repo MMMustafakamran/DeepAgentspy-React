@@ -60,3 +60,12 @@ frontend/VERSIONS.md
 # for context while the recorder is built against them. Not ours to publish,
 # and to be deleted once the takes reproduce what it describes.
 previous-testingoutcomes/
+
+# New harness (2026-11-09)
+logs/
+probe/node_modules/
+probe/videos/
+probe/*.png
+agent/.venv/
+agent/.langgraph_api/
+.langgraph_api/

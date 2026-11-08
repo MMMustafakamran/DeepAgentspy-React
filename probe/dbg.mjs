@@ -1,0 +1,14 @@
+import { chromium } from 'playwright';
+const [url, prompt, wait='60'] = process.argv.slice(2);
+const b = await chromium.launch(); const p = await b.newPage({ viewport: { width: 1440, height: 900 } });
+p.on('request', r => { if (r.url().includes('/api/')) console.log('REQ', r.method(), r.url().slice(21, 120)); });
+p.on('console', m => { if (m.type()==='error' || m.type()==='warning') console.log('CONSOLE', m.type(), m.text().slice(0, 300)); });
+p.on('dialog', async d => { console.log('DIALOG', d.type(), d.message()); await d.accept(); }); p.on('pageerror', e => console.log('PAGEERROR', String(e).slice(0, 300)));
+await p.goto(url, { waitUntil: 'domcontentloaded', timeout: 240000 }); await p.waitForTimeout(25000);
+const ta = p.locator('[data-testid="copilot-chat-textarea"], textarea').first();
+console.log('textareas', await p.locator('textarea').count(), 'testid', await p.locator('[data-testid="copilot-chat-textarea"]').count());
+await ta.click(); await ta.pressSequentially(prompt, { delay: 5 }); await p.keyboard.press('Enter');
+await p.waitForTimeout(Number(wait) * 1000);
+await p.screenshot({ path: 'dbg.png' });
+console.log('BODY', (await p.locator('body').innerText()).replace(/\s+/g, ' ').slice(0, 1500));
+await b.close();
