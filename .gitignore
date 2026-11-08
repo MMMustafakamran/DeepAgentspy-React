@@ -69,3 +69,7 @@ probe/*.png
 agent/.venv/
 agent/.langgraph_api/
 .langgraph_api/
+
+# Recorder output (CI artifact only)
+autorecorder/videos/*
+!autorecorder/videos/.gitkeep
