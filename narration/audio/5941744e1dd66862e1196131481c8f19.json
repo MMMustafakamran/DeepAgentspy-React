@@ -1,0 +1,9 @@
+{
+ "text": "So I asked it for three sample flights, and it does reply, but the flight card is broken.",
+ "model": "s2.1-pro-free",
+ "refSha256": "2c9d0ecf4608feacc07c88e869cd4dec601481306a939b7be92fc1bff521a727",
+ "duration": 6.78,
+ "file": "5941744e1dd66862e1196131481c8f19.mp3",
+ "clip": "DEEPAGENTS-react-30-FixedSchemaA2UI",
+ "at": "+"
+}

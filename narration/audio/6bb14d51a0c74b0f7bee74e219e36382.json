@@ -1,0 +1,9 @@
+{
+ "text": "As published, it fails on missing imports and an unknown node.",
+ "model": "s2.1-pro-free",
+ "refSha256": "2c9d0ecf4608feacc07c88e869cd4dec601481306a939b7be92fc1bff521a727",
+ "duration": 4.83,
+ "file": "6bb14d51a0c74b0f7bee74e219e36382.mp3",
+ "clip": "DEEPAGENTS-react-39-ManuallyPredictive",
+ "at": "notepad"
+}

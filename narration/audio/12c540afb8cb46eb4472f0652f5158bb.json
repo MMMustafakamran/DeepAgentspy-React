@@ -1,0 +1,9 @@
+{
+ "text": "Back on the doc, the Python code is just a fragment, these dots skip the imports, the model call and the whole graph.",
+ "model": "s2.1-pro-free",
+ "refSha256": "2c9d0ecf4608feacc07c88e869cd4dec601481306a939b7be92fc1bff521a727",
+ "duration": 9.242,
+ "file": "12c540afb8cb46eb4472f0652f5158bb.mp3",
+ "clip": "DEEPAGENTS-react-39-ManuallyPredictive",
+ "at": "evidence#1"
+}

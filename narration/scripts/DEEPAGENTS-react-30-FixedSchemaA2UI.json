@@ -8,15 +8,35 @@
   },
   {
    "at": "ide",
-   "text": "This is the code from the doc."
+   "text": "So this is my project, this is the exact code from the doc, umm, plus the schema file I had to write myself, and this is the CopilotKit version, one point eighty-five."
   },
   {
    "at": "demo",
-   "text": "Moving on to the demo. The page never shows the flight schema file, so with a hand-written one, umm, the cards come up as unknown component instead of the flight details."
+   "text": "Moving on to the demo."
   },
   {
    "at": "+",
-   "text": "So yeah, that's it, kindly check this page."
+   "text": "So I asked it for three sample flights, and it does reply, but the flight card is broken."
+  },
+  {
+   "at": "error",
+   "text": "Up in the card, uh, it's all unknown component errors around the book flight button."
+  },
+  {
+   "at": "evidence#1",
+   "text": "Back on the doc, it just says save the schema as a JSON file, but the file itself is never shown."
+  },
+  {
+   "at": "evidence#2",
+   "text": "And here, the agent registration is just placeholders, search flights and some dots, with no model."
+  },
+  {
+   "at": "notepad",
+   "text": "So with my own schema, the card just shows unknown components."
+  },
+  {
+   "at": "+",
+   "text": "Alright, so kindly get this page fixed."
   }
  ]
 }

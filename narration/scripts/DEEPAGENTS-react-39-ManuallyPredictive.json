@@ -4,19 +4,35 @@
  "segments": [
   {
    "at": "doc",
-   "text": "Ok so, this is the state streaming, the manual custom graph page in the CopilotKit docs, for Deep Agents, the Python agent with React, and I have implemented this page in my project."
+   "text": "Ok so, this is the state streaming page in the CopilotKit docs, the manual option for a custom graph, for Deep Agents, the Python agent with React, and I have implemented this page in my project."
   },
   {
    "at": "ide",
-   "text": "This is the code from the doc."
+   "text": "So this is the code from the doc, and next to it, my completed copy."
   },
   {
    "at": "demo",
-   "text": "Moving on to the demo. The Python code on the page is just a fragment, no imports and no graph, so I had to complete it; once completed, the steps show and it answers."
+   "text": "Moving on to the demo."
   },
   {
    "at": "+",
-   "text": "So yeah, please have a look at this page."
+   "text": "So umm, this demo runs on my completed copy, because the page's code can't run as it is. With that, the four steps show and it answers."
+  },
+  {
+   "at": "evidence#1",
+   "text": "Back on the doc, the Python code is just a fragment, these dots skip the imports, the model call and the whole graph."
+  },
+  {
+   "at": "evidence#2",
+   "text": "And it routes to C P K action node, which the page never defines."
+  },
+  {
+   "at": "notepad",
+   "text": "As published, it fails on missing imports and an unknown node."
+  },
+  {
+   "at": "+",
+   "text": "So please have a look and fix it."
   }
  ]
 }
