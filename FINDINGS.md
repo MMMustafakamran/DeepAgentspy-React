@@ -80,6 +80,7 @@ Stack: `@copilotkit/react-core`/`runtime` 1.85.0 (declared `^1.85.0`), `@ag-ui/c
 - #18 Frontend tools and other pages link "Getting Started" to `/langgraph/quickstart`.
 - #17 Tool rendering says `useRenderToolCall` where it means `useRenderTool` (×2).
 - #32 Markdown: `my-link`/`my-heading` classes are undefined.
+- #60 The docs site shows "Missing snippet — No demo found for `deepagents::<cell>`" boxes where code should be on Headless UI (×3), Voice, Reasoning, Sub-agents, HITL Overview, CopilotChat, CopilotSidebar, CopilotPopup and A2UI (all already carry the "Not available" banner, #57).
 
 ## Build-only (`tsc` / `next build`; `npm run dev` runs fine)
 - **#5 [Tool rendering](https://docs.copilotkit.ai/deepagents/generative-ui/tool-rendering):** `useDefaultRenderTool({ render: ({ name, args, status, result }) => … })`: `args` is not a prop (it is `parameters`).

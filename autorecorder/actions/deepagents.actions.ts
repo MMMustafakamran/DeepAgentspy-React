@@ -345,7 +345,29 @@ async function textCentreY(target: Locator, text: string): Promise<number | null
  * Falls back to the element's first line when the exact text can't be located.
  */
 async function dragSelect(page: Page, target: Locator, text: string): Promise<void> {
-  const pts = await locateText(target, text);
+  let pts = await locateText(target, text);
+  // A long code line runs past the right edge of its code box (own horizontal scrollbar): wheel the
+  // box sideways with the cursor over it, as a person would, until the text is inside the box.
+  for (let i = 0; pts && i < 8; i++) {
+    const clip = await target
+      .evaluate((el) => {
+        let s: HTMLElement | null = el as HTMLElement;
+        for (; s; s = s.parentElement) {
+          const ox = getComputedStyle(s).overflowX;
+          if ((ox === 'auto' || ox === 'scroll') && s.scrollWidth > s.clientWidth + 4) break;
+        }
+        if (!s) return null;
+        const r = s.getBoundingClientRect();
+        return { left: r.left, right: r.left + s.clientWidth };
+      })
+      .catch(() => null);
+    if (!clip || (pts.ex <= clip.right - 12 && pts.sx >= clip.left + 8)) break;
+    const dx = pts.ex > clip.right - 12 ? Math.min(pts.ex - clip.right + 60, 400) : Math.max(pts.sx - clip.left - 60, -400);
+    await humanGlide(page, (clip.left + clip.right) / 2, pts.sy, 18);
+    await page.mouse.wheel(dx, 0);
+    await sleep(500);
+    pts = await locateText(target, text);
+  }
   const vh = page.viewportSize()?.height ?? 900;
   // Never drag at a guess: a miss selects whatever is under the cursor (a code-box header, prose).
   if (!pts || pts.sy < 70 || pts.ey > vh - 30) {

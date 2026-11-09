@@ -736,17 +736,17 @@
    "child": true,
    "docPath": "generative-ui/components",
    "reachable": "sidebar",
-   "status": "⚠️",
+   "status": "❌",
    "findings": [
     49
    ],
    "notes": [
-    "Note: needs `npm install maplibre-gl`, and the \"Try it\" agent fails with \"chat() needs a threadId\"."
+    "Issue: the \"Try it\" agent never replies; every run fails with \"chat() needs a threadId\"."
    ],
    "block": null,
    "links": [
     {
-     "text": "Issue",
+     "text": "Not Working",
      "clip": "DEEPAGENTS-react-20-ComponentsAndSurfaces",
      "loom": null,
      "narration": null
@@ -1315,12 +1315,12 @@
    "child": true,
    "docPath": "shared-state/predictive-state-updates?agent-type=custom-graph",
    "reachable": "sidebar",
-   "status": "⚠️",
+   "status": "❌",
    "findings": [
     13
    ],
    "notes": [
-    "Note: the Python snippet is a fragment (no imports, no graph, an undefined cpk_action_node); works once completed."
+    "Issue: the Python snippet is a fragment (no imports, no graph, an undefined cpk_action_node) and can't run as published; the clip runs on a completed copy."
    ],
    "block": null,
    "links": [

@@ -3,14 +3,15 @@
  * Numbers are DeepAgentspy-React/FINDINGS.md IDs (owner-approved 2026-11-09).
  *
  * Level 1 (full take: demo -> doc highlights -> Notepad): #45 threads drawer, #46 A2UI dynamic +
- * advanced, #47 MCP Apps, #48 tool-based state streaming, #16 input/output schemas + workflow.
+ * advanced, #47 MCP Apps, #48 tool-based state streaming, #16 input/output schemas + workflow,
+ * #12 fixed schema A2UI, #13 manual state streaming (owner 2026-11-09).
  * Level 2 (KNOWN_ISSUE, short take ending after the demo; doc-only pages keep the highlight):
- * #49 components, #12 fixed schema, #9 read/write state, #43 prebuilt streaming, #13 manual,
+ * #49 components, #9 read/write state, #43 prebuilt streaming,
  * #57 the 17 "Not available for Langchain DeepAgents yet" banner pages.
  */
 import { join } from 'node:path';
 import { type PageActionHandler } from '../core/types';
-import { sleep } from '../core/overlays/cursor';
+import { humanGlide, sleep } from '../core/overlays/cursor';
 import { checkpoint, mark } from '../core/timeline';
 import { glideClick, glideTo } from './glide-click';
 import {
@@ -43,7 +44,8 @@ for (const id of BANNER_PAGES) {
 }
 
 /** Level 2 chat pages: already reported by the QA team, failing the same way. */
-export const LEVEL2 = ['components', 'a2ui-fixed-schema', 'in-app-agent-read', 'in-app-agent-write', 'predictive-prebuilt', 'predictive-manual'];
+// Owner 2026-11-09: Fixed Schema A2UI (#12) and Manually Predictive (#13) are level 1 (full take).
+export const LEVEL2 = ['components', 'in-app-agent-read', 'in-app-agent-write', 'predictive-prebuilt'];
 for (const id of LEVEL2) {
   KNOWN_ISSUE.add(id);
   FINDING_NOTES[id] = 'already reported by the qa team';
@@ -96,6 +98,25 @@ Object.assign(FINDING_NOTES, {
     'with a model set it answers fine',
   ].join('\n'),
 });
+Object.assign(FINDING_NOTES, {
+  'a2ui-fixed-schema': [
+    'fixed schema a2ui (#12)',
+    'page says save the schema as apps/agent/src/a2ui/schemas/flight_schema.json or design it in a2ui composer',
+    'but the schema file itself is never shown',
+    'and the agent registration is just create_deep_agent(tools=[search_flights, ...], ...) with no model',
+    'so i wrote a schema by hand',
+    'the card then shows unknown component airport, arrow, airlinebadge, pricetag around the book flight button',
+  ].join('\n'),
+  'predictive-manual': [
+    'manual state streaming, custom graph (#13)',
+    'the python snippet is a fragment, # ... before and after the emit loop',
+    'no imports, no model call, no graph',
+    'and it routes to cpk_action_node which is never defined',
+    'as published its NameError RunnableConfig is not defined, with imports langgraph dev says edge ending at unknown node cpk_action_node',
+    'what u see in the demo is my completed copy, imports plus a model call plus a start to chat_node to end graph',
+    'with that the four steps show and it answers',
+  ].join('\n'),
+});
 FINDING_NOTES['workflow-execution'] = FINDING_NOTES['state-inputs-outputs'].replace(
   'input/output schemas (#16)',
   'workflow execution, same content as input/output schemas (#16)',
@@ -118,6 +139,39 @@ Object.assign(FINDING_EVIDENCE, {
   ],
 });
 FINDING_EVIDENCE['workflow-execution'] = FINDING_EVIDENCE['state-inputs-outputs'];
+Object.assign(FINDING_EVIDENCE, {
+  'a2ui-fixed-schema': [
+    { text: 'or write it by hand. Save it as a JSON file:', caption: 'the schema file is never shown (#12)' },
+    { text: 'tools=[search_flights, ...],', caption: 'agent registration is placeholders, no model (#12)' },
+  ],
+  'predictive-manual': [
+    { text: '# ...', caption: 'fragment: no imports, no model call, no graph (#13)' },
+    { text: '"cpk_action_node"', caption: 'routes to a node the page never defines (#13)' },
+  ],
+});
+
+/**
+ * Fixed Schema A2UI (#12): ask for flights, then scroll the chat back up to the flight card, where
+ * the hand-written schema's components show as "Unknown component: ...".
+ */
+const fixedSchemaTake: PageActionHandler = async (page, config, root, ctx) => {
+  await keyboardSend(page, config, root, ctx);
+  const unknown = page.getByText(/Unknown component/).first();
+  const seen = await unknown.waitFor({ state: 'attached', timeout: 20000 }).then(() => true).catch(() => false);
+  void checkpoint('unknown', 'flight card shows "Unknown component"', async () => (seen ? ((await unknown.textContent().catch(() => '')) || 'yes') : null));
+  if (!seen) return;
+  const input = page.locator('textarea:visible').first();
+  const ib = await input.boundingBox().catch(() => null);
+  if (ib) await humanGlide(page, ib.x + ib.width / 2, Math.max(ib.y - 300, 200), 20);
+  for (let i = 0; i < 12; i++) {
+    const b = await unknown.boundingBox().catch(() => null);
+    if (b && b.y > 90) break;
+    await page.mouse.wheel(0, -240);
+    await sleep(350);
+  }
+  mark('error', 'Unknown component');
+  await glideTo(page, unknown, 3500).catch(() => {});
+};
 
 /** No MCP App iframe after the reply = the feature did not work. */
 const mcpTake: PageActionHandler = async (page, config, root, ctx) => {
@@ -308,6 +362,9 @@ export const DEEPAGENTS_ACTIONS: Record<string, PageActionHandler> = {
   'workflow-execution': withFinding(runPromptOrError),
   'mcp-apps': withFinding(mcpTake),
   'predictive-tool': withFinding(keyboardSend),
+  'a2ui-fixed-schema': withFinding(fixedSchemaTake),
+  // The demo runs on the completed harness copy; the note and narration say so (#13).
+  'predictive-manual': withFinding(keyboardSend),
   'in-app-agent-write': writeStateTake,
   multimodal: multimodalTake,
   'programmatic-control': programmaticTake,
