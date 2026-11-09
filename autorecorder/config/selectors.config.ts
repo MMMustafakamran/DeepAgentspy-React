@@ -70,7 +70,7 @@ export const SELECTORS: SelectorContract = {
   // visible, and attachment-enabled chats (css, headless-ui) render a display:none
   // <input type="file"> before the textarea, so the wait could never succeed there.
   chatReady:
-    'textarea, input[type="text"], input:not([type="file"]):not([type="hidden"]), [contenteditable="true"], .copilotKitChat, [class*="copilotKit"]',
+    'textarea, input[type="text"], input:not([type="file"]):not([type="hidden"]), [contenteditable="true"], .copilotKitChat, [class*="copilotKit"], [data-harness-ready]',
 
   docContentReady: 'h1, article, main, [class*="content"], pre',
 

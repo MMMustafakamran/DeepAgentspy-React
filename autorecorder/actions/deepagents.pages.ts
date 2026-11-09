@@ -12,7 +12,7 @@ import { join } from 'node:path';
 import { type PageActionHandler } from '../core/types';
 import { sleep } from '../core/overlays/cursor';
 import { checkpoint, mark } from '../core/timeline';
-import { glideClick } from './glide-click';
+import { glideClick, glideTo } from './glide-click';
 import {
   FINDING_EVIDENCE,
   FINDING_NOTES,
@@ -140,15 +140,15 @@ const multimodalTake: PageActionHandler = async (page, config, root, ctx) => {
   const input = page.locator('input[type=file]').first();
   await input.waitFor({ state: 'attached', timeout: 60000 });
   mark('action', 'attach image');
-  await input.setInputFiles(join(__dirname, '..', 'assets', 'red.png'));
+  await input.setInputFiles(join(process.cwd(), 'assets', 'red.png')); // cwd = autorecorder/ (ESM: no __dirname)
   await sleep(2500);
   await keyboardSend(page, config, root, ctx);
 };
 
 const programmaticTake: PageActionHandler = async (page, _config, _root, ctx) => {
-  const btn = page.getByRole('button', { name: 'Run agent' });
+  const btn = page.getByRole('button', { name: 'Run agent', exact: true });
   await btn.waitFor({ state: 'visible', timeout: 60000 });
-  await sleep(8000);
+  await sleep(6000);
   mark('click', 'Run agent');
   await glideClick(page, btn);
   const ok = await page.locator('#messages [data-role="assistant"]').filter({ hasText: /\w{3,}/ }).first()
@@ -173,9 +173,58 @@ const governedTake: PageActionHandler = async (page, config, root, ctx) => {
   await sleep(20000);
 };
 
+/**
+ * Threads Drawer (#45): the page crashes on load. Show the crash, then end the take (no minutes of
+ * a frozen error page): mark it, rest the cursor on the message, fail, and let the finding follow.
+ */
+const crashTake: PageActionHandler = async (page, _config, _root, ctx) => {
+  const crash = page.getByText(/couldn.t load|Application error|not found after runtime sync/i).first();
+  const input = page.locator('textarea:visible').first();
+  const outcome = await Promise.race([
+    crash.waitFor({ state: 'visible', timeout: 30000 }).then(() => 'crash' as const),
+    input.waitFor({ state: 'visible', timeout: 30000 }).then(() => 'chat' as const),
+  ]).catch(() => 'timeout' as const);
+  if (outcome === 'chat') {
+    await keyboardSend(page, _config, _root, ctx);
+    return;
+  }
+  mark('error');
+  if (outcome === 'crash') await glideTo(page, crash, 2000).catch(() => {});
+  void checkpoint('error', 'page crash visible', async () => (outcome === 'crash' ? 'crash page' : null));
+  await sleep(4000);
+  ctx.fail("The page crashed on load (useAgent: Agent 'default' not found).");
+};
+
+/**
+ * State streaming (/shared-state/streaming): the agent writes the document into shared state with a
+ * tool and posts no chat text, so wait for the page's document panel instead of a chat reply.
+ */
+const streamingTake: PageActionHandler = async (page, config, _root, ctx) => {
+  const input = page.locator('textarea:visible').first();
+  await input.waitFor({ state: 'visible', timeout: 60000 });
+  await sleep(2000);
+  await glideClick(page, input);
+  await sleep(300);
+  await page.keyboard.type(config.prompt, { delay: 60 });
+  await page.keyboard.press('Enter');
+  mark('action', 'prompt sent');
+  const doc = page.locator('#doc');
+  const ok = await page
+    .waitForFunction(() => (document.querySelector('#doc')?.textContent ?? '').trim().length > 40, undefined, { timeout: 180000, polling: 500 })
+    .then(() => true)
+    .catch(() => false);
+  if (ok) {
+    await glideTo(page, doc, 1500).catch(() => {});
+    await page.getByText('State streaming done').waitFor({ timeout: 120000 }).catch(() => {});
+  }
+  void checkpoint('document', 'document streamed into shared state', async () => ((await doc.textContent().catch(() => '')) || null));
+  if (!ok) ctx.fail('The document never appeared in shared state.');
+  await sleep(4000);
+};
+
 export const DEEPAGENTS_ACTIONS: Record<string, PageActionHandler> = {
   ...Object.fromEntries(BANNER_PAGES.map((id) => [id, runDocOnlyFindingAction])),
-  'threads-drawer': withFinding(runPromptOrError),
+  'threads-drawer': withFinding(crashTake),
   'a2ui-dynamic-schema': withFinding(runPromptOrError),
   'a2ui-advanced': withFinding(runPromptOrError),
   'state-inputs-outputs': withFinding(runPromptOrError),
@@ -186,6 +235,7 @@ export const DEEPAGENTS_ACTIONS: Record<string, PageActionHandler> = {
   multimodal: multimodalTake,
   'programmatic-control': programmaticTake,
   'governed-actions': governedTake,
+  'shared-state-streaming': streamingTake,
 };
 
 /** Every other page (✅ and level-2 chat pages): keyboard send + reply/surface wait. */

@@ -9,5 +9,7 @@ function Messages() {
 }
 
 export default function Page() {
-  return <main><h1>Programmatic control</h1><AgentTrigger agentId="sample_agent" /><Messages /></main>;
+  // HARNESS: data-harness-ready lets the recorder see the page is ready (there is no chat input);
+  // light background so the take is not a black screen under the dark-mode scaffold CSS.
+  return <main data-harness-ready style={{ background: "#fff", color: "#111", minHeight: "100vh", padding: 24 }}><h1>Programmatic control</h1><AgentTrigger agentId="sample_agent" /><Messages /></main>;
 }
