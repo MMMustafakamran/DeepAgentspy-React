@@ -124,6 +124,20 @@
     "",
     ""
    ]
+  },
+  {
+   "label": "Interactivity",
+   "cells": [
+    "Section",
+    "Section"
+   ]
+  },
+  {
+   "label": "Agent Capabilities",
+   "cells": [
+    "Section",
+    "Section"
+   ]
   }
  ],
  "status_note": "Statuses approved by the owner 2026-11-09 (probe results; no clips recorded yet).",
@@ -149,7 +163,7 @@
     {
      "text": "Python (React) - Python",
      "clip": "DEEPAGENTS-react-01-PythonReact",
-     "loom": null,
+     "loom": "https://www.loom.com/share/58a083c2cd704c1a9943d98f531138ce",
      "narration": null
     }
    ],
@@ -219,7 +233,7 @@
     {
      "text": "Issue",
      "clip": "DEEPAGENTS-react-02-CopilotChat",
-     "loom": null,
+     "loom": "https://www.loom.com/share/1aecd47a083d4ff8b50593b9a62c31fb",
      "narration": null
     }
    ],
@@ -249,7 +263,7 @@
     {
      "text": "Issue",
      "clip": "DEEPAGENTS-react-03-CopilotSidebar",
-     "loom": null,
+     "loom": "https://www.loom.com/share/01287fcfc6cb41928923db84469c3ef8",
      "narration": null
     }
    ],
@@ -279,7 +293,7 @@
     {
      "text": "Issue",
      "clip": "DEEPAGENTS-react-04-CopilotPopup",
-     "loom": null,
+     "loom": "https://www.loom.com/share/79bdfe15804e42eda8ae63effec663e8",
      "narration": null
     }
    ],
@@ -307,7 +321,7 @@
     {
      "text": "Open, close, and feedback - Python",
      "clip": "DEEPAGENTS-react-05-OpenCloseAndFeedback",
-     "loom": null,
+     "loom": "https://www.loom.com/share/f2e9291ea5b84282b485aa06866228ba",
      "narration": null
     }
    ],
@@ -337,7 +351,7 @@
     {
      "text": "Issue",
      "clip": "DEEPAGENTS-react-06-CSSCustomization",
-     "loom": null,
+     "loom": "https://www.loom.com/share/4a8e07e89f0c4afc8d49a7cb144c4d58",
      "narration": null
     }
    ],
@@ -367,7 +381,7 @@
     {
      "text": "Issue",
      "clip": "DEEPAGENTS-react-07-Slots",
-     "loom": null,
+     "loom": "https://www.loom.com/share/5380cb70a33e43f1a6d0f98616895583",
      "narration": null
     }
    ],
@@ -395,7 +409,7 @@
     {
      "text": "Markdown Rendering - Python",
      "clip": "DEEPAGENTS-react-08-MarkdownRendering",
-     "loom": null,
+     "loom": "https://www.loom.com/share/2cb9efc1d7274785b85b71043c5ad941",
      "narration": null
     }
    ],
@@ -425,7 +439,7 @@
     {
      "text": "Issue",
      "clip": "DEEPAGENTS-react-09-HeadlessUI",
-     "loom": null,
+     "loom": "https://www.loom.com/share/40d160a3ef3b4652a827b0b1d7865b92",
      "narration": null
     }
    ],
@@ -455,7 +469,7 @@
     {
      "text": "Issue",
      "clip": "DEEPAGENTS-react-10-ReasoningMessages",
-     "loom": null,
+     "loom": "https://www.loom.com/share/58d380a89c19490db10a579e988476af",
      "narration": null
     }
    ],
@@ -469,7 +483,7 @@
    "id": "multimodal",
    "label": "Multimodal Attachments",
    "kind": "guide",
-   "group": "Chat",
+   "group": "Custom Look and Feel",
    "child": false,
    "docPath": "multimodal-attachments",
    "reachable": "sidebar",
@@ -485,7 +499,7 @@
     {
      "text": "Multimodal Attachments - Python",
      "clip": "DEEPAGENTS-react-11-MultimodalAttachments",
-     "loom": null,
+     "loom": "https://www.loom.com/share/d7c7e199b1ae4fe8a0ee76ec48f59a4d",
      "narration": null
     }
    ],
@@ -499,7 +513,7 @@
    "id": "voice",
    "label": "Voice",
    "kind": "guide",
-   "group": "Chat",
+   "group": "Custom Look and Feel",
    "child": false,
    "docPath": "voice",
    "reachable": "sidebar",
@@ -515,7 +529,7 @@
     {
      "text": "Issue",
      "clip": "DEEPAGENTS-react-12-Voice",
-     "loom": null,
+     "loom": "https://www.loom.com/share/32372c4f3ca04c438a1746e4001d63ee",
      "narration": null
     }
    ],
@@ -529,7 +543,7 @@
    "id": "reasoning",
    "label": "Reasoning",
    "kind": "guide",
-   "group": "Chat",
+   "group": "Custom Look and Feel",
    "child": false,
    "docPath": "generative-ui/reasoning",
    "reachable": "sidebar",
@@ -545,7 +559,7 @@
     {
      "text": "Issue",
      "clip": "DEEPAGENTS-react-13-Reasoning",
-     "loom": null,
+     "loom": "https://www.loom.com/share/cefcbb4f34f748d4b2d546b1bafafe29",
      "narration": null
     }
    ],
@@ -575,7 +589,7 @@
     {
      "text": "Not Working",
      "clip": "DEEPAGENTS-react-14-ThreadsDrawer",
-     "loom": null,
+     "loom": "https://www.loom.com/share/64b084270ee0495c9a60aaea9abb2d80",
      "narration": null
     }
    ],
@@ -605,7 +619,7 @@
     {
      "text": "Headless Threads - Python",
      "clip": "DEEPAGENTS-react-15-HeadlessThreads",
-     "loom": null,
+     "loom": "https://www.loom.com/share/066705ec2c3d42588e0c83ec531de7b3",
      "narration": null
     }
    ],
@@ -633,7 +647,7 @@
     {
      "text": "Frontend Tools - Python",
      "clip": "DEEPAGENTS-react-16-FrontendTools",
-     "loom": null,
+     "loom": "https://www.loom.com/share/99185d0c1f0f471cb704d3a0d77ca87a",
      "narration": null
     }
    ],
@@ -663,7 +677,7 @@
     {
      "text": "Issue",
      "clip": "DEEPAGENTS-react-17-ComponentsAsTools",
-     "loom": null,
+     "loom": "https://www.loom.com/share/dc9ec2c6fc22447581e34ca8f87d8e1b",
      "narration": null
     }
    ],
@@ -692,7 +706,7 @@
     {
      "text": "Tool Call Rendering - Python",
      "clip": "DEEPAGENTS-react-18-ToolCallRendering",
-     "loom": null,
+     "loom": "https://www.loom.com/share/11057a99f542443cb2a7a151c49ec6cc",
      "narration": null
     }
    ],
@@ -718,7 +732,7 @@
     {
      "text": "State Rendering - Python",
      "clip": "DEEPAGENTS-react-19-StateRendering",
-     "loom": null,
+     "loom": "https://www.loom.com/share/0a3ec2f0bca84e369c6244643bc4900b",
      "narration": null
     }
    ],
@@ -748,7 +762,7 @@
     {
      "text": "Not Working",
      "clip": "DEEPAGENTS-react-20-ComponentsAndSurfaces",
-     "loom": null,
+     "loom": "https://www.loom.com/share/88366da27d2b4954b721563a37c1292d",
      "narration": null
     }
    ],
@@ -762,7 +776,7 @@
    "id": "components-surfaces",
    "label": "Surfaces",
    "kind": "guide",
-   "group": "Components and surfaces",
+   "group": "Declarative",
    "child": true,
    "docPath": "generative-ui/components/surfaces",
    "reachable": "sidebar",
@@ -778,7 +792,7 @@
     {
      "text": "Surfaces - Python",
      "clip": "DEEPAGENTS-react-21-Surfaces",
-     "loom": null,
+     "loom": "https://www.loom.com/share/e5f19c0eb67a47258ade1aa2e20beca1",
      "narration": null
     }
    ],
@@ -792,7 +806,7 @@
    "id": "components-catalogs",
    "label": "Catalogs",
    "kind": "guide",
-   "group": "Components and surfaces",
+   "group": "Declarative",
    "child": true,
    "docPath": "generative-ui/components/catalogs",
    "reachable": "sidebar",
@@ -806,7 +820,7 @@
     {
      "text": "Catalogs - Python",
      "clip": "DEEPAGENTS-react-22-Catalogs",
-     "loom": null,
+     "loom": "https://www.loom.com/share/c65fc4de2f5f40b5a59fb2173b340268",
      "narration": null
     }
    ],
@@ -820,7 +834,7 @@
    "id": "components-standard-catalog",
    "label": "Standard catalog",
    "kind": "guide",
-   "group": "Components and surfaces",
+   "group": "Declarative",
    "child": true,
    "docPath": "generative-ui/components/standard-catalog",
    "reachable": "sidebar",
@@ -834,7 +848,7 @@
     {
      "text": "Standard catalog - Python",
      "clip": "DEEPAGENTS-react-23-StandardCatalog",
-     "loom": null,
+     "loom": "https://www.loom.com/share/fcd94f14fd594fc5b8a17b3f171e9077",
      "narration": null
     }
    ],
@@ -848,7 +862,7 @@
    "id": "components-state-and-actions",
    "label": "State and actions",
    "kind": "guide",
-   "group": "Components and surfaces",
+   "group": "Declarative",
    "child": true,
    "docPath": "generative-ui/components/state-and-actions",
    "reachable": "sidebar",
@@ -865,7 +879,7 @@
     {
      "text": "State and actions - Python",
      "clip": "DEEPAGENTS-react-24-StateAndActions",
-     "loom": null,
+     "loom": "https://www.loom.com/share/bfd492112d9e4a93a5e21d7145b34f87",
      "narration": null
     }
    ],
@@ -879,7 +893,7 @@
    "id": "components-theming",
    "label": "Theming",
    "kind": "guide",
-   "group": "Components and surfaces",
+   "group": "Declarative",
    "child": true,
    "docPath": "generative-ui/components/theming",
    "reachable": "sidebar",
@@ -893,7 +907,7 @@
     {
      "text": "Theming - Python",
      "clip": "DEEPAGENTS-react-25-Theming",
-     "loom": null,
+     "loom": "https://www.loom.com/share/97e9b863851749878d651b72873903f3",
      "narration": null
     }
    ],
@@ -907,7 +921,7 @@
    "id": "components-transports",
    "label": "Transports",
    "kind": "guide",
-   "group": "Components and surfaces",
+   "group": "Declarative",
    "child": true,
    "docPath": "generative-ui/components/transports",
    "reachable": "sidebar",
@@ -921,7 +935,7 @@
     {
      "text": "Transports - Python",
      "clip": "DEEPAGENTS-react-26-Transports",
-     "loom": null,
+     "loom": "https://www.loom.com/share/ba043b94d327484e9fddead5e55e04fd",
      "narration": null
     }
    ],
@@ -935,7 +949,7 @@
    "id": "components-markdown-mode",
    "label": "Markdown mode",
    "kind": "guide",
-   "group": "Components and surfaces",
+   "group": "Declarative",
    "child": true,
    "docPath": "generative-ui/components/markdown-mode",
    "reachable": "sidebar",
@@ -949,7 +963,7 @@
     {
      "text": "Markdown mode - Python",
      "clip": "DEEPAGENTS-react-27-MarkdownMode",
-     "loom": null,
+     "loom": "https://www.loom.com/share/f71256198afc47818a2d42130621f528",
      "narration": null
     }
    ],
@@ -963,7 +977,7 @@
    "id": "components-from-a2ui",
    "label": "Adopt from A2UI",
    "kind": "guide",
-   "group": "Components and surfaces",
+   "group": "Declarative",
    "child": true,
    "docPath": "generative-ui/components/from-a2ui",
    "reachable": "sidebar",
@@ -977,7 +991,7 @@
     {
      "text": "Adopt from A2UI - Python",
      "clip": "DEEPAGENTS-react-28-AdoptFromA2UI",
-     "loom": null,
+     "loom": "https://www.loom.com/share/bcddd3fc75e64a5688e8a461893deecd",
      "narration": null
     }
    ],
@@ -1027,7 +1041,7 @@
     {
      "text": "Not Working",
      "clip": "DEEPAGENTS-react-29-DynamicSchemaA2UI",
-     "loom": null,
+     "loom": "https://www.loom.com/share/c5771c4e52c0499ea29dd7dfcade1561",
      "narration": null
     }
    ],
@@ -1057,7 +1071,7 @@
     {
      "text": "Issue",
      "clip": "DEEPAGENTS-react-30-FixedSchemaA2UI",
-     "loom": null,
+     "loom": "https://www.loom.com/share/c13e4d3ded314fbf97880b17e9225a6e",
      "narration": null
     }
    ],
@@ -1087,7 +1101,7 @@
     {
      "text": "Issue",
      "clip": "DEEPAGENTS-react-31-Advanced",
-     "loom": null,
+     "loom": "https://www.loom.com/share/02902959c57e43c2b572bf6c2df4b471",
      "narration": null
     }
    ],
@@ -1117,7 +1131,7 @@
     {
      "text": "Issue",
      "clip": "DEEPAGENTS-react-32-JSONRender",
-     "loom": null,
+     "loom": "https://www.loom.com/share/ceddfc56f87840cb96aafe985807adac",
      "narration": null
     }
    ],
@@ -1147,7 +1161,7 @@
     {
      "text": "Issue",
      "clip": "DEEPAGENTS-react-33-Hashbrown",
-     "loom": null,
+     "loom": "https://www.loom.com/share/5ba0ffb317e9437194f6ed835b91bc97",
      "narration": null
     }
    ],
@@ -1177,7 +1191,7 @@
     {
      "text": "Not Working",
      "clip": "DEEPAGENTS-react-34-MCPApps",
-     "loom": null,
+     "loom": "https://www.loom.com/share/462235c5a9614db6bc2fc57477998692",
      "narration": null
     }
    ],
@@ -1207,7 +1221,7 @@
     {
      "text": "Issue",
      "clip": "DEEPAGENTS-react-35-OpenGenerativeUI",
-     "loom": null,
+     "loom": "https://www.loom.com/share/0c3dfa396ed2444084a3c5c571b751c9",
      "narration": null
     }
    ],
@@ -1237,7 +1251,7 @@
     {
      "text": "Issue",
      "clip": "DEEPAGENTS-react-36-ReadingAgentState",
-     "loom": null,
+     "loom": "https://www.loom.com/share/669e1dc9c11941adbf150c8e63d87be3",
      "narration": null
     }
    ],
@@ -1267,7 +1281,7 @@
     {
      "text": "Issue",
      "clip": "DEEPAGENTS-react-37-WritingAgentState",
-     "loom": null,
+     "loom": "https://www.loom.com/share/b5e449a155c94351bcd2056a9c6f4908",
      "narration": null
     }
    ],
@@ -1297,7 +1311,7 @@
     {
      "text": "Issue",
      "clip": "DEEPAGENTS-react-38-PrebuiltAgent",
-     "loom": null,
+     "loom": "https://www.loom.com/share/56b4624790834f15bddd656773498e18",
      "narration": null
     }
    ],
@@ -1327,7 +1341,7 @@
     {
      "text": "Issue",
      "clip": "DEEPAGENTS-react-39-ManuallyPredictive",
-     "loom": null,
+     "loom": "https://www.loom.com/share/48720c1809aa474aa1fbef59ef39a9fa",
      "narration": null
     }
    ],
@@ -1357,7 +1371,7 @@
     {
      "text": "Not Working",
      "clip": "DEEPAGENTS-react-40-Tool-basedPredictive",
-     "loom": null,
+     "loom": "https://www.loom.com/share/469c72c6db0140bb813afc71f55afc94",
      "narration": null
     }
    ],
@@ -1387,7 +1401,7 @@
     {
      "text": "Issue",
      "clip": "DEEPAGENTS-react-41-InputOutputSchemas",
-     "loom": null,
+     "loom": "https://www.loom.com/share/e942397d11c74c19be2476939543b190",
      "narration": null
     }
    ],
@@ -1417,7 +1431,7 @@
     {
      "text": "Issue",
      "clip": "DEEPAGENTS-react-42-WorkflowExecution",
-     "loom": null,
+     "loom": "https://www.loom.com/share/1b94054a456f4f4e8b6cbd46b5f4d508",
      "narration": null
     }
    ],
@@ -1447,7 +1461,7 @@
     {
      "text": "Issue",
      "clip": "DEEPAGENTS-react-43-HITLOverview",
-     "loom": null,
+     "loom": "https://www.loom.com/share/c50d828af3c044e0a3ea0ed483f4bfc6",
      "narration": null
     }
    ],
@@ -1477,7 +1491,7 @@
     {
      "text": "Issue",
      "clip": "DEEPAGENTS-react-44-PausingTheAgentForInput",
-     "loom": null,
+     "loom": "https://www.loom.com/share/c8d5731d261b4fe791d42ad5f630a1da",
      "narration": null
     }
    ],
@@ -1507,7 +1521,7 @@
     {
      "text": "Issue",
      "clip": "DEEPAGENTS-react-45-HeadlessInterrupts",
-     "loom": null,
+     "loom": "https://www.loom.com/share/ee345d7a1c1f4113b4a54990b7b8ce88",
      "narration": null
     }
    ],
@@ -1537,7 +1551,7 @@
     {
      "text": "Governed Action Approval UI - Python",
      "clip": "DEEPAGENTS-react-46-GovernedActionApprovalUI",
-     "loom": null,
+     "loom": "https://www.loom.com/share/93ba6536fa9248c89b65fe9f08cd5495",
      "narration": null
     }
    ],
@@ -1565,7 +1579,7 @@
     {
      "text": "WebMCP - Python",
      "clip": "DEEPAGENTS-react-47-WebMCP",
-     "loom": null,
+     "loom": "https://www.loom.com/share/39f09efc724e40b781997fc7e9f5afad",
      "narration": null
     }
    ],
@@ -1595,7 +1609,7 @@
     {
      "text": "Issue",
      "clip": "DEEPAGENTS-react-48-Sub-agents",
-     "loom": null,
+     "loom": "https://www.loom.com/share/fbafcd33536a4648b3d2d95afc6d26fd",
      "narration": null
     }
    ],
@@ -1623,7 +1637,7 @@
     {
      "text": "Programmatic Control - Python",
      "clip": "DEEPAGENTS-react-49-ProgrammaticControl",
-     "loom": null,
+     "loom": "https://www.loom.com/share/8daa1c25d3e1447c85fdf55b0cb7ce2e",
      "narration": null
     }
    ],
@@ -1653,7 +1667,7 @@
     {
      "text": "State Streaming (shared state) - Python",
      "clip": "DEEPAGENTS-react-50-StateStreamingSharedState",
-     "loom": null,
+     "loom": "https://www.loom.com/share/48203bd1425740faa575f46b76289d42",
      "narration": null
     }
    ],
