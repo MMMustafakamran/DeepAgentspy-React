@@ -946,12 +946,6 @@ export const SCRIPTED: Record<string, PageActionHandler> = {
     { waitText: 'spanish', timeoutMs: 10000 },
     { prompt: 'Hi, who are you?' },
   ]),
-  'chat-controls': scripted([
-    { click: 'Ask the assistant', holdMs: 2500 },
-    { prompt: 'Say hi in five words.' },
-    { goto: '/prebuilt-components/chat-controls/feedback', holdMs: 5000 },
-    { prompt: 'Give me a link to the React docs and a short heading.' },
-  ]),
   'frontend-cards': withFinding(scripted([
     { goto: '/generative-ui/frontend-cards', holdMs: 12000 },
     { goto: '/generative-ui/frontend-cards/harness', holdMs: 6000 },

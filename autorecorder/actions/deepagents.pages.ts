@@ -222,7 +222,84 @@ const streamingTake: PageActionHandler = async (page, config, _root, ctx) => {
   await sleep(4000);
 };
 
+/**
+ * Open, close, and feedback: the page's own nav button opens the CopilotSidebar (controlled open
+ * state), a prompt is answered there, then the inline
+ * CopilotChat gets a prompt and its thumbs-up fires the doc's onThumbsUp (analytics.track in the
+ * console). Before this take the page ran the default keyboard send, which typed into whichever
+ * textarea came first and never opened the sidebar or touched the feedback buttons.
+ */
+const chatControlsTake: PageActionHandler = async (page, config, _root, ctx) => {
+  const feedback: string[] = [];
+  page.on('console', (m) => {
+    if (m.text().includes('analytics.track')) feedback.push(m.text());
+  });
+  const typeAndSend = async (box: import('playwright').Locator, text: string) => {
+    await glideClick(page, box);
+    await sleep(300);
+    await page.keyboard.type(text, { delay: 45 });
+    await sleep(400);
+    if (!(await box.inputValue().catch(() => text)).trim()) await box.fill(text);
+    await page.keyboard.press('Enter');
+  };
+  const countIn = (sel: string) => page.locator(sel).count().catch(() => 0);
+  const waitMore = (sel: string, n: number, ms = 180000) =>
+    page.waitForFunction(([s, k]) => document.querySelectorAll(s as string).length > (k as number), [sel, n] as const, { timeout: ms, polling: 500 })
+      .then(() => true).catch(() => false);
+
+  // 1. Open the sidebar from the page's own button.
+  const open = page.getByRole('button', { name: 'Ask the assistant', exact: true }).first();
+  await open.waitFor({ state: 'visible', timeout: 60000 });
+  await sleep(1500);
+  mark('click', 'Ask the assistant');
+  await glideClick(page, open);
+  const side = page.locator('aside.copilotKitSidebar');
+  const sideInput = side.locator('textarea').first();
+  const opened = await sideInput.waitFor({ state: 'visible', timeout: 15000 }).then(() => true).catch(() => false);
+  void checkpoint('sidebar-open', 'sidebar opened from "Ask the assistant"', async () => (opened ? 'open' : null));
+  if (!opened) {
+    ctx.fail('"Ask the assistant" did not open the sidebar.');
+    return;
+  }
+  await sleep(1500);
+
+  // 2. Ask in the sidebar and wait for its reply.
+  const sideCopy = 'aside.copilotKitSidebar [data-testid="copilot-copy-button"]';
+  const sideBefore = await countIn(sideCopy);
+  mark('action', 'sidebar prompt');
+  await typeAndSend(sideInput, config.prompt);
+  const sideReply = await waitMore(sideCopy, sideBefore);
+  void checkpoint('reply', 'sidebar reply rendered', async () => (sideReply ? 'reply' : null));
+  if (!sideReply) ctx.fail('No reply in the sidebar.');
+  await sleep(3500);
+
+  // The sidebar stays open: its close button sits under the provider's floating inspector button,
+  // so a click there opens the inspector instead (seen in a local take).
+
+  // 3. Feedback: prompt the inline CopilotChat, then thumbs up its reply.
+  const inline = page.locator('textarea:not(aside textarea)').first();
+  const upSel = 'main [data-testid="copilot-thumbs-up-button"]';
+  const upBefore = await countIn(upSel);
+  mark('action', 'feedback prompt');
+  await typeAndSend(inline, 'Give me a link to the React docs and a short heading.');
+  const inlineReply = await waitMore(upSel, upBefore);
+  void checkpoint('reply', 'inline chat reply with feedback buttons', async () => (inlineReply ? 'reply' : null));
+  if (!inlineReply) {
+    ctx.fail('No reply (or no thumbs buttons) in the inline chat.');
+    return;
+  }
+  await sleep(2500);
+  const up = page.locator(upSel).last();
+  mark('click', 'thumbs up');
+  await glideClick(page, up);
+  await sleep(2000);
+  void checkpoint('feedback', 'onThumbsUp fired (analytics.track in the console)', async () => feedback[feedback.length - 1] ?? null);
+  if (feedback.length === 0) ctx.fail('Thumbs up did not call onThumbsUp.');
+  await sleep(3000);
+};
+
 export const DEEPAGENTS_ACTIONS: Record<string, PageActionHandler> = {
+  'chat-controls': chatControlsTake,
   ...Object.fromEntries(BANNER_PAGES.map((id) => [id, runDocOnlyFindingAction])),
   'threads-drawer': withFinding(crashTake),
   'a2ui-dynamic-schema': withFinding(runPromptOrError),
