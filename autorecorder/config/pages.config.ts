@@ -7,7 +7,24 @@
 import { definePages } from '../core/types';
 
 /** Registered but not recorded, with the reason printed on every run. */
-export const SKIP_RECORDING: Record<string, string> = {};
+export const SKIP_RECORDING: Record<string, string> = {
+  'sidebar': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
+  'popup': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
+  'css': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
+  'slots': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
+  'headless-ui': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
+  'reasoning-messages': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
+  'voice': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
+  'reasoning': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
+  'tool-based': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
+  'json-render': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
+  'hashbrown': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
+  'open-generative-ui': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
+  'hitl': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
+  'use-interrupt': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
+  'headless-interrupts': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
+  'subagents': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
+};
 
 export const PAGES = definePages([
   {"id": "quickstart", "name": "Python (React)", "videoName": "PythonReact", "docPath": "quickstart", "route": "", "ideFile": "frontend/VERSIONS.md", "startLine": 1, "endLine": 20, "extraTabs": [{"filePath": "agent/main.py", "startLine": 1, "endLine": 13}, {"filePath": "agent/langgraph.json", "startLine": 1, "endLine": 23}, {"filePath": "frontend/app/api/copilotkit/[[...slug]]/route.ts", "startLine": 1, "endLine": 35}, {"filePath": "frontend/app/(quickstart)/providers.tsx", "startLine": 1, "endLine": 11}, {"filePath": "frontend/app/(quickstart)/page.tsx", "startLine": 1, "endLine": 26}], "prompt": "Hey, are you connected? What is the weather like in Karachi right now?"},
