@@ -2,12 +2,13 @@
  * Deep Agents (Python) + React: per-page takes, finding notes and doc evidence.
  * Numbers are DeepAgentspy-React/FINDINGS.md IDs (owner-approved 2026-11-09).
  *
- * Level 1 (full take: demo -> doc highlights -> Notepad): #45 threads drawer, #46 A2UI dynamic +
+ * Level 1 (full take: demo -> doc highlights -> Notepad): #46 A2UI dynamic +
  * advanced, #47 MCP Apps, #48 tool-based state streaming, #16 input/output schemas + workflow,
  * #12 fixed schema A2UI, #13 manual state streaming (owner 2026-11-09).
  * Level 2 (KNOWN_ISSUE, short take ending after the demo; doc-only pages keep the highlight):
- * #49 components, #9 read/write state, #43 prebuilt streaming,
- * #57 the 17 "Not available for Langchain DeepAgents yet" banner pages.
+ * #49 components, #9 read/write state, #43 prebuilt streaming.
+ * "Not available for Langchain DeepAgents yet" banner pages are N/A, not recorded (owner, 2026-11-11).
+ * Threads Drawer (#45) is a minor note (✅, 2026-11-11): plain working take on the harness route.
  */
 import { join } from 'node:path';
 import { type PageActionHandler } from '../core/types';
@@ -19,7 +20,6 @@ import {
   FINDING_NOTES,
   KNOWN_ISSUE,
   keyboardSend,
-  runDocOnlyFindingAction,
   runPromptOrError,
   scripted,
   withFinding,
@@ -31,18 +31,6 @@ for (const k of Object.keys(FINDING_NOTES)) delete FINDING_NOTES[k];
 for (const k of Object.keys(FINDING_EVIDENCE)) delete FINDING_EVIDENCE[k];
 KNOWN_ISSUE.clear();
 
-export const BANNER_PAGES = [
-  'chat', 'sidebar', 'popup', 'css', 'slots', 'headless-ui', 'reasoning-messages', 'voice', 'reasoning',
-  'tool-based', 'json-render', 'hashbrown', 'open-generative-ui', 'hitl', 'use-interrupt',
-  'headless-interrupts', 'subagents',
-];
-const BANNER: DocEvidence = { text: 'Not available for', caption: '"Not available for Langchain DeepAgents yet" banner (#57)' };
-for (const id of BANNER_PAGES) {
-  FINDING_NOTES[id] = 'page says not available for langchain deepagents yet, nothing to run';
-  FINDING_EVIDENCE[id] = [BANNER];
-  KNOWN_ISSUE.add(id);
-}
-
 /** Level 2 chat pages: already reported by the QA team, failing the same way. */
 // Owner 2026-11-09: Fixed Schema A2UI (#12) and Manually Predictive (#13) are level 1 (full take).
 export const LEVEL2 = ['components', 'in-app-agent-read', 'in-app-agent-write', 'predictive-prebuilt'];
@@ -52,14 +40,6 @@ for (const id of LEVEL2) {
 }
 
 Object.assign(FINDING_NOTES, {
-  'threads-drawer': [
-    'threads drawer (#45)',
-    "page crashes right away: useAgent: Agent 'default' not found, known agents [sample_agent]",
-    'the provider snippet has no agentId so it looks for "default"',
-    'the quickstart only registers sample_agent',
-    'also no "use client" on the page',
-    'with agentId="sample_agent" added the drawer lists threads and chat works',
-  ].join('\n'),
   'a2ui-dynamic-schema': [
     'dynamic schema a2ui (#46)',
     'every run fails, no ui and no reply',
@@ -123,7 +103,6 @@ FINDING_NOTES['workflow-execution'] = FINDING_NOTES['state-inputs-outputs'].repl
 );
 
 Object.assign(FINDING_EVIDENCE, {
-  'threads-drawer': [{ text: '<CopilotKitProvider runtimeUrl="/api/copilotkit">', caption: 'provider without agentId -> "default" not found' }],
   'a2ui-dynamic-schema': [
     { text: 'injectA2UITool: true,', caption: 'runtime turns the A2UI tool on' },
     { text: 'model=ChatOpenAI(model="gpt-6-luna", reasoning_effort="none"),', caption: 'the agent whose generate_a2ui call fails every run' },
@@ -225,28 +204,6 @@ const governedTake: PageActionHandler = async (page, config, root, ctx) => {
   mark('click', 'Approve and run');
   await glideClick(page, approve);
   await sleep(20000);
-};
-
-/**
- * Threads Drawer (#45): the page crashes on load. Show the crash, then end the take (no minutes of
- * a frozen error page): mark it, rest the cursor on the message, fail, and let the finding follow.
- */
-const crashTake: PageActionHandler = async (page, _config, _root, ctx) => {
-  const crash = page.getByText(/couldn.t load|Application error|not found after runtime sync/i).first();
-  const input = page.locator('textarea:visible').first();
-  const outcome = await Promise.race([
-    crash.waitFor({ state: 'visible', timeout: 30000 }).then(() => 'crash' as const),
-    input.waitFor({ state: 'visible', timeout: 30000 }).then(() => 'chat' as const),
-  ]).catch(() => 'timeout' as const);
-  if (outcome === 'chat') {
-    await keyboardSend(page, _config, _root, ctx);
-    return;
-  }
-  mark('error');
-  if (outcome === 'crash') await glideTo(page, crash, 2000).catch(() => {});
-  void checkpoint('error', 'page crash visible', async () => (outcome === 'crash' ? 'crash page' : null));
-  await sleep(4000);
-  ctx.fail("The page crashed on load (useAgent: Agent 'default' not found).");
 };
 
 /**
@@ -354,8 +311,6 @@ const chatControlsTake: PageActionHandler = async (page, config, _root, ctx) => 
 
 export const DEEPAGENTS_ACTIONS: Record<string, PageActionHandler> = {
   'chat-controls': chatControlsTake,
-  ...Object.fromEntries(BANNER_PAGES.map((id) => [id, runDocOnlyFindingAction])),
-  'threads-drawer': withFinding(crashTake),
   'a2ui-dynamic-schema': withFinding(runPromptOrError),
   'a2ui-advanced': withFinding(runPromptOrError),
   'state-inputs-outputs': withFinding(runPromptOrError),

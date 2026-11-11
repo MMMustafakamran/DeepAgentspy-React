@@ -221,22 +221,13 @@
    "child": false,
    "docPath": "prebuilt-components/chat",
    "reachable": "sidebar",
-   "status": "❌",
-   "findings": [
-    57
-   ],
+   "status": "N/A",
+   "findings": [],
    "notes": [
-    "Issue: the page says \"Not available for Langchain DeepAgents yet\" (same on 17 pages; one clip covers them all)."
+    "Note: Not available for Langchain DeepAgents (the page says \"Not available for Langchain DeepAgents yet\")."
    ],
    "block": null,
-   "links": [
-    {
-     "text": "Issue",
-     "clip": "DEEPAGENTS-react-02-CopilotChat",
-     "loom": "https://www.loom.com/share/1aecd47a083d4ff8b50593b9a62c31fb",
-     "narration": null
-    }
-   ],
+   "links": [],
    "review": {
     "verdict": null,
     "approvedAt": null,
@@ -251,23 +242,13 @@
    "child": false,
    "docPath": "prebuilt-components/sidebar",
    "reachable": "sidebar",
-   "status": "❌",
-   "findings": [
-    57
-   ],
+   "status": "N/A",
+   "findings": [],
    "notes": [
-    "Issue: the page says \"Not available for Langchain DeepAgents yet\" (same on 17 pages; one clip covers them all)."
+    "Note: Not available for Langchain DeepAgents (the page says \"Not available for Langchain DeepAgents yet\")."
    ],
    "block": null,
-   "links": [
-    {
-     "text": "Issue",
-     "clip": "DEEPAGENTS-react-02-CopilotChat",
-     "loom": "https://www.loom.com/share/1aecd47a083d4ff8b50593b9a62c31fb",
-     "narration": null,
-     "shared": true
-    }
-   ],
+   "links": [],
    "review": {
     "verdict": null,
     "approvedAt": null,
@@ -282,23 +263,13 @@
    "child": false,
    "docPath": "prebuilt-components/popup",
    "reachable": "sidebar",
-   "status": "❌",
-   "findings": [
-    57
-   ],
+   "status": "N/A",
+   "findings": [],
    "notes": [
-    "Issue: the page says \"Not available for Langchain DeepAgents yet\" (same on 17 pages; one clip covers them all)."
+    "Note: Not available for Langchain DeepAgents (the page says \"Not available for Langchain DeepAgents yet\")."
    ],
    "block": null,
-   "links": [
-    {
-     "text": "Issue",
-     "clip": "DEEPAGENTS-react-02-CopilotChat",
-     "loom": "https://www.loom.com/share/1aecd47a083d4ff8b50593b9a62c31fb",
-     "narration": null,
-     "shared": true
-    }
-   ],
+   "links": [],
    "review": {
     "verdict": null,
     "approvedAt": null,
@@ -341,23 +312,13 @@
    "child": false,
    "docPath": "custom-look-and-feel/css",
    "reachable": "sidebar",
-   "status": "❌",
-   "findings": [
-    57
-   ],
+   "status": "N/A",
+   "findings": [],
    "notes": [
-    "Issue: the page says \"Not available for Langchain DeepAgents yet\" (same on 17 pages; one clip covers them all)."
+    "Note: Not available for Langchain DeepAgents (the page says \"Not available for Langchain DeepAgents yet\")."
    ],
    "block": null,
-   "links": [
-    {
-     "text": "Issue",
-     "clip": "DEEPAGENTS-react-02-CopilotChat",
-     "loom": "https://www.loom.com/share/1aecd47a083d4ff8b50593b9a62c31fb",
-     "narration": null,
-     "shared": true
-    }
-   ],
+   "links": [],
    "review": {
     "verdict": null,
     "approvedAt": null,
@@ -372,23 +333,13 @@
    "child": false,
    "docPath": "custom-look-and-feel/slots",
    "reachable": "sidebar",
-   "status": "❌",
-   "findings": [
-    57
-   ],
+   "status": "N/A",
+   "findings": [],
    "notes": [
-    "Issue: the page says \"Not available for Langchain DeepAgents yet\" (same on 17 pages; one clip covers them all)."
+    "Note: Not available for Langchain DeepAgents (the page says \"Not available for Langchain DeepAgents yet\")."
    ],
    "block": null,
-   "links": [
-    {
-     "text": "Issue",
-     "clip": "DEEPAGENTS-react-02-CopilotChat",
-     "loom": "https://www.loom.com/share/1aecd47a083d4ff8b50593b9a62c31fb",
-     "narration": null,
-     "shared": true
-    }
-   ],
+   "links": [],
    "review": {
     "verdict": null,
     "approvedAt": null,
@@ -431,23 +382,13 @@
    "child": false,
    "docPath": "custom-look-and-feel/headless-ui",
    "reachable": "sidebar",
-   "status": "❌",
-   "findings": [
-    57
-   ],
+   "status": "N/A",
+   "findings": [],
    "notes": [
-    "Issue: the page says \"Not available for Langchain DeepAgents yet\" (same on 17 pages; one clip covers them all)."
+    "Note: Not available for Langchain DeepAgents (the page says \"Not available for Langchain DeepAgents yet\")."
    ],
    "block": null,
-   "links": [
-    {
-     "text": "Issue",
-     "clip": "DEEPAGENTS-react-02-CopilotChat",
-     "loom": "https://www.loom.com/share/1aecd47a083d4ff8b50593b9a62c31fb",
-     "narration": null,
-     "shared": true
-    }
-   ],
+   "links": [],
    "review": {
     "verdict": null,
     "approvedAt": null,
@@ -462,23 +403,13 @@
    "child": false,
    "docPath": "custom-look-and-feel/reasoning-messages",
    "reachable": "sidebar",
-   "status": "❌",
-   "findings": [
-    57
-   ],
+   "status": "N/A",
+   "findings": [],
    "notes": [
-    "Issue: the page says \"Not available for Langchain DeepAgents yet\" (same on 17 pages; one clip covers them all)."
+    "Note: Not available for Langchain DeepAgents (the page says \"Not available for Langchain DeepAgents yet\")."
    ],
    "block": null,
-   "links": [
-    {
-     "text": "Issue",
-     "clip": "DEEPAGENTS-react-02-CopilotChat",
-     "loom": "https://www.loom.com/share/1aecd47a083d4ff8b50593b9a62c31fb",
-     "narration": null,
-     "shared": true
-    }
-   ],
+   "links": [],
    "review": {
     "verdict": null,
     "approvedAt": null,
@@ -523,23 +454,13 @@
    "child": false,
    "docPath": "voice",
    "reachable": "sidebar",
-   "status": "❌",
-   "findings": [
-    57
-   ],
+   "status": "N/A",
+   "findings": [],
    "notes": [
-    "Issue: the page says \"Not available for Langchain DeepAgents yet\" (same on 17 pages; one clip covers them all)."
+    "Note: Not available for Langchain DeepAgents (the page says \"Not available for Langchain DeepAgents yet\")."
    ],
    "block": null,
-   "links": [
-    {
-     "text": "Issue",
-     "clip": "DEEPAGENTS-react-02-CopilotChat",
-     "loom": "https://www.loom.com/share/1aecd47a083d4ff8b50593b9a62c31fb",
-     "narration": null,
-     "shared": true
-    }
-   ],
+   "links": [],
    "review": {
     "verdict": null,
     "approvedAt": null,
@@ -554,23 +475,13 @@
    "child": false,
    "docPath": "generative-ui/reasoning",
    "reachable": "sidebar",
-   "status": "❌",
-   "findings": [
-    57
-   ],
+   "status": "N/A",
+   "findings": [],
    "notes": [
-    "Issue: the page says \"Not available for Langchain DeepAgents yet\" (same on 17 pages; one clip covers them all)."
+    "Note: Not available for Langchain DeepAgents (the page says \"Not available for Langchain DeepAgents yet\")."
    ],
    "block": null,
-   "links": [
-    {
-     "text": "Issue",
-     "clip": "DEEPAGENTS-react-02-CopilotChat",
-     "loom": "https://www.loom.com/share/1aecd47a083d4ff8b50593b9a62c31fb",
-     "narration": null,
-     "shared": true
-    }
-   ],
+   "links": [],
    "review": {
     "verdict": null,
     "approvedAt": null,
@@ -585,19 +496,19 @@
    "child": false,
    "docPath": "prebuilt-components/copilot-threads-drawer",
    "reachable": "sidebar",
-   "status": "❌",
+   "status": "✅",
    "findings": [
     45
    ],
    "notes": [
-    "Issue: the page crashes with \"Agent 'default' not found\"; the provider snippet has no agentId."
+    "Note: the provider snippet has no agentId, so it looks for \"default\"; with the app's agentId (\"sample_agent\") the drawer works."
    ],
    "block": null,
    "links": [
     {
-     "text": "Not Working",
+     "text": "Threads Drawer - Python",
      "clip": "DEEPAGENTS-react-14-ThreadsDrawer",
-     "loom": "https://www.loom.com/share/64b084270ee0495c9a60aaea9abb2d80",
+     "loom": null,
      "narration": null
     }
    ],
@@ -673,23 +584,13 @@
    "child": true,
    "docPath": "generative-ui/tool-based",
    "reachable": "sidebar",
-   "status": "❌",
-   "findings": [
-    57
-   ],
+   "status": "N/A",
+   "findings": [],
    "notes": [
-    "Issue: the page says \"Not available for Langchain DeepAgents yet\" (same on 17 pages; one clip covers them all)."
+    "Note: Not available for Langchain DeepAgents (the page says \"Not available for Langchain DeepAgents yet\")."
    ],
    "block": null,
-   "links": [
-    {
-     "text": "Issue",
-     "clip": "DEEPAGENTS-react-02-CopilotChat",
-     "loom": "https://www.loom.com/share/1aecd47a083d4ff8b50593b9a62c31fb",
-     "narration": null,
-     "shared": true
-    }
-   ],
+   "links": [],
    "review": {
     "verdict": null,
     "approvedAt": null,
@@ -1073,7 +974,7 @@
     12
    ],
    "notes": [
-    "Issue: flight_schema.json is never shown and the agent registration is placeholders; a hand-written schema renders \"Unknown component\" cards."
+    "Issue: flight_schema.json is never shown and the agent registration is placeholders (tools=[search_flights, ...], no model), so the reader has to write the schema."
    ],
    "block": null,
    "links": [
@@ -1128,23 +1029,13 @@
    "child": true,
    "docPath": "generative-ui/json-render",
    "reachable": "sidebar",
-   "status": "❌",
-   "findings": [
-    57
-   ],
+   "status": "N/A",
+   "findings": [],
    "notes": [
-    "Issue: the page says \"Not available for Langchain DeepAgents yet\" (same on 17 pages; one clip covers them all)."
+    "Note: Not available for Langchain DeepAgents (the page says \"Not available for Langchain DeepAgents yet\")."
    ],
    "block": null,
-   "links": [
-    {
-     "text": "Issue",
-     "clip": "DEEPAGENTS-react-02-CopilotChat",
-     "loom": "https://www.loom.com/share/1aecd47a083d4ff8b50593b9a62c31fb",
-     "narration": null,
-     "shared": true
-    }
-   ],
+   "links": [],
    "review": {
     "verdict": null,
     "approvedAt": null,
@@ -1159,23 +1050,13 @@
    "child": true,
    "docPath": "generative-ui/hashbrown",
    "reachable": "sidebar",
-   "status": "❌",
-   "findings": [
-    57
-   ],
+   "status": "N/A",
+   "findings": [],
    "notes": [
-    "Issue: the page says \"Not available for Langchain DeepAgents yet\" (same on 17 pages; one clip covers them all)."
+    "Note: Not available for Langchain DeepAgents (the page says \"Not available for Langchain DeepAgents yet\")."
    ],
    "block": null,
-   "links": [
-    {
-     "text": "Issue",
-     "clip": "DEEPAGENTS-react-02-CopilotChat",
-     "loom": "https://www.loom.com/share/1aecd47a083d4ff8b50593b9a62c31fb",
-     "narration": null,
-     "shared": true
-    }
-   ],
+   "links": [],
    "review": {
     "verdict": null,
     "approvedAt": null,
@@ -1220,23 +1101,13 @@
    "child": true,
    "docPath": "generative-ui/open-generative-ui",
    "reachable": "sidebar",
-   "status": "❌",
-   "findings": [
-    57
-   ],
+   "status": "N/A",
+   "findings": [],
    "notes": [
-    "Issue: the page says \"Not available for Langchain DeepAgents yet\" (same on 17 pages; one clip covers them all)."
+    "Note: Not available for Langchain DeepAgents (the page says \"Not available for Langchain DeepAgents yet\")."
    ],
    "block": null,
-   "links": [
-    {
-     "text": "Issue",
-     "clip": "DEEPAGENTS-react-02-CopilotChat",
-     "loom": "https://www.loom.com/share/1aecd47a083d4ff8b50593b9a62c31fb",
-     "narration": null,
-     "shared": true
-    }
-   ],
+   "links": [],
    "review": {
     "verdict": null,
     "approvedAt": null,
@@ -1461,23 +1332,13 @@
    "child": false,
    "docPath": "human-in-the-loop",
    "reachable": "sidebar",
-   "status": "❌",
-   "findings": [
-    57
-   ],
+   "status": "N/A",
+   "findings": [],
    "notes": [
-    "Issue: the page says \"Not available for Langchain DeepAgents yet\" (same on 17 pages; one clip covers them all)."
+    "Note: Not available for Langchain DeepAgents (the page says \"Not available for Langchain DeepAgents yet\")."
    ],
    "block": null,
-   "links": [
-    {
-     "text": "Issue",
-     "clip": "DEEPAGENTS-react-02-CopilotChat",
-     "loom": "https://www.loom.com/share/1aecd47a083d4ff8b50593b9a62c31fb",
-     "narration": null,
-     "shared": true
-    }
-   ],
+   "links": [],
    "review": {
     "verdict": null,
     "approvedAt": null,
@@ -1492,23 +1353,13 @@
    "child": false,
    "docPath": "human-in-the-loop/useInterrupt",
    "reachable": "sidebar",
-   "status": "❌",
-   "findings": [
-    57
-   ],
+   "status": "N/A",
+   "findings": [],
    "notes": [
-    "Issue: the page says \"Not available for Langchain DeepAgents yet\" (same on 17 pages; one clip covers them all)."
+    "Note: Not available for Langchain DeepAgents (the page says \"Not available for Langchain DeepAgents yet\")."
    ],
    "block": null,
-   "links": [
-    {
-     "text": "Issue",
-     "clip": "DEEPAGENTS-react-02-CopilotChat",
-     "loom": "https://www.loom.com/share/1aecd47a083d4ff8b50593b9a62c31fb",
-     "narration": null,
-     "shared": true
-    }
-   ],
+   "links": [],
    "review": {
     "verdict": null,
     "approvedAt": null,
@@ -1523,23 +1374,13 @@
    "child": false,
    "docPath": "human-in-the-loop/headless",
    "reachable": "sidebar",
-   "status": "❌",
-   "findings": [
-    57
-   ],
+   "status": "N/A",
+   "findings": [],
    "notes": [
-    "Issue: the page says \"Not available for Langchain DeepAgents yet\" (same on 17 pages; one clip covers them all)."
+    "Note: Not available for Langchain DeepAgents (the page says \"Not available for Langchain DeepAgents yet\")."
    ],
    "block": null,
-   "links": [
-    {
-     "text": "Issue",
-     "clip": "DEEPAGENTS-react-02-CopilotChat",
-     "loom": "https://www.loom.com/share/1aecd47a083d4ff8b50593b9a62c31fb",
-     "narration": null,
-     "shared": true
-    }
-   ],
+   "links": [],
    "review": {
     "verdict": null,
     "approvedAt": null,
@@ -1612,23 +1453,13 @@
    "child": false,
    "docPath": "multi-agent/subagents",
    "reachable": "sidebar",
-   "status": "❌",
-   "findings": [
-    57
-   ],
+   "status": "N/A",
+   "findings": [],
    "notes": [
-    "Issue: the page says \"Not available for Langchain DeepAgents yet\" (same on 17 pages; one clip covers them all)."
+    "Note: Not available for Langchain DeepAgents (the page says \"Not available for Langchain DeepAgents yet\")."
    ],
    "block": null,
-   "links": [
-    {
-     "text": "Issue",
-     "clip": "DEEPAGENTS-react-02-CopilotChat",
-     "loom": "https://www.loom.com/share/1aecd47a083d4ff8b50593b9a62c31fb",
-     "narration": null,
-     "shared": true
-    }
-   ],
+   "links": [],
    "review": {
     "verdict": null,
     "approvedAt": null,
@@ -1643,20 +1474,13 @@
    "child": false,
    "docPath": "programmatic-control",
    "reachable": "in-content",
-   "status": "✅",
-   "findings": [
-    56
+   "status": "N/A",
+   "findings": [],
+   "notes": [
+    "Note: Not available for Langchain DeepAgents (the page says \"Not available for Langchain DeepAgents yet\")."
    ],
-   "notes": [],
    "block": null,
-   "links": [
-    {
-     "text": "Programmatic Control - Python",
-     "clip": "DEEPAGENTS-react-49-ProgrammaticControl",
-     "loom": "https://www.loom.com/share/8daa1c25d3e1447c85fdf55b0cb7ce2e",
-     "narration": null
-    }
-   ],
+   "links": [],
    "review": {
     "verdict": null,
     "approvedAt": null,
@@ -1671,22 +1495,13 @@
    "child": false,
    "docPath": "shared-state/streaming",
    "reachable": "in-content",
-   "status": "✅",
-   "findings": [
-    55
-   ],
+   "status": "N/A",
+   "findings": [],
    "notes": [
-    "Note: the agent is LangChain create_agent and the frontend is only a useAgent fragment."
+    "Note: Not available for Langchain DeepAgents (the page says \"Not available for Langchain DeepAgents yet\")."
    ],
    "block": null,
-   "links": [
-    {
-     "text": "State Streaming (shared state) - Python",
-     "clip": "DEEPAGENTS-react-50-StateStreamingSharedState",
-     "loom": "https://www.loom.com/share/48203bd1425740faa575f46b76289d42",
-     "narration": null
-    }
-   ],
+   "links": [],
    "review": {
     "verdict": null,
     "approvedAt": null,

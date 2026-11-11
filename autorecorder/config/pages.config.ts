@@ -1,29 +1,32 @@
 /**
  * One entry per recorded page of https://docs.copilotkit.ai/deepagents, in assignment.json order
  * (clip numbers DEEPAGENTS-react-NN come from that order). Generated from assignment.json
- * (2026-11-09); edit both together. Banner pages ("Not available for Langchain DeepAgents yet",
- * FINDINGS.md #57) are doc-only takes that end on the highlighted banner.
+ * (2026-11-09); edit both together. Banner pages ("Not available for Langchain DeepAgents yet")
+ * are N/A rows with no clip (owner, 2026-11-11): all listed in SKIP_RECORDING.
  */
 import { definePages } from '../core/types';
 
 /** Registered but not recorded, with the reason printed on every run. */
 export const SKIP_RECORDING: Record<string, string> = {
-  'sidebar': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
-  'popup': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
-  'css': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
-  'slots': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
-  'headless-ui': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
-  'reasoning-messages': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
-  'voice': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
-  'reasoning': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
-  'tool-based': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
-  'json-render': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
-  'hashbrown': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
-  'open-generative-ui': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
-  'hitl': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
-  'use-interrupt': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
-  'headless-interrupts': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
-  'subagents': 'Doc shows "Not available for Langchain DeepAgents yet"; one clip (chat, DEEPAGENTS-react-02-CopilotChat) covers all 17 banner pages (owner, 2026-11-10). Drift still checked.',
+  'chat': 'Doc shows "Not available for Langchain DeepAgents yet": report row N/A, no test, no clip (owner, 2026-11-11). Drift still checked.',
+  'sidebar': 'Doc shows "Not available for Langchain DeepAgents yet": report row N/A, no test, no clip (owner, 2026-11-11). Drift still checked.',
+  'popup': 'Doc shows "Not available for Langchain DeepAgents yet": report row N/A, no test, no clip (owner, 2026-11-11). Drift still checked.',
+  'css': 'Doc shows "Not available for Langchain DeepAgents yet": report row N/A, no test, no clip (owner, 2026-11-11). Drift still checked.',
+  'slots': 'Doc shows "Not available for Langchain DeepAgents yet": report row N/A, no test, no clip (owner, 2026-11-11). Drift still checked.',
+  'headless-ui': 'Doc shows "Not available for Langchain DeepAgents yet": report row N/A, no test, no clip (owner, 2026-11-11). Drift still checked.',
+  'reasoning-messages': 'Doc shows "Not available for Langchain DeepAgents yet": report row N/A, no test, no clip (owner, 2026-11-11). Drift still checked.',
+  'voice': 'Doc shows "Not available for Langchain DeepAgents yet": report row N/A, no test, no clip (owner, 2026-11-11). Drift still checked.',
+  'reasoning': 'Doc shows "Not available for Langchain DeepAgents yet": report row N/A, no test, no clip (owner, 2026-11-11). Drift still checked.',
+  'tool-based': 'Doc shows "Not available for Langchain DeepAgents yet": report row N/A, no test, no clip (owner, 2026-11-11). Drift still checked.',
+  'json-render': 'Doc shows "Not available for Langchain DeepAgents yet": report row N/A, no test, no clip (owner, 2026-11-11). Drift still checked.',
+  'hashbrown': 'Doc shows "Not available for Langchain DeepAgents yet": report row N/A, no test, no clip (owner, 2026-11-11). Drift still checked.',
+  'open-generative-ui': 'Doc shows "Not available for Langchain DeepAgents yet": report row N/A, no test, no clip (owner, 2026-11-11). Drift still checked.',
+  'hitl': 'Doc shows "Not available for Langchain DeepAgents yet": report row N/A, no test, no clip (owner, 2026-11-11). Drift still checked.',
+  'use-interrupt': 'Doc shows "Not available for Langchain DeepAgents yet": report row N/A, no test, no clip (owner, 2026-11-11). Drift still checked.',
+  'headless-interrupts': 'Doc shows "Not available for Langchain DeepAgents yet": report row N/A, no test, no clip (owner, 2026-11-11). Drift still checked.',
+  'subagents': 'Doc shows "Not available for Langchain DeepAgents yet": report row N/A, no test, no clip (owner, 2026-11-11). Drift still checked.',
+  'programmatic-control': 'Doc shows "Not available for Langchain DeepAgents yet": report row N/A, no test, no clip (owner, 2026-11-11). Drift still checked.',
+  'shared-state-streaming': 'Doc shows "Not available for Langchain DeepAgents yet": report row N/A, no test, no clip (owner, 2026-11-11). Drift still checked.',
 };
 
 export const PAGES = definePages([
@@ -40,7 +43,7 @@ export const PAGES = definePages([
   {"id": "multimodal", "name": "Multimodal Attachments", "videoName": "MultimodalAttachments", "docPath": "multimodal-attachments", "route": "multimodal-attachments/harness", "ideFile": "frontend/app/(multimodal)/multimodal-attachments/page.tsx", "startLine": 1, "endLine": 14, "extraTabs": [{"filePath": "frontend/app/(multimodal)/multimodal-attachments/harness/page.tsx", "startLine": 1, "endLine": 14}], "prompt": "What color is this image? One word."},
   {"id": "voice", "name": "Voice", "videoName": "Voice", "docPath": "voice", "route": "", "ideFile": "FINDINGS.md", "startLine": 7, "endLine": 11, "prompt": "", "docOnly": true, "docOnlyAction": true, "docViewDurationMs": 12000},
   {"id": "reasoning", "name": "Reasoning", "videoName": "Reasoning", "docPath": "generative-ui/reasoning", "route": "", "ideFile": "FINDINGS.md", "startLine": 7, "endLine": 11, "prompt": "", "docOnly": true, "docOnlyAction": true, "docViewDurationMs": 12000},
-  {"id": "threads-drawer", "name": "Threads Drawer", "videoName": "ThreadsDrawer", "docPath": "prebuilt-components/copilot-threads-drawer", "route": "prebuilt-components/copilot-threads-drawer", "ideFile": "frontend/app/(threads-drawer)/prebuilt-components/copilot-threads-drawer/page.tsx", "startLine": 1, "endLine": 21, "extraTabs": [{"filePath": "frontend/app/(threads-drawer)/prebuilt-components/copilot-threads-drawer/harness/page.tsx", "startLine": 1, "endLine": 21}], "prompt": "Say hi in three words."},
+  {"id": "threads-drawer", "name": "Threads Drawer", "videoName": "ThreadsDrawer", "docPath": "prebuilt-components/copilot-threads-drawer", "route": "prebuilt-components/copilot-threads-drawer/harness", "ideFile": "frontend/app/(threads-drawer)/prebuilt-components/copilot-threads-drawer/page.tsx", "startLine": 1, "endLine": 21, "extraTabs": [{"filePath": "frontend/app/(threads-drawer)/prebuilt-components/copilot-threads-drawer/harness/page.tsx", "startLine": 1, "endLine": 21}], "prompt": "Say hi in three words."},
   {"id": "headless-threads", "name": "Headless Threads", "videoName": "HeadlessThreads", "docPath": "headless-threads", "route": "headless-threads/harness", "ideFile": "frontend/app/(headless-threads)/headless-threads/page.tsx", "startLine": 1, "endLine": 46, "extraTabs": [{"filePath": "frontend/app/(headless-threads)/headless-threads/harness/page.tsx", "startLine": 1, "endLine": 46}], "prompt": "Say hi in three words."},
   {"id": "frontend-tools", "name": "Frontend Tools", "videoName": "FrontendTools", "docPath": "frontend-tools", "route": "frontend-tools", "ideFile": "frontend/app/(frontend-tools)/frontend-tools/page.tsx", "startLine": 1, "endLine": 27, "extraTabs": [{"filePath": "agent/main.py", "startLine": 1, "endLine": 13}], "prompt": "Can you say hello to Fiqros for me?"},
   {"id": "tool-based", "name": "Components as Tools", "videoName": "ComponentsAsTools", "docPath": "generative-ui/tool-based", "route": "", "ideFile": "FINDINGS.md", "startLine": 7, "endLine": 11, "prompt": "", "docOnly": true, "docOnlyAction": true, "docViewDurationMs": 12000},
